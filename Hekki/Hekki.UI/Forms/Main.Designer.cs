@@ -30,9 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             Cherkasy = new Button();
-            School = new Button();
-            Sprint = new Button();
-            Junior = new Button();
             EveryOnEvery = new Button();
             numbersOfKarts = new RichTextBox();
             versionNumber = new Label();
@@ -50,36 +47,6 @@
             Cherkasy.Text = "Cherkasy";
             Cherkasy.UseVisualStyleBackColor = true;
             Cherkasy.Click += Cherkasy_Click;
-            // 
-            // School
-            // 
-            School.Location = new Point(344, 61);
-            School.Name = "School";
-            School.Size = new Size(204, 86);
-            School.TabIndex = 1;
-            School.Text = "School";
-            School.UseVisualStyleBackColor = true;
-            School.Click += School_Click;
-            // 
-            // Sprint
-            // 
-            Sprint.Location = new Point(61, 236);
-            Sprint.Name = "Sprint";
-            Sprint.Size = new Size(204, 86);
-            Sprint.TabIndex = 2;
-            Sprint.Text = "Sprint";
-            Sprint.UseVisualStyleBackColor = true;
-            Sprint.Click += Sprint_Click;
-            // 
-            // Junior
-            // 
-            Junior.Location = new Point(344, 236);
-            Junior.Name = "Junior";
-            Junior.Size = new Size(204, 86);
-            Junior.TabIndex = 3;
-            Junior.Text = "Junior";
-            Junior.UseVisualStyleBackColor = true;
-            Junior.Click += Junior_Click;
             // 
             // EveryOnEvery
             // 
@@ -113,7 +80,7 @@
             // 
             // SprintOld
             // 
-            SprintOld.Location = new Point(637, 61);
+            SprintOld.Location = new Point(344, 61);
             SprintOld.Name = "SprintOld";
             SprintOld.Size = new Size(204, 86);
             SprintOld.TabIndex = 17;
@@ -123,7 +90,7 @@
             // 
             // TestNew
             // 
-            TestNew.Location = new Point(344, 378);
+            TestNew.Location = new Point(344, 236);
             TestNew.Name = "TestNew";
             TestNew.Size = new Size(204, 86);
             TestNew.TabIndex = 18;
@@ -133,7 +100,7 @@
             // 
             // SprintNew
             // 
-            SprintNew.Location = new Point(637, 378);
+            SprintNew.Location = new Point(637, 61);
             SprintNew.Name = "SprintNew";
             SprintNew.Size = new Size(204, 86);
             SprintNew.TabIndex = 19;
@@ -152,9 +119,6 @@
             Controls.Add(versionNumber);
             Controls.Add(numbersOfKarts);
             Controls.Add(EveryOnEvery);
-            Controls.Add(Junior);
-            Controls.Add(Sprint);
-            Controls.Add(School);
             Controls.Add(Cherkasy);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Main";
@@ -166,9 +130,6 @@
         #endregion
 
         private Button Cherkasy;
-        private Button School;
-        private Button Sprint;
-        private Button Junior;
         private Button EveryOnEvery;
         private RichTextBox numbersOfKarts;
         private Label versionNumber;
