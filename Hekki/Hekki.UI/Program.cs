@@ -38,20 +38,10 @@ namespace Hekki.Hekki.UI
 
         private static async Task UpdateMyApp()
         {
-            using var mgr = UpdateManager.GitHubUpdateManager("https://github.com/MrFreuden/Hekki");
+            using var mgr = UpdateManager.GitHubUpdateManager("https://github.com/AntonDushchak/Hekki");
             var newVersion = await mgr.Result.UpdateApp();
-            if (newVersion == null)
-            {
-                using var mgr1 = UpdateManager.GitHubUpdateManager("https://github.com/AntonDushchak/Hekki");
-                newVersion = await mgr1.Result.UpdateApp();
 
-                if (newVersion != null)
-                {
-                    MessageBox.Show("Доступно новое обновление. Сейчас перезапутим программу.");
-                    UpdateManager.RestartApp();
-                }
-            }
-            else
+            if (newVersion != null)
             {
                 MessageBox.Show("Доступно новое обновление. Сейчас перезапутим программу.");
                 UpdateManager.RestartApp();
