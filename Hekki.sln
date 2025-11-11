@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaceLogic", "RaceLogic\Race
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelWorker.Test", "ExcelWorkerTest\ExcelWorker.Test.csproj", "{10F79E9F-1183-45D1-975A-EDF2834AF8D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelController", "ExcelController\ExcelController.csproj", "{01B7ED6E-9B89-3857-BAF1-9AB941047199}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{10F79E9F-1183-45D1-975A-EDF2834AF8D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10F79E9F-1183-45D1-975A-EDF2834AF8D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10F79E9F-1183-45D1-975A-EDF2834AF8D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01B7ED6E-9B89-3857-BAF1-9AB941047199}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01B7ED6E-9B89-3857-BAF1-9AB941047199}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01B7ED6E-9B89-3857-BAF1-9AB941047199}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01B7ED6E-9B89-3857-BAF1-9AB941047199}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

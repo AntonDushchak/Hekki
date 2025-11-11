@@ -1,4 +1,5 @@
 using Squirrel;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Hekki.Hekki.UI
@@ -11,11 +12,14 @@ namespace Hekki.Hekki.UI
         [STAThread]
         static async Task Main()
         {
-            await UpdateMyApp();
             SquirrelAwareApp.HandleEvents(
                 onInitialInstall: OnAppInstall,
                 onAppUninstall: OnAppUninstall,
                 onEveryRun: OnAppRun);
+
+            if (IsSquirrelInstalled())
+                await UpdateMyApp();
+
             ApplicationConfiguration.Initialize();
             Application.Run(new Main());
         }
@@ -46,6 +50,16 @@ namespace Hekki.Hekki.UI
                 MessageBox.Show("Доступно новое обновление. Сейчас перезапутим программу.");
                 UpdateManager.RestartApp();
             }
-        } 
+        }
+
+        private static bool IsSquirrelInstalled()
+        {
+            var updateExe = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
+                "..", "Update.exe");
+
+            return File.Exists(Path.GetFullPath(updateExe));
+        }
+
     }
 }
