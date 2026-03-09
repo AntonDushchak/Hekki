@@ -1,17 +1,19 @@
-using Squirrel;
+using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
+using System.Windows;
+using Squirrel;
 
-namespace Hekki.Hekki.UI
+namespace Hekki
 {
-    internal static class Program
+    /// <summary>
+    /// Interaction logic for App.xaml
+    /// </summary>
+    public partial class App : Application
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static async Task Main()
+        protected override async void OnStartup(StartupEventArgs e)
         {
+            base.OnStartup(e);
+
             SquirrelAwareApp.HandleEvents(
                 onInitialInstall: OnAppInstall,
                 onAppUninstall: OnAppUninstall,
@@ -19,9 +21,6 @@ namespace Hekki.Hekki.UI
 
             if (IsSquirrelInstalled())
                 await UpdateMyApp();
-
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Main());
         }
 
         private static void OnAppInstall(SemanticVersion version, IAppTools tools)
@@ -42,12 +41,12 @@ namespace Hekki.Hekki.UI
 
         private static async Task UpdateMyApp()
         {
-            using var mgr = UpdateManager.GitHubUpdateManager("https://github.com/AntonDushchak/Hekki");
-            var newVersion = await mgr.Result.UpdateApp();
+            using var mgr = await UpdateManager.GitHubUpdateManager("https://github.com/AntonDushchak/Hekki");
+            var newVersion = await mgr.UpdateApp();
 
             if (newVersion != null)
             {
-                MessageBox.Show("Доступно новое обновление. Сейчас перезапутим программу.");
+                MessageBox.Show("Р”РѕСЃС‚СѓРїРЅР° РЅРѕРІР°СЏ РѕР±РЅРѕРІР»РµРЅРёРµ. РџСЂРѕРіСЂР°РјРјР° РїРµСЂРµР·Р°РїСѓСЃС‚РёС‚СЃСЏ.");
                 UpdateManager.RestartApp();
             }
         }
@@ -58,8 +57,7 @@ namespace Hekki.Hekki.UI
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
                 "..", "Update.exe");
 
-            return File.Exists(Path.GetFullPath(updateExe));
+            return File.Exists(updateExe);
         }
-
     }
 }

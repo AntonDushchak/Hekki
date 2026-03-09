@@ -1,0 +1,24 @@
+﻿<Window x:Class="Hekki.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Hekki.UI"
+        mc:Ignorable="d"
+        Title="Hekki - Karting Registration" Height="450" Width="800">
+    <Grid>
+        <Button x:Name="Cherkasy" Content="Cherkasy" HorizontalAlignment="Left" Margin="58,84,0,0" VerticalAlignment="Top" Height="58" Width="128" Click="Cherkasy_Click"/>
+        <Button x:Name="SprintOld" Content="SprintOld" HorizontalAlignment="Left" Margin="324,84,0,0" VerticalAlignment="Top" Height="58" Width="128" Click="SprintOld_Click"/>
+        <Button x:Name="SprintNew" Content="SprintNew" HorizontalAlignment="Left" Margin="579,84,0,0" VerticalAlignment="Top" Height="58" Width="128" Click="SprintNew_Click"/>
+        <Button x:Name="EveryOnEvery" Content="Every On Every" HorizontalAlignment="Left" Margin="579,212,0,0" VerticalAlignment="Top" Height="58" Width="128" Click="EveryOnEvery_Click"/>
+        <Button x:Name="TestNew" Content="TestNew" HorizontalAlignment="Left" Margin="324,212,0,0" VerticalAlignment="Top" Height="58" Width="128" Click="TestNew_Click"/>
+        <RichTextBox x:Name="numbersOfKarts" Margin="58,212,646,45">
+            <FlowDocument>
+                <Paragraph>
+                    <Run/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+
+    </Grid>
+</Window>

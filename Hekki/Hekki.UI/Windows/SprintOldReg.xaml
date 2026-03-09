@@ -1,0 +1,46 @@
+﻿<Window x:Class="Hekki.UI.SprintOldReg"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Hekki.UI"
+        mc:Ignorable="d"
+        Title="SprintOldReg" Height="450" Width="800">
+    <Grid>
+        <Button x:Name="DoOneRace" Content="Распределить 1 хит" HorizontalAlignment="Left" Margin="57,24,0,0" VerticalAlignment="Top" Height="72" Width="143"/>
+        <Button x:Name="DoThreeRaces" Content="Распределить 3 хита" HorizontalAlignment="Left" Margin="57,120,0,0" VerticalAlignment="Top" Height="72" Width="143"/>
+        <Button x:Name="DoFinalPro" HorizontalAlignment="Left" Margin="404,120,0,0" VerticalAlignment="Top" Height="72" Width="144">
+            <TextBlock Text="Распределить финал про" TextWrapping="Wrap" TextAlignment="Center"/>
+        </Button>
+        <Button x:Name="DoFinalAmator" HorizontalAlignment="Left" Margin="588,120,0,0" VerticalAlignment="Top" Height="72" Width="144">
+            <TextBlock Text="Распределить финал аматоров" TextWrapping="Wrap" TextAlignment="Center"/>
+        </Button>
+        <Button x:Name="RebuildPilots" HorizontalAlignment="Left" Margin="297,256,0,0" VerticalAlignment="Top" Height="68" Width="98">
+            <TextBlock Text="Пересобрать пилотов" TextWrapping="Wrap" TextAlignment="Center"/>
+        </Button>
+        <Button HorizontalAlignment="Left" Margin="297,345,0,0" VerticalAlignment="Top" Height="68" Width="98">
+            <TextBlock x:Name="DeleteKartsFromLastRace" Text="Удалить карты с последнего хита" TextWrapping="Wrap" TextAlignment="Center"/>
+        </Button>
+        <Button x:Name="SortTimes" HorizontalAlignment="Left" Margin="683,345,0,0" VerticalAlignment="Top" Height="68" Width="97">
+            <TextBlock Text="Сортировать по лигам" TextWrapping="Wrap" TextAlignment="Center"/>
+        </Button>
+        <Button x:Name="ReadScores" HorizontalAlignment="Left" Margin="564,258,0,0" VerticalAlignment="Top" Height="68" Width="98">
+            <TextBlock x:Name="ReadScores1" Text="Перенести балы в общую таблицу" TextWrapping="Wrap" TextAlignment="Center"/>
+        </Button>
+
+        <Button x:Name="SortScores" HorizontalAlignment="Left" Margin="683,258,0,0" VerticalAlignment="Top" Height="68" Width="97">
+            <TextBlock Text="Сортировать общую таблицу по балам" TextWrapping="Wrap" TextAlignment="Center"/>
+        </Button>
+        <Button x:Name="DoSemiFinal" HorizontalAlignment="Left" Margin="228,120,0,0" VerticalAlignment="Top" Height="72" Width="144">
+            <TextBlock Text="Распределить Полуфинал" TextWrapping="Wrap" TextAlignment="Center"/>
+        </Button>
+        <Button x:Name="Clear" Content="Очистить" HorizontalAlignment="Left" Margin="180,368,0,0" VerticalAlignment="Top" Height="45" Width="96"/>
+        <RichTextBox x:Name="numbersOfKarts" Margin="57,236,647,21">
+            <FlowDocument>
+                <Paragraph>
+                    <Run/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+    </Grid>
+</Window>
