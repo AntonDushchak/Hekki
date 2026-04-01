@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -14,10 +14,6 @@
       <Guid>00020813-0000-0000-c000-000000000046</Guid>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ExcelController\ExcelController.csproj" />
   </ItemGroup>
 
 </Project>
