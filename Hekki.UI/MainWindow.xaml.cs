@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Hekki.UI.Controls;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,6 +20,21 @@ namespace Hekki.UI
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void sidebar_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedItem = sidebar.SelectedItem as NavButton;
+
+            if (selectedItem?.NavLink != null)
+            {
+                mainFrame.Navigate(selectedItem.NavLink);
+
+                while (mainFrame.CanGoBack)
+                {
+                    mainFrame.RemoveBackEntry();
+                }
+            }
         }
     }
 }
