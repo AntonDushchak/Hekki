@@ -1,13 +1,15 @@
 ﻿using Hekki.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Hekki.Infrastructure
 {
     public class HekkiDbContext : DbContext
     {
+        public HekkiDbContext(DbContextOptions<HekkiDbContext> options)
+            : base(options)
+        {
+        }
+
         public DbSet<RaceEntity> Races { get; set; }
         public DbSet<RaceParticipantEntity> RaceParticipants { get; set; }
         public DbSet<RegulationEntity> Regulations { get; set; }
@@ -81,8 +83,13 @@ namespace Hekki.Infrastructure
                 entity.Property(e => e.Date)
                     .IsRequired();
 
-                entity.Property(e => e.DefaultReglementId)
+                entity.Property(e => e.RegulationId)
                     .IsRequired();
+
+                entity.HasOne(e => e.Regulation)
+                    .WithMany()
+                    .HasForeignKey(e => e.RegulationId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             // -------------------------

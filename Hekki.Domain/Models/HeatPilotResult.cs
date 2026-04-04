@@ -1,4 +1,6 @@
-﻿namespace Hekki.Domain.Models
+﻿using Hekki.Domain;
+
+namespace Hekki.Domain.Models
 {
     public class HeatPilotResult
     {
