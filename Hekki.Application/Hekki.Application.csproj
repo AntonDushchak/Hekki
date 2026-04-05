@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Hekki.Domain\Hekki.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

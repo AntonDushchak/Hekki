@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Hekki.Application\Hekki.Application.csproj" />
     <ProjectReference Include="..\Hekki.Domain\Hekki.Domain.csproj" />
   </ItemGroup>
 
