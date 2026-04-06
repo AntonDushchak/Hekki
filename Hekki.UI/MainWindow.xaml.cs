@@ -1,14 +1,6 @@
 ﻿using Hekki.UI.Controls;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Hekki.UI
 {
@@ -17,9 +9,12 @@ namespace Hekki.UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private readonly NavigationService _navigationService;
+
+        public MainWindow(NavigationService navigationService)
         {
             InitializeComponent();
+            _navigationService = navigationService;
         }
 
         private void sidebar_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -28,12 +23,15 @@ namespace Hekki.UI
 
             if (selectedItem?.NavLink != null)
             {
-                mainFrame.Navigate(selectedItem.NavLink);
+                var page = _navigationService.CreatePage(selectedItem.NavLink);
 
-                while (mainFrame.CanGoBack)
+                if (page != null)
                 {
-                    mainFrame.RemoveBackEntry();
+                    mainFrame.Navigate(selectedItem.NavLink);
+
+                    while (mainFrame.CanGoBack) { mainFrame.RemoveBackEntry(); }
                 }
+
             }
         }
     }

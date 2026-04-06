@@ -1,4 +1,6 @@
-﻿using Hekki.Infrastructure;
+﻿using Hekki.Application.Abstrations;
+using Hekki.Infrastructure;
+using Hekki.UI.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +12,7 @@ namespace Hekki.UI
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         public static IHost Host { get; private set; } = null!;
 
@@ -24,9 +26,14 @@ namespace Hekki.UI
                 .ConfigureServices((context, services) =>
                 {
                     services.AddDbContext<HekkiDbContext>(options =>
+                        options.UseNpgsql(context.Configuration.GetConnectionString("HekkiDb"))); //TODO Разобраться
+                    services.AddDbContextFactory<HekkiDbContext>(options =>
                         options.UseNpgsql(context.Configuration.GetConnectionString("HekkiDb")));
 
-                    // services.AddTransient<MainWindow>();
+                    services.AddScoped<IRegulationRepository, RegulationRepository>();
+                    services.AddTransient<RegulationSelectionViewModel>();
+                    services.AddTransient<NavigationService>();
+                    services.AddTransient<MainWindow>();
                 })
                 .Build();
         }
@@ -42,8 +49,8 @@ namespace Hekki.UI
             }
 
             base.OnStartup(e);
-            // var main = Host.Services.GetRequiredService<MainWindow>();
-            // main.Show();
+            var main = Host.Services.GetRequiredService<MainWindow>();
+            main.Show();
         }
 
         protected override async void OnExit(ExitEventArgs e)
