@@ -15,12 +15,32 @@ namespace Hekki.UI.Pages
             InitializeComponent();
             _viewModel = regulationSelectionViewModel;
             DataContext = _viewModel;
+
+            Loaded += async (_, __) =>
+            {
+                try
+                {
+                    await _viewModel.InitializeAsync();
+                }
+                catch (Exception ex)
+                {
+                    // TODO: показать MessageBox / записать в лог
+                }
+            };
         }
 
         protected override async void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-            await _viewModel.InitializeAsync();
+
+            try
+            {
+                await _viewModel.InitializeAsync();
+            }
+            catch (Exception ex)
+            {
+                // TODO: показать MessageBox / записать в лог
+            }
         }
     }
 }
