@@ -27,7 +27,7 @@ namespace Hekki.UI
 
                 if (page != null)
                 {
-                    mainFrame.Navigate(selectedItem.NavLink);
+                    mainFrame.Navigate(page);
 
                     while (mainFrame.CanGoBack) { mainFrame.RemoveBackEntry(); }
                 }

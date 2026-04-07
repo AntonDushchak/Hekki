@@ -12,8 +12,8 @@ namespace Hekki.UI.Pages
 
         public RegulationSelection(RegulationSelectionViewModel regulationSelectionViewModel)
         {
-            InitializeComponent();
             _viewModel = regulationSelectionViewModel;
+            InitializeComponent();
             DataContext = _viewModel;
 
             Loaded += async (_, __) =>

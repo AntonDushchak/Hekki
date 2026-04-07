@@ -25,8 +25,6 @@ namespace Hekki.UI
                 })
                 .ConfigureServices((context, services) =>
                 {
-                    services.AddDbContext<HekkiDbContext>(options =>
-                        options.UseNpgsql(context.Configuration.GetConnectionString("HekkiDb"))); //TODO Разобраться
                     services.AddDbContextFactory<HekkiDbContext>(options =>
                         options.UseNpgsql(context.Configuration.GetConnectionString("HekkiDb")));
 
