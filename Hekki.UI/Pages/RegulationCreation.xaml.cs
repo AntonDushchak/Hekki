@@ -16,9 +16,9 @@ namespace Hekki.UI.Pages
     /// <summary>
     /// Логика взаимодействия для RegulatationCreation.xaml
     /// </summary>
-    public partial class RegulatationCreation : Page
+    public partial class RegulationCreation : Page
     {
-        public RegulatationCreation()
+        public RegulationCreation()
         {
             InitializeComponent();
         }

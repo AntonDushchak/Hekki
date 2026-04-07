@@ -9,8 +9,16 @@
       Title="RegulationSelection">
 
     <Grid>
-        <Label Content="Selection" HorizontalAlignment="Left" Margin="568,0,0,0" VerticalAlignment="Center" FontSize="48"/>
-        <ComboBox x:Name="RegulationComboBox" ItemsSource="{Binding Regulations}" DisplayMemberPath="Name" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="150"/>
+        <Label Content="Selection" HorizontalAlignment="Left" Margin="278,0,0,0" VerticalAlignment="Center" FontSize="48"/>
+        <ComboBox x:Name="RegulationComboBox" 
+                  ItemsSource="{Binding Items}" 
+                  DisplayMemberPath="Title"
+                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                  HorizontalAlignment="Left" 
+                  Margin="10,10,0,0" 
+                  VerticalAlignment="Top" 
+                  Width="150">
 
+        </ComboBox>
     </Grid>
 </Page>
