@@ -21,6 +21,8 @@ namespace Hekki.UI.Pages
                 try
                 {
                     await _viewModel.InitializeAsync();
+                    if (DataContext is RegulationSelectionViewModel vm)
+                        vm.NavigateSelected();
                 }
                 catch (Exception ex)
                 {

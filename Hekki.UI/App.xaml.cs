@@ -29,7 +29,7 @@ namespace Hekki.UI
                         options.UseNpgsql(context.Configuration.GetConnectionString("HekkiDb")));
 
                     services.AddScoped<IRegulationRepository, RegulationRepository>();
-                    services.AddTransient<RegulationSelectionViewModel>();
+                    services.AddSingleton<RegulationSelectionViewModel>();
                     services.AddSingleton<NavigationService>();
                     services.AddTransient<MainWindow>();
                 })

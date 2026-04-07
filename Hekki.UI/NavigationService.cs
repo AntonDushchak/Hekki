@@ -54,7 +54,8 @@ public class NavigationService
     {
         return uri.ToString() switch
         {
-            "/Pages/RegulationSelection.xaml" => CreateRegulationSelectionPage(),
+            "/Pages/RegulationSelection.xaml" => _pageCache.GetValueOrDefault("/Pages/RegulationSelection.xaml")
+                ?? AddToCache("/Pages/RegulationSelection.xaml", CreateRegulationSelectionPage()),
             "/Pages/RegulationCreation.xaml" => _pageCache.GetValueOrDefault("/Pages/RegulationCreation.xaml")
                   ?? AddToCache("/Pages/RegulationCreation.xaml", CreateRegulationCreationPage()),
             "/Pages/Preference.xaml" => new Preference(),
