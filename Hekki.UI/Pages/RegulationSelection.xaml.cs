@@ -1,4 +1,5 @@
 ﻿using Hekki.UI.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Hekki.UI.Pages
@@ -16,28 +17,15 @@ namespace Hekki.UI.Pages
             InitializeComponent();
             DataContext = _viewModel;
 
-            Loaded += async (_, __) =>
-            {
-                try
-                {
-                    await _viewModel.InitializeAsync();
-                    if (DataContext is RegulationSelectionViewModel vm)
-                        vm.NavigateSelected();
-                }
-                catch (Exception ex)
-                {
-                    // TODO: показать MessageBox / записать в лог
-                }
-            };
+            Loaded += OnLoaded;
         }
 
-        protected override async void OnInitialized(EventArgs e)
+        private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            base.OnInitialized(e);
-
             try
             {
                 await _viewModel.InitializeAsync();
+                _viewModel.NavigateToSelected();
             }
             catch (Exception ex)
             {

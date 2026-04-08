@@ -1,10 +1,12 @@
 ﻿using Hekki.Application.Abstrations;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Hekki.UI.ViewModels
 {
-    public class RegulationSelectionViewModel
+    public class RegulationSelectionViewModel : INotifyPropertyChanged
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly NavigationService _navigationService;
@@ -13,18 +15,17 @@ namespace Hekki.UI.ViewModels
         private RegulationChoiceItem? _selectedItem;
         private bool _initialized = false;
 
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public RegulationChoiceItem? SelectedItem
         {
             get => _selectedItem;
             set
             {
+                if (_selectedItem == value) return;
                 _selectedItem = value;
-                if (value is null) return;
-
-                if (value.Kind == RegulationChoiceKind.Create)
-                    _navigationService.Navigate(new Uri("/Pages/RegulationCreation.xaml", UriKind.Relative));
-                else
-                    _navigationService.NavigateToRace(value.RegulationId!.Value);
+                OnPropertyChanged();
+                NavigateToSelected();
             }
         }
 
@@ -34,15 +35,19 @@ namespace Hekki.UI.ViewModels
             _navigationService = navigationService;
         }
 
-        public void NavigateSelected()
+        public void NavigateToSelected()
         {
-            var value = SelectedItem;
-            if (value is null) return;
+            if (SelectedItem is null) return;
 
-            if (value.Kind == RegulationChoiceKind.Create)
+            if (SelectedItem.Kind == RegulationChoiceKind.Create)
                 _navigationService.Navigate(new Uri("/Pages/RegulationCreation.xaml", UriKind.Relative));
             else
-                _navigationService.NavigateToRace(value.RegulationId!.Value);
+                _navigationService.NavigateToRace(SelectedItem.RegulationId!.Value);
+        }
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public async Task InitializeAsync()
