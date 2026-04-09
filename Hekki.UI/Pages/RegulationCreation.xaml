@@ -5,9 +5,14 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Hekki.UI.Pages"
       xmlns:controls="clr-namespace:Hekki.UI.Controls"
+      xmlns:converters="clr-namespace:Hekki.UI.Converters"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="RegulatationCreation">
+
+    <Page.Resources>
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    </Page.Resources>
 
     <Grid>
         <controls:RegulationPicker HorizontalAlignment="Left" VerticalAlignment="Top" Margin="19,10,0,0"/>
@@ -34,7 +39,10 @@
                 </ListBox.ItemContainerStyle>
             </ListBox>
         </DockPanel>
-        <DockPanel x:Name="HeatDetails" LastChildFill="False" Margin="542,89,40,58">
+        <DockPanel x:Name="HeatDetails" 
+                   LastChildFill="False" 
+                   Margin="542,89,40,58"
+                   Visibility="{Binding SelectedHeat, Converter={StaticResource NullToVisibilityConverter}}">
             <ScrollViewer>
                 <StackPanel>
                     <HeaderedContentControl Header="Name">
@@ -43,25 +51,25 @@
 
                     <GroupBox Header="Shuffle">
                         <StackPanel>
-                            <ComboBox SelectedValue="{Binding Shuffle.MethodName}" ItemsSource="{Binding AvailableShuffleMethods}"/>
+                            <ComboBox SelectedValue="{Binding SelectedHeat.Shuffle.MethodName}" ItemsSource="{Binding AvailableShuffleMethods}"/>
                         </StackPanel>
                     </GroupBox>
 
                     <GroupBox Header="Group Assigment">
                         <StackPanel>
-                            <ComboBox SelectedValue="{Binding Grouping.MethodName}" ItemsSource="{Binding AvailableGroupMethods}"/>
+                            <ComboBox SelectedValue="{Binding SelectedHeat.Grouping.MethodName}" ItemsSource="{Binding AvailableGroupMethods}"/>
                         </StackPanel>
                     </GroupBox>
 
                     <GroupBox Header="Kart Assigment">
                         <StackPanel>
-                            <ComboBox SelectedValue="{Binding KartAssignment.MethodName}" ItemsSource="{Binding AvailableKartMethods}"/>
+                            <ComboBox SelectedValue="{Binding SelectedHeat.KartAssignment.MethodName}" ItemsSource="{Binding AvailableKartMethods}"/>
                         </StackPanel>
                     </GroupBox>
 
                     <GroupBox Header="Score Assigment">
                         <StackPanel>
-                            <ComboBox SelectedValue="{Binding Scoring.MethodName}" ItemsSource="{Binding AvailableScoreMethods}"/>
+                            <ComboBox SelectedValue="{Binding SelectedHeat.Scoring.MethodName}" ItemsSource="{Binding AvailableScoreMethods}"/>
                         </StackPanel>
                     </GroupBox>
 
