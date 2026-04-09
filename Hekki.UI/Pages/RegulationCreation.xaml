@@ -51,25 +51,37 @@
 
                     <GroupBox Header="Shuffle">
                         <StackPanel>
-                            <ComboBox SelectedValue="{Binding SelectedHeat.Shuffle.MethodName}" ItemsSource="{Binding AvailableShuffleMethods}"/>
+                            <ComboBox SelectedValue="{Binding SelectedHeat.Shuffle.MethodId}" 
+                                      DisplayMemberPath="Title"
+                                      SelectedValuePath="Id"
+                                      ItemsSource="{Binding AvailableShuffleMethods}"/>
                         </StackPanel>
                     </GroupBox>
 
                     <GroupBox Header="Group Assigment">
                         <StackPanel>
-                            <ComboBox SelectedValue="{Binding SelectedHeat.Grouping.MethodName}" ItemsSource="{Binding AvailableGroupMethods}"/>
+                            <ComboBox SelectedValue="{Binding SelectedHeat.Grouping.MethodId}"
+                                      DisplayMemberPath="Title"
+                                      SelectedValuePath="Id"
+                                      ItemsSource="{Binding AvailableGroupMethods}"/>
                         </StackPanel>
                     </GroupBox>
 
                     <GroupBox Header="Kart Assigment">
                         <StackPanel>
-                            <ComboBox SelectedValue="{Binding SelectedHeat.KartAssignment.MethodName}" ItemsSource="{Binding AvailableKartMethods}"/>
+                            <ComboBox SelectedValue="{Binding SelectedHeat.KartAssignment.MethodId}" 
+                                      DisplayMemberPath="Title"
+                                      SelectedValuePath="Id"
+                                      ItemsSource="{Binding AvailableKartMethods}"/>
                         </StackPanel>
                     </GroupBox>
 
                     <GroupBox Header="Score Assigment">
                         <StackPanel>
-                            <ComboBox SelectedValue="{Binding SelectedHeat.Scoring.MethodName}" ItemsSource="{Binding AvailableScoreMethods}"/>
+                            <ComboBox SelectedValue="{Binding SelectedHeat.Scoring.MethodId}" 
+                                      DisplayMemberPath="Title"
+                                      SelectedValuePath="Id"
+                                      ItemsSource="{Binding AvailableScoreMethods}"/>
                         </StackPanel>
                     </GroupBox>
 

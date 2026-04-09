@@ -16,7 +16,7 @@ namespace Hekki.UI.ViewModels
     public partial class MethodSettings : ObservableObject
     {
         [ObservableProperty]
-        private string _methodName;
+        private string _methodId;
 
         public Dictionary<string, object> Arguments { get; set; } = [];
     }

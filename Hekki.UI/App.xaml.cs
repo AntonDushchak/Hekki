@@ -1,4 +1,5 @@
 ﻿using Hekki.Application.Abstrations;
+using Hekki.Application.Methods;
 using Hekki.Infrastructure;
 using Hekki.UI.ViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,31 @@ namespace Hekki.UI
                     services.AddSingleton<RegulationSelectionViewModel>();
                     services.AddTransient<RegulationCreationViewModel>();
                     services.AddSingleton<NavigationService>();
+
+                    services.AddSingleton<IParticipantShuffleMethod, NoShuffle>();
+                    services.AddSingleton<IParticipantShuffleMethod, RandomShuffle>();
+                    services.AddSingleton<IParticipantShuffleMethod, ScoreAscShuffle>();
+                    services.AddSingleton<IParticipantShuffleMethod, TimeDescShuffle>();
+
+                    services.AddSingleton<IParticipantShuffleCatalog, ParticipantShuffleCatalog>();
+
+                    services.AddSingleton<IGroupAssignmentMethod, RandomGroupAssignment>();
+                    services.AddSingleton<IGroupAssignmentMethod, CardGroupAssignment>();
+                    services.AddSingleton<IGroupAssignmentMethod, ListGroupAssignment>();
+                    services.AddSingleton<IGroupAssignmentMethod, ReplacementGroupAssignment>();
+
+                    services.AddSingleton<IGroupAssignmentCatalog, GroupAssigmentCatalog>();
+
+                    services.AddSingleton<IKartNummerAssignmentMethod, RandomKartAssignment>();
+                    services.AddSingleton<IKartNummerAssignmentMethod, RandomNoRepeatKartAssignment>();
+
+                    services.AddSingleton<IKartNummerAssignmentCatalog, KartNummerAssigmentCatalog>();
+
+                    services.AddSingleton<IScoreAssignmentMethod, DefaultScoreAssignment>();
+
+                    services.AddSingleton<IScoreAssignmentCatalog, ScoreAssignmentCatalog>();
+
+
                     services.AddTransient<MainWindow>();
                 })
                 .Build();

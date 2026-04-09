@@ -1,0 +1,46 @@
+﻿using Hekki.Domain.Models;
+
+namespace Hekki.Application.Methods
+{
+    public interface IParticipantShuffleMethod
+    {
+        string Id { get; }
+        string Title { get; }
+        string Description { get; }
+        List<RaceParticipant> Shuffle(List<RaceParticipant> participants);
+    }
+
+    public interface IParticipantShuffleCatalog
+    {
+        IReadOnlyList<IParticipantShuffleMethod> GetAll();
+        IParticipantShuffleMethod GetById(string id);
+    }
+
+    public class ParticipantShuffleCatalog : IParticipantShuffleCatalog
+    {
+        private readonly IReadOnlyList<IParticipantShuffleMethod> _all;
+        private readonly IReadOnlyDictionary<string, IParticipantShuffleMethod> _byId;
+
+        public ParticipantShuffleCatalog(IEnumerable<IParticipantShuffleMethod> methods)
+        {
+            _all = methods
+                .OrderBy(m => m.Title)
+                .ToList();
+
+            _byId = _all.ToDictionary(m => m.Id, StringComparer.OrdinalIgnoreCase);
+        }
+
+        public IReadOnlyList<IParticipantShuffleMethod> GetAll() => _all;
+
+        public IParticipantShuffleMethod GetById(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentException("Shuffle method id is null/empty.", nameof(id));
+
+            if (_byId.TryGetValue(id, out var method))
+                return method;
+
+            throw new KeyNotFoundException($"Unknown shuffle method id: '{id}'.");
+        }
+    }
+}
