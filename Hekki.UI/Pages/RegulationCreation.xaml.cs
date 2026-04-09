@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hekki.UI.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -18,9 +19,12 @@ namespace Hekki.UI.Pages
     /// </summary>
     public partial class RegulationCreation : Page
     {
-        public RegulationCreation()
+        private readonly RegulationCreationViewModel _viewModel;
+        public RegulationCreation(RegulationCreationViewModel regulationCreationViewModel)
         {
+            _viewModel = regulationCreationViewModel;
             InitializeComponent();
+            DataContext = _viewModel;
         }
     }
 }

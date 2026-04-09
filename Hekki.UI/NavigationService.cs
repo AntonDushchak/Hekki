@@ -65,7 +65,8 @@ public class NavigationService
 
     private RegulationCreation CreateRegulationCreationPage()
     {
-        return new();
+        var viewModel = _services.GetRequiredService<RegulationCreationViewModel>();
+        return new RegulationCreation(viewModel);
     }
 
     private Page CreateRacePage(int regulationId)

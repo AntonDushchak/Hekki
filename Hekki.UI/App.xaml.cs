@@ -30,6 +30,7 @@ namespace Hekki.UI
 
                     services.AddScoped<IRegulationRepository, RegulationRepository>();
                     services.AddSingleton<RegulationSelectionViewModel>();
+                    services.AddTransient<RegulationCreationViewModel>();
                     services.AddSingleton<NavigationService>();
                     services.AddTransient<MainWindow>();
                 })

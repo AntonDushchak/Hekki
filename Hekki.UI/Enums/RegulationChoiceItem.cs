@@ -1,4 +1,4 @@
-﻿namespace Hekki.UI
+﻿namespace Hekki.UI.Enums
 {
     public record RegulationChoiceItem
     (
@@ -6,10 +6,4 @@
         RegulationChoiceKind Kind,
         int? RegulationId
     );
-
-    public enum RegulationChoiceKind
-    {
-        Create,
-        Existing
-    }
 }
