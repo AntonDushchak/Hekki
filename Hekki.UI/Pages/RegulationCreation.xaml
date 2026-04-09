@@ -19,7 +19,20 @@
         <DockPanel x:Name="HeatsList" LastChildFill="False" Margin="99,89,258,124">
             <ListBox ItemsSource="{Binding Heats}" 
                     SelectedItem="{Binding SelectedHeat}" 
-                    DisplayMemberPath="Name" />
+                    DisplayMemberPath="Name" >
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                        
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
         </DockPanel>
         <DockPanel x:Name="HeatDetails" LastChildFill="False" Margin="542,89,40,58">
             <ScrollViewer>
