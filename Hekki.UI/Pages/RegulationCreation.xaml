@@ -16,11 +16,6 @@
 
     <Grid>
         <controls:RegulationPicker HorizontalAlignment="Left" VerticalAlignment="Top" Margin="19,10,0,0"/>
-        <Button x:Name="AddHeatButton"
-                Content="Add Heat" 
-                HorizontalAlignment="Left" 
-                Margin="66,388,0,0" 
-                VerticalAlignment="Top"/>
         <DockPanel x:Name="HeatsList" LastChildFill="False" Margin="99,89,258,124">
             <ListBox ItemsSource="{Binding Heats}" 
                     SelectedItem="{Binding SelectedHeat}" 
@@ -89,6 +84,19 @@
             </ScrollViewer>
         </DockPanel>
         <CheckBox x:Name="SameScoreCheckBox" Content="Same Score" HorizontalAlignment="Left" Margin="167,388,0,0" VerticalAlignment="Top"/>
-
+        <Button x:Name="SaveButton" Command="{Binding SaveCommand}" Content="Save" HorizontalAlignment="Left" Margin="306,385,0,0" VerticalAlignment="Top" Height="32" Width="73"/>
+        <Button x:Name="AddHeatButton"
+                Content="Add Heat" 
+                HorizontalAlignment="Left" 
+                Margin="66,388,0,0" 
+                VerticalAlignment="Top" Height="29" Width="72"
+                Command="{Binding AddHeatCommand}"/>
+        <TextBox x:Name="NameTextBox" 
+                 HorizontalAlignment="Left" 
+                 Margin="282,26,0,0" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding RegulationName, UpdateSourceTrigger=PropertyChanged}" 
+                 VerticalAlignment="Top" 
+                 Width="120"/>
     </Grid>
 </Page>

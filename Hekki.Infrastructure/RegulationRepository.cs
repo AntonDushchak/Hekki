@@ -1,11 +1,17 @@
-﻿using Hekki.Domain.Models;
-using Hekki.Application.Abstrations;
+﻿using Hekki.Application.Abstrations;
+using Hekki.Domain.Models;
+using Hekki.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace Hekki.Infrastructure
 {
     public class RegulationRepository : IRegulationRepository
     {
+        static readonly JsonSerializerOptions JsonOpts = new()
+        {
+            
+        };
         private readonly IDbContextFactory<HekkiDbContext> _dbFactory;
 
         public RegulationRepository(IDbContextFactory<HekkiDbContext> dbFactory)
@@ -22,7 +28,7 @@ namespace Hekki.Infrastructure
                 {
                     Id = e.Id,
                     Name = e.Name,
-                    Json = e.Json
+                    Version = e.Version,
                 })
                 .ToListAsync(ct);
         }
@@ -34,17 +40,41 @@ namespace Hekki.Infrastructure
             var e = await db.Regulations.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id, ct);
             if (e is null) return null;
 
-            return new Regulation { Id = e.Id, Name = e.Name, Json = e.Json };
+            var configs = DeserializeConfigurations(e.Json);
+
+            return new Regulation
+            {
+                Id = e.Id,
+                Name = e.Name,
+                Version = e.Version,
+                Configurations = configs
+            };
         }
+        private static string SerializeConfigurations(List<HeatConfigurationModel> configs)
+            => JsonSerializer.Serialize(configs ?? [], JsonOpts);
+
+        private static List<HeatConfigurationModel> DeserializeConfigurations(string? json)
+            => JsonSerializer.Deserialize<List<HeatConfigurationModel>>(json ?? "[]", JsonOpts) ?? [];
 
         public Task UpdateAsync(Regulation regulation, CancellationToken ct = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> AddAsync(Regulation regulation, CancellationToken ct = default)
+        public async Task<int> AddAsync(Regulation regulation, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            await using var db = await _dbFactory.CreateDbContextAsync(ct);
+            var entity = await db.Regulations.FindAsync(regulation.Id, ct)
+                         ?? new RegulationEntity { Id = regulation.Id };
+
+            entity.Name = regulation.Name;
+            entity.Version = regulation.Version;
+
+            entity.Json = SerializeConfigurations(regulation.Configurations);
+
+            db.Update(entity);
+            await db.SaveChangesAsync(ct);
+            return entity.Id;
         }
 
         public Task DeleteAsync(int id, CancellationToken ct = default)

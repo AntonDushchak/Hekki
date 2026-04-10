@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Text.Json;
 
 namespace Hekki.UI.ViewModels
 {
@@ -7,17 +8,17 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty]
         private string _name;
 
-        public MethodSettings Shuffle { get; set; } = new();
-        public MethodSettings Grouping { get; set; } = new();
-        public MethodSettings KartAssignment { get; set; } = new();
-        public MethodSettings Scoring { get; set; } = new();
+        public MethodSettingsVm Shuffle { get; set; } = new();
+        public MethodSettingsVm Grouping { get; set; } = new();
+        public MethodSettingsVm KartAssignment { get; set; } = new();
+        public MethodSettingsVm Scoring { get; set; } = new();
     }
 
-    public partial class MethodSettings : ObservableObject
+    public partial class MethodSettingsVm : ObservableObject
     {
         [ObservableProperty]
         private string _methodId;
 
-        public Dictionary<string, object> Arguments { get; set; } = [];
+        public Dictionary<string, JsonElement> Arguments { get; set; } = [];
     }
 }

@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Hekki.Application.Abstrations;
 using Hekki.Application.Methods;
 using System.Collections.ObjectModel;
 
@@ -6,6 +8,7 @@ namespace Hekki.UI.ViewModels
 {
     public partial class RegulationCreationViewModel : ObservableObject
     {
+        private string _regulationName = string.Empty;
         private readonly IParticipantShuffleCatalog _shuffleCatalog;
         private readonly IGroupAssignmentCatalog _groupCatalog;
         private readonly IKartNummerAssignmentCatalog _kartCatalog;
@@ -14,6 +17,11 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty]
         private HeatConfiguration? _selectedHeat;
 
+        public string RegulationName
+        {
+            get => _regulationName;
+            set => SetProperty(ref _regulationName, value);
+        }
         public ObservableCollection<HeatConfiguration> Heats { get; } = [];
         public ObservableCollection<MethodOptionViewModel> AvailableShuffleMethods { get; } = [];
         public ObservableCollection<MethodOptionViewModel> AvailableGroupMethods { get; } = [];
@@ -26,12 +34,16 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty] private string? _selectedKartMethodId;
         [ObservableProperty] private string? _selectedScoreMethodId;
 
+        private readonly IRegulationRepository _regulationRepository;
+
         public RegulationCreationViewModel(
             IParticipantShuffleCatalog shuffleCatalog,
             IGroupAssignmentCatalog groupCatalog,
             IKartNummerAssignmentCatalog kartCatalog,
-            IScoreAssignmentCatalog scoreCatalog)
+            IScoreAssignmentCatalog scoreCatalog,
+            IRegulationRepository regulationRepository)
         {
+            _regulationRepository = regulationRepository;
             _shuffleCatalog = shuffleCatalog;
             _groupCatalog = groupCatalog;
             _kartCatalog = kartCatalog;
@@ -47,8 +59,6 @@ namespace Hekki.UI.ViewModels
             _selectedKartMethodId = AvailableKartMethods.FirstOrDefault()?.Id;
             _selectedScoreMethodId = AvailableScoreMethods.FirstOrDefault()?.Id;
 
-            Heats.Add(new HeatConfiguration { Name = "Заезд 1" });
-            Heats.Add(new HeatConfiguration { Name = "Заезд 2" });
         }
 
         private static void Fill<TMethod>(
@@ -60,6 +70,19 @@ namespace Hekki.UI.ViewModels
 
             foreach (dynamic m in methods)
                 target.Add(new MethodOptionViewModel(m.Id, m.Title, m.Description));
+        }
+
+        [RelayCommand]
+        private void AddHeat()
+        {
+            int nextNumber = Heats.Count + 1;
+            Heats.Add(new HeatConfiguration { Name = $"Heat {nextNumber}" });
+        }
+
+        [RelayCommand]
+        private void Save()
+        {
+            _regulationRepository.AddAsync(RegulationUiMapper.ToDomain(this, 0, 1));
         }
     }
 }
