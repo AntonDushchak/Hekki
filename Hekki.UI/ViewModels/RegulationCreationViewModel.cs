@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.Abstrations;
 using Hekki.Application.Methods;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels
@@ -13,7 +14,7 @@ namespace Hekki.UI.ViewModels
         private readonly IGroupAssignmentCatalog _groupCatalog;
         private readonly IKartNummerAssignmentCatalog _kartCatalog;
         private readonly IScoreAssignmentCatalog _scoreCatalog;
-
+        private readonly IServiceScopeFactory _scopeFactory;
         [ObservableProperty]
         private HeatConfiguration? _selectedHeat;
 
@@ -34,20 +35,19 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty] private string? _selectedKartMethodId;
         [ObservableProperty] private string? _selectedScoreMethodId;
 
-        private readonly IRegulationRepository _regulationRepository;
 
         public RegulationCreationViewModel(
             IParticipantShuffleCatalog shuffleCatalog,
             IGroupAssignmentCatalog groupCatalog,
             IKartNummerAssignmentCatalog kartCatalog,
             IScoreAssignmentCatalog scoreCatalog,
-            IRegulationRepository regulationRepository)
+            IServiceScopeFactory scopeFactory)
         {
-            _regulationRepository = regulationRepository;
             _shuffleCatalog = shuffleCatalog;
             _groupCatalog = groupCatalog;
             _kartCatalog = kartCatalog;
             _scoreCatalog = scoreCatalog;
+            _scopeFactory = scopeFactory;
 
             Fill(AvailableShuffleMethods, _shuffleCatalog.GetAll());
             Fill(AvailableGroupMethods, _groupCatalog.GetAll());
@@ -80,9 +80,19 @@ namespace Hekki.UI.ViewModels
         }
 
         [RelayCommand]
-        private void Save()
+        private async Task Save()
         {
-            _regulationRepository.AddAsync(RegulationUiMapper.ToDomain(this, 0, 1));
+            using var scope = _scopeFactory.CreateScope();
+            var repo = scope.ServiceProvider.GetRequiredService<IRegulationRepository>();
+            try
+            {
+                await repo.AddAsync(RegulationUiMapper.ToDomain(this, 0, 1));
+            }
+            catch 
+            {
+                //TODO: Handle error
+            }
+
         }
     }
 }

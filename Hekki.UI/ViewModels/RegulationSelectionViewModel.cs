@@ -54,7 +54,6 @@ namespace Hekki.UI.ViewModels
         public async Task InitializeAsync()
         {
             if (_initialized) return;
-            _initialized = true;
 
             Items.Clear();
             Items.Add(new("Create regulation…", RegulationChoiceKind.Create, null));
@@ -64,6 +63,8 @@ namespace Hekki.UI.ViewModels
             var regulations = await repo.GetAllAsync();
             foreach (var r in regulations)
                 Items.Add(new(r.Name, RegulationChoiceKind.Existing, r.Id));
+
+            _initialized = true;
         }
     }
 }
