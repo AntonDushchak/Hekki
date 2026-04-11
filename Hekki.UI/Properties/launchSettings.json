@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Hekki.UI": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
