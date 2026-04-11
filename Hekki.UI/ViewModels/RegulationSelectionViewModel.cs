@@ -11,10 +11,10 @@ namespace Hekki.UI.ViewModels
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly NavigationService _navigationService;
-        public ObservableCollection<RegulationChoiceItem> Items { get; } = [];
 
         private RegulationChoiceItem? _selectedItem;
         private bool _initialized = false;
+        public ObservableCollection<RegulationChoiceItem> Items { get; } = [];
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

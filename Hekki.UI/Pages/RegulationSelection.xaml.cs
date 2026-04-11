@@ -4,9 +4,6 @@ using System.Windows.Controls;
 
 namespace Hekki.UI.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для RegulationSelection.xaml
-    /// </summary>
     public partial class RegulationSelection : Page
     {
         private readonly RegulationSelectionViewModel _viewModel;
@@ -29,7 +26,7 @@ namespace Hekki.UI.Pages
             }
             catch (Exception ex)
             {
-                // TODO: показать MessageBox / записать в лог
+                // TODO: показать MessageBox
             }
         }
     }

@@ -6,7 +6,7 @@ namespace Hekki.UI.ViewModels
     public partial class HeatConfiguration : ObservableObject
     {
         [ObservableProperty]
-        private string _name;
+        private string _name = string.Empty;
 
         public MethodSettingsVm Shuffle { get; set; } = new();
         public MethodSettingsVm Grouping { get; set; } = new();
@@ -17,7 +17,7 @@ namespace Hekki.UI.ViewModels
     public partial class MethodSettingsVm : ObservableObject
     {
         [ObservableProperty]
-        private string _methodId;
+        private string _methodId = string.Empty;
 
         public Dictionary<string, JsonElement> Arguments { get; set; } = [];
     }
