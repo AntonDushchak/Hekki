@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.Abstrations;
 using Hekki.Application.Methods;
-using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels
@@ -14,7 +13,7 @@ namespace Hekki.UI.ViewModels
         private readonly IGroupAssignmentCatalog _groupCatalog;
         private readonly IKartNummerAssignmentCatalog _kartCatalog;
         private readonly IScoreAssignmentCatalog _scoreCatalog;
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IRegulationRepository _regulationRepository;
         [ObservableProperty]
         private HeatConfiguration? _selectedHeat;
 
@@ -41,13 +40,13 @@ namespace Hekki.UI.ViewModels
             IGroupAssignmentCatalog groupCatalog,
             IKartNummerAssignmentCatalog kartCatalog,
             IScoreAssignmentCatalog scoreCatalog,
-            IServiceScopeFactory scopeFactory)
+            IRegulationRepository regulationRepository)
         {
             _shuffleCatalog = shuffleCatalog;
             _groupCatalog = groupCatalog;
             _kartCatalog = kartCatalog;
             _scoreCatalog = scoreCatalog;
-            _scopeFactory = scopeFactory;
+            _regulationRepository = regulationRepository;
 
             Fill(AvailableShuffleMethods, _shuffleCatalog.GetAll());
             Fill(AvailableGroupMethods, _groupCatalog.GetAll());
@@ -82,13 +81,11 @@ namespace Hekki.UI.ViewModels
         [RelayCommand]
         private async Task Save()
         {
-            using var scope = _scopeFactory.CreateScope();
-            var repo = scope.ServiceProvider.GetRequiredService<IRegulationRepository>();
             try
             {
-                await repo.AddAsync(RegulationUiMapper.ToDomain(this, 0, 1));
+                await _regulationRepository.AddAsync(RegulationUiMapper.ToDomain(this, 0, 1));
             }
-            catch 
+            catch
             {
                 //TODO: Handle error
             }

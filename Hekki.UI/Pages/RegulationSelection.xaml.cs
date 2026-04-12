@@ -6,9 +6,9 @@ namespace Hekki.UI.Pages
 {
     public partial class RegulationSelection : Page
     {
-        private readonly RegulationSelectionViewModel _viewModel;
+        private readonly RegulationPickerViewModel _viewModel;
 
-        public RegulationSelection(RegulationSelectionViewModel regulationSelectionViewModel)
+        public RegulationSelection(RegulationPickerViewModel regulationSelectionViewModel)
         {
             _viewModel = regulationSelectionViewModel;
             InitializeComponent();

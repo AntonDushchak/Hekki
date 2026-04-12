@@ -1,16 +1,15 @@
 ﻿using Hekki.Application.Abstrations;
 using Hekki.UI.Enums;
-using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace Hekki.UI.ViewModels
 {
-    public class RegulationSelectionViewModel : INotifyPropertyChanged
+    public class RegulationPickerViewModel : INotifyPropertyChanged
     {
-        private readonly IServiceScopeFactory _scopeFactory;
-        private readonly NavigationService _navigationService;
+        private readonly IRegulationRepository _regulationRepository;
+        private readonly ShellNavigationService _navigationService;
 
         private RegulationChoiceItem? _selectedItem;
         private bool _initialized = false;
@@ -30,9 +29,9 @@ namespace Hekki.UI.ViewModels
             }
         }
 
-        public RegulationSelectionViewModel(IServiceScopeFactory scopeFactory, NavigationService navigationService)
+        public RegulationPickerViewModel(IRegulationRepository regulationRepository, ShellNavigationService navigationService)
         {
-            _scopeFactory = scopeFactory;
+            _regulationRepository = regulationRepository;
             _navigationService = navigationService;
         }
 
@@ -58,9 +57,7 @@ namespace Hekki.UI.ViewModels
             Items.Clear();
             Items.Add(new("Create regulation…", RegulationChoiceKind.Create, null));
 
-            using var scope = _scopeFactory.CreateScope();
-            var repo = scope.ServiceProvider.GetRequiredService<IRegulationRepository>();
-            var regulations = await repo.GetAllAsync();
+            var regulations = await _regulationRepository.GetAllAsync();
             foreach (var r in regulations)
                 Items.Add(new(r.Name, RegulationChoiceKind.Existing, r.Id));
 

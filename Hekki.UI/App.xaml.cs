@@ -10,13 +10,11 @@ using System.Windows;
 
 namespace Hekki.UI
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : System.Windows.Application
     {
         public static IHost Host { get; private set; } = null!;
-
+        private static IServiceScope _uiScope = null!;
+        public static IServiceProvider UiServices => _uiScope.ServiceProvider;
         public App()
         {
             Host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder()
@@ -31,12 +29,13 @@ namespace Hekki.UI
                     services.AddDbContextFactory<HekkiDbContext>(options =>
                         options.UseNpgsql(context.Configuration.GetConnectionString("HekkiDb")));
 
-                    services.AddScoped<IRegulationRepository, RegulationRepository>();
-                    services.AddSingleton<RegulationSelectionViewModel>();
-                    services.AddTransient<RegulationCreationViewModel>();
-                    services.AddSingleton<NavigationService>();
+                    services.AddTransient<IRegulationRepository, RegulationRepository>();
+                    services.AddScoped<PageFactory>();
+                    services.AddScoped<RootNavigationService>();
+                    services.AddScoped<ShellNavigationService>();
+                    services.AddScoped<RegulationPickerViewModel>();
+                    services.AddScoped<RegulationCreationViewModel>();
 
-                    
                     AddServicesMethods(services);
 
                     services.AddTransient<MainWindow>();
@@ -76,17 +75,19 @@ namespace Hekki.UI
 
             using (var scope = Host.Services.CreateScope())
             {
-                var db = scope.ServiceProvider.GetRequiredService<HekkiDbContext>();
+                var factory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<HekkiDbContext>>();
+                using var db = factory.CreateDbContext();
                 await db.Database.MigrateAsync();
             }
-
+            _uiScope = Host.Services.CreateScope();
             base.OnStartup(e);
-            var main = Host.Services.GetRequiredService<MainWindow>();
+            var main = _uiScope.ServiceProvider.GetRequiredService<MainWindow>();
             main.Show();
         }
 
         protected override async void OnExit(ExitEventArgs e)
         {
+            _uiScope.Dispose();
             await Host.StopAsync();
             Host.Dispose();
             base.OnExit(e);
