@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.Abstrations;
 using Hekki.Application.Methods;
+using Hekki.UI.Mappers;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Hekki.UI
+namespace Hekki.UI.Services
 {
     public abstract class NavigationServiceBase
     {

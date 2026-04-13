@@ -1,12 +1,12 @@
 ﻿using Hekki.Domain.Models;
 using Hekki.UI.ViewModels;
 
-namespace Hekki.UI
+namespace Hekki.UI.Mappers
 {
     public class RegulationUiMapper
     {
         public static Regulation ToDomain(RegulationCreationViewModel vm, int id, int version)
-        => new Regulation
+        => new()
         {
             Id = id,
             Name = vm.RegulationName,
