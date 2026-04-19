@@ -11,14 +11,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Hekki.UI.Pages
+namespace Hekki.UI.Views
 {
     /// <summary>
-    /// Логика взаимодействия для Race.xaml
+    /// Логика взаимодействия для RecentActivityList.xaml
     /// </summary>
-    public partial class Race : Page
+    public partial class RecentActivityList : UserControl
     {
-        public Race()
+        public RecentActivityList()
         {
             InitializeComponent();
         }

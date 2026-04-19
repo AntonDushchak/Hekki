@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Hekki.UI.Controls
+namespace Hekki.UI.Views
 {
     public partial class RegulationPicker : UserControl
     {

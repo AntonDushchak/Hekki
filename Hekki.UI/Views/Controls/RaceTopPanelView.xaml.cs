@@ -11,14 +11,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Hekki.UI.Pages
+namespace Hekki.UI.Views
 {
     /// <summary>
-    /// Логика взаимодействия для Preference.xaml
+    /// Логика взаимодействия для RaceTopPanelView.xaml
     /// </summary>
-    public partial class Preference : Page
+    public partial class RaceTopPanelView : UserControl
     {
-        public Preference()
+        public RaceTopPanelView()
         {
             InitializeComponent();
         }

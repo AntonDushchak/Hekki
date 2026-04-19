@@ -1,8 +1,7 @@
 ﻿using Hekki.Application.Abstrations;
-using Hekki.Application.Methods;
 using Hekki.Infrastructure;
-using Hekki.UI.Services;
 using Hekki.UI.ViewModels;
+using Hekki.UI.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,14 +30,16 @@ namespace Hekki.UI
                         options.UseNpgsql(context.Configuration.GetConnectionString("HekkiDb")));
 
                     services.AddTransient<IRegulationRepository, RegulationRepository>();
-                    services.AddScoped<PageFactory>();
-                    services.AddScoped<RootNavigationService>();
-                    services.AddScoped<ShellNavigationService>();
-                    services.AddScoped<RegulationPickerViewModel>();
-                    services.AddScoped<RegulationCreationViewModel>();
+
+                    //services.AddScoped<ShellNavigationService>();
+                    //services.AddScoped<RegulationPickerViewModel>();
+                    //services.AddScoped<RegulationCreationViewModel>();
 
                     AddServicesMethods(services);
-
+                    services.AddTransient<SelectRaceView>();
+                    services.AddTransient<SelectionViewModel>();
+                    services.AddTransient<SelectionTopPanelViewModel>();
+                    services.AddTransient<MainViewModel>();
                     services.AddTransient<MainWindow>();
                 })
                 .Build();
@@ -46,28 +47,28 @@ namespace Hekki.UI
 
         private void AddServicesMethods(IServiceCollection services)
         {
-            services.AddSingleton<IParticipantShuffleMethod, NoShuffle>();
-            services.AddSingleton<IParticipantShuffleMethod, RandomShuffle>();
-            services.AddSingleton<IParticipantShuffleMethod, ScoreAscShuffle>();
-            services.AddSingleton<IParticipantShuffleMethod, TimeDescShuffle>();
+            //services.AddSingleton<IParticipantShuffleMethod, NoShuffle>();
+            //services.AddSingleton<IParticipantShuffleMethod, RandomShuffle>();
+            //services.AddSingleton<IParticipantShuffleMethod, ScoreAscShuffle>();
+            //services.AddSingleton<IParticipantShuffleMethod, TimeDescShuffle>();
 
-            services.AddSingleton<IParticipantShuffleCatalog, ParticipantShuffleCatalog>();
+            //services.AddSingleton<IParticipantShuffleCatalog, ParticipantShuffleCatalog>();
 
-            services.AddSingleton<IGroupAssignmentMethod, RandomGroupAssignment>();
-            services.AddSingleton<IGroupAssignmentMethod, CardGroupAssignment>();
-            services.AddSingleton<IGroupAssignmentMethod, ListGroupAssignment>();
-            services.AddSingleton<IGroupAssignmentMethod, ReplacementGroupAssignment>();
+            //services.AddSingleton<IGroupAssignmentMethod, RandomGroupAssignment>();
+            //services.AddSingleton<IGroupAssignmentMethod, CardGroupAssignment>();
+            //services.AddSingleton<IGroupAssignmentMethod, ListGroupAssignment>();
+            //services.AddSingleton<IGroupAssignmentMethod, ReplacementGroupAssignment>();
 
-            services.AddSingleton<IGroupAssignmentCatalog, GroupAssigmentCatalog>();
+            //services.AddSingleton<IGroupAssignmentCatalog, GroupAssigmentCatalog>();
 
-            services.AddSingleton<IKartNummerAssignmentMethod, RandomKartAssignment>();
-            services.AddSingleton<IKartNummerAssignmentMethod, RandomNoRepeatKartAssignment>();
+            //services.AddSingleton<IKartNummerAssignmentMethod, RandomKartAssignment>();
+            //services.AddSingleton<IKartNummerAssignmentMethod, RandomNoRepeatKartAssignment>();
 
-            services.AddSingleton<IKartNummerAssignmentCatalog, KartNummerAssigmentCatalog>();
+            //services.AddSingleton<IKartNummerAssignmentCatalog, KartNummerAssigmentCatalog>();
 
-            services.AddSingleton<IScoreAssignmentMethod, DefaultScoreAssignment>();
+            //services.AddSingleton<IScoreAssignmentMethod, DefaultScoreAssignment>();
 
-            services.AddSingleton<IScoreAssignmentCatalog, ScoreAssignmentCatalog>();
+            //services.AddSingleton<IScoreAssignmentCatalog, ScoreAssignmentCatalog>();
         }
 
         protected override async void OnStartup(StartupEventArgs e)
