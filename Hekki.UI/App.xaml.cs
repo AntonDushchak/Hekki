@@ -1,5 +1,6 @@
 ﻿using Hekki.Application.Abstrations;
 using Hekki.Infrastructure;
+using Hekki.UI.Services;
 using Hekki.UI.ViewModels;
 using Hekki.UI.Views;
 using Microsoft.EntityFrameworkCore;
@@ -31,16 +32,25 @@ namespace Hekki.UI
 
                     services.AddTransient<IRegulationRepository, RegulationRepository>();
 
-                    //services.AddScoped<ShellNavigationService>();
-                    //services.AddScoped<RegulationPickerViewModel>();
-                    //services.AddScoped<RegulationCreationViewModel>();
 
-                    AddServicesMethods(services);
-                    services.AddTransient<SelectRaceView>();
+                    //AddServicesMethods(services);
+
+                    services.AddTransient<IRegulationService, RegulationService>();
+
+                    services.AddSingleton<NavigationService>();
+
+                    services.AddTransient<IViewModelFactory, ViewModelFactory>();
+
+                    //services.AddTransient<SelectRaceView>();
                     services.AddTransient<SelectionViewModel>();
-                    services.AddTransient<SelectionTopPanelViewModel>();
-                    services.AddTransient<MainViewModel>();
-                    services.AddTransient<MainWindow>();
+                    //services.AddTransient<CreateRaceView>();
+                    services.AddTransient<CreateRaceViewModel>();
+                    //services.AddTransient<RaceView>();
+                    //services.AddTransient<RaceViewModel>();
+                    //services.AddTransient<SelectionTopPanelViewModel>();
+
+                    services.AddSingleton<MainViewModel>();
+                    services.AddSingleton<MainWindow>();
                 })
                 .Build();
         }

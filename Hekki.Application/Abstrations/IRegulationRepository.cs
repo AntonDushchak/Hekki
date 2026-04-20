@@ -5,6 +5,7 @@ namespace Hekki.Application.Abstrations
     public interface IRegulationRepository
     {
         Task<IReadOnlyList<Regulation>> GetAllAsync(CancellationToken ct = default);
+        Task<IReadOnlyList<Regulation>> GetLookupAsync(CancellationToken ct = default);
         Task<Regulation?> GetByIdAsync(int id, CancellationToken ct = default);
         Task<int> AddAsync(Regulation regulation, CancellationToken ct = default);
         Task UpdateAsync(Regulation regulation, CancellationToken ct = default);

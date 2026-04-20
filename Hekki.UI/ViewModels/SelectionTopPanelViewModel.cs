@@ -1,4 +1,6 @@
-﻿namespace Hekki.UI.ViewModels
+﻿using System.ComponentModel;
+
+namespace Hekki.UI.ViewModels
 {
     public class SelectionTopPanelViewModel
     {
@@ -28,8 +30,22 @@
         }
     }
 
-    public class TopPanelViewModel
+    public class TopPanelViewModel : INotifyPropertyChanged
     {
-        public object LeftTopPanelContent { get; set; }
+        private object _leftTopPanelContent;
+
+        public object LeftTopPanelContent
+        {
+            get => _leftTopPanelContent;
+            set
+            {
+                _leftTopPanelContent = value;
+                OnPropertyChanged(nameof(LeftTopPanelContent));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string name)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

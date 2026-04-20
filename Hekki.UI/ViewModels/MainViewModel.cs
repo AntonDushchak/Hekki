@@ -1,40 +1,74 @@
-﻿namespace Hekki.UI.ViewModels
-{
-    public class MainViewModel
-    {
-        public TopPanelViewModel TopPanelVM { get; }
-        public object CurrentPageVM { get; set; }
+﻿using Hekki.Application.Abstrations;
+using Hekki.UI.Services;
+using System.ComponentModel;
 
-        public MainViewModel()
+
+namespace Hekki.UI.ViewModels
+{
+    public class MainViewModel : INotifyPropertyChanged
+    {
+        private readonly NavigationService _navigationService;
+        private readonly IRegulationService _regulationService;
+        private readonly IViewModelFactory _viewModelFactory;
+
+        public TopPanelViewModel TopPanelVM { get; }
+
+        private object _currentPageVM;
+
+        public object CurrentPageVM
+        {
+            get => _currentPageVM;
+            set
+            {
+                _currentPageVM = value;
+                OnPropertyChanged(nameof(CurrentPageVM));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string name)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        public MainViewModel(NavigationService navigationService, IRegulationService regulationService, IViewModelFactory viewModelFactory)
         {
             TopPanelVM = new TopPanelViewModel();
+
+            _navigationService = navigationService;
+            _regulationService = regulationService;
+            _viewModelFactory = viewModelFactory;
+
+            System.Diagnostics.Debug.WriteLine($"MainViewModel.ctor: {this.GetHashCode()}");
+            navigationService.Navigate = OnNavigate;
             NavigateToSelection();
         }
 
-        public void NavigateToRace()
+        private void NavigateToSelection()
         {
-            var vm = new RaceViewModel();
-
-            CurrentPageVM = vm;
-            TopPanelVM.LeftTopPanelContent = new RaceTopPanelViewModel();
+            _navigationService.Go(_viewModelFactory.Create<SelectionViewModel>());
         }
 
-        public void NavigateToCreate()
+        private void OnNavigate(object vm)
         {
-            var vm = new CreateRaceViewModel();
-
             CurrentPageVM = vm;
-            TopPanelVM.LeftTopPanelContent = new CreateRaceTopPanelViewModel();
-        }
 
-        public void NavigateToSelection()
-        {
-            var vm = new SelectionViewModel();
+            switch (vm)
+            {
+                case RaceViewModel:
+                    TopPanelVM.LeftTopPanelContent = new RaceTopPanelViewModel();
+                    break;
 
-            CurrentPageVM = vm;
-            TopPanelVM.LeftTopPanelContent = new SelectionTopPanelViewModel();
+                case CreateRaceViewModel:
+                    TopPanelVM.LeftTopPanelContent = new CreateRaceTopPanelViewModel();
+                    break;
+
+                case SelectionViewModel:
+                    TopPanelVM.LeftTopPanelContent = new SelectionTopPanelViewModel();
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
-
-    
 }

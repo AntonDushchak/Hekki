@@ -21,15 +21,29 @@ namespace Hekki.Infrastructure
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
+            var rawData = await db.Regulations
+                .AsNoTracking()
+                .OrderBy(r => r.Name)
+                .Select(e => new { e.Id, e.Name, e.Version, e.Json })
+                .ToListAsync(ct);
+
+            return rawData.Select(e => new Regulation
+            {
+                Id = e.Id,
+                Name = e.Name,
+                Version = e.Version,
+                Configurations = DeserializeConfigurations(e.Json)
+            }).ToList();
+        }
+
+        public async Task<IReadOnlyList<Regulation>> GetLookupAsync(CancellationToken ct = default)
+        {
+            await using var db = await _dbFactory.CreateDbContextAsync(ct);
+
             return await db.Regulations
                 .AsNoTracking()
                 .OrderBy(r => r.Name)
-                .Select(e => new Regulation
-                {
-                    Id = e.Id,
-                    Name = e.Name,
-                    Version = e.Version,
-                })
+                .Select(e => new Regulation() { Id = e.Id, Name = e.Name, Version = e.Version })
                 .ToListAsync(ct);
         }
 
@@ -50,6 +64,7 @@ namespace Hekki.Infrastructure
                 Configurations = configs
             };
         }
+
         private static string SerializeConfigurations(List<HeatConfigurationModel> configs)
             => JsonSerializer.Serialize(configs ?? [], JsonOpts);
 

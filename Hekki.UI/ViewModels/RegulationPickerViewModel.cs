@@ -10,7 +10,7 @@ namespace Hekki.UI.ViewModels
     public class RegulationPickerViewModel : INotifyPropertyChanged
     {
         private readonly IRegulationRepository _regulationRepository;
-        private readonly ShellNavigationService _navigationService;
+        private readonly NavigationService _navigationService;
 
         private RegulationChoiceItem? _selectedItem;
         private bool _initialized = false;
@@ -30,7 +30,7 @@ namespace Hekki.UI.ViewModels
             }
         }
 
-        public RegulationPickerViewModel(IRegulationRepository regulationRepository, ShellNavigationService navigationService)
+        public RegulationPickerViewModel(IRegulationRepository regulationRepository, NavigationService navigationService)
         {
             _regulationRepository = regulationRepository;
             _navigationService = navigationService;
@@ -43,7 +43,7 @@ namespace Hekki.UI.ViewModels
             if (SelectedItem.Kind == RegulationChoiceKind.Create)
                 _navigationService.Navigate(new Uri("/Pages/RegulationCreation.xaml", UriKind.Relative));
             else
-                _navigationService.NavigateToRace(SelectedItem.RegulationId!.Value);
+                _navigationService.Navigate(new Uri($"/Pages/Race.xaml?regulationId={SelectedItem.RegulationId}", UriKind.Relative));
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
