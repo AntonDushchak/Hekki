@@ -12,7 +12,14 @@
         <ItemsControl ItemsSource="{Binding Regulations}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <components:RegulationCard />
+                    <Grid>
+                        <Grid.InputBindings>
+                            <MouseBinding MouseAction="LeftClick"
+                                          Command="{Binding DataContext.NavigateToRaceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                          CommandParameter="{Binding Id}" />
+                        </Grid.InputBindings>
+                        <components:RegulationCard />
+                    </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

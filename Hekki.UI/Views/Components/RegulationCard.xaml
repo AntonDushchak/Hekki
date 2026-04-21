@@ -6,7 +6,7 @@
              xmlns:views="clr-namespace:Hekki.UI.Views"
              mc:Ignorable="d" >
     
-    <Border CornerRadius="12" 
+    <Border  CornerRadius="12" 
             Margin="0,0,0,10" 
             Padding="20,15">
 
@@ -55,6 +55,8 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel>
+
+                
                 <TextBlock Text="{Binding Name}" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                     <TextBlock Foreground="#999999" FontSize="12" Text="{Binding Version, StringFormat='v{0}'}" />

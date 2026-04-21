@@ -66,6 +66,12 @@ namespace Hekki.UI.ViewModels
         }
 
         [RelayCommand]
+        private void NavigateToRace(int id)
+        {
+            _navigationService.Go(_viewModelFactory.CreateRaceViewModel(id));
+        }
+
+        [RelayCommand]
         private void Prev()
         {
             PaginationService.Prev();
