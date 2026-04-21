@@ -5,12 +5,13 @@ namespace Hekki.UI.Mappers
 {
     public class RegulationUiMapper
     {
-        public static Regulation ToDomain(RegulationCreationViewModel vm, int id, int version)
+        public static Regulation ToDomain(RegulationCreationViewModel vm, int id, int version, DateTime creationDate)
         => new()
         {
             Id = id,
             Name = vm.RegulationName,
             Version = version,
+            CreationDate = creationDate,
             Configurations = vm.Heats.Select(h => new HeatConfigurationModel
             {
                 Name = h.Name,

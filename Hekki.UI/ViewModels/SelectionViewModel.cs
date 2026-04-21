@@ -11,19 +11,19 @@ namespace Hekki.UI.ViewModels
     {
         private readonly IRegulationService _regulationService;
         private readonly IViewModelFactory _viewModelFactory;
-        public IPaginationService PaginationService { get; }
         private readonly NavigationService _navigationService;
 
         [ObservableProperty]
         private bool _isLoading;
-        public ObservableCollection<Regulation> Regulations { get; } = new ObservableCollection<Regulation>();
+        public ObservableCollection<Regulation> Regulations { get; } = [];
+        public IPaginationService PaginationService { get; }
 
 
-        
+
         public SelectionViewModel(
-            NavigationService navigationService, 
-            IRegulationService regulationService, 
-            IViewModelFactory viewModelFactory, 
+            NavigationService navigationService,
+            IRegulationService regulationService,
+            IViewModelFactory viewModelFactory,
             IPaginationService paginationService)
         {
             _navigationService = navigationService;
@@ -63,6 +63,18 @@ namespace Hekki.UI.ViewModels
         private void NavigateToCreation()
         {
             _navigationService.Go(_viewModelFactory.Create<CreateRaceViewModel>());
+        }
+
+        [RelayCommand]
+        private void Prev()
+        {
+            PaginationService.Prev();
+        }
+
+        [RelayCommand]
+        private void Next()
+        {
+            PaginationService.Next();
         }
     }
 }

@@ -61,6 +61,9 @@ namespace Hekki.Infrastructure
 
                 entity.Property(e => e.Version)
                     .IsRequired();
+
+                entity.Property(e => e.CreationDate)
+                    .IsRequired();
             });
 
             // -------------------------

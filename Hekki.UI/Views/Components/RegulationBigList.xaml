@@ -21,8 +21,8 @@
             
             <TextBlock Text="{Binding PaginationService.PagingText}" Foreground="#999999" VerticalAlignment="Center"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Previous" Margin="0,0,10,0" Command="{Binding PaginationService.PrevCommand}"/>
-                <Button Content="Next" Command="{Binding PaginationService.NextCommand}"/>
+                <Button Content="Previous" Margin="0,0,10,0" Command="{Binding PrevCommand}"/>
+                <Button Content="Next" Command="{Binding NextCommand}"/>
             </StackPanel>
         </Grid>
     </StackPanel>

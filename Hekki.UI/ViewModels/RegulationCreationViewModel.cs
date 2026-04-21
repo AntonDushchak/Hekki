@@ -84,7 +84,7 @@ namespace Hekki.UI.ViewModels
         {
             try
             {
-                await _regulationRepository.AddAsync(RegulationUiMapper.ToDomain(this, 0, 1));
+                await _regulationRepository.AddAsync(RegulationUiMapper.ToDomain(this, 0, 1, DateTime.Now));
             }
             catch
             {

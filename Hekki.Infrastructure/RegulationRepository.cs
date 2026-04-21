@@ -24,7 +24,7 @@ namespace Hekki.Infrastructure
             var rawData = await db.Regulations
                 .AsNoTracking()
                 .OrderBy(r => r.Name)
-                .Select(e => new { e.Id, e.Name, e.Version, e.Json })
+                .Select(e => new { e.Id, e.Name, e.Version, e.Json, e.CreationDate })
                 .ToListAsync(ct);
 
             return rawData.Select(e => new Regulation
@@ -43,7 +43,7 @@ namespace Hekki.Infrastructure
             return await db.Regulations
                 .AsNoTracking()
                 .OrderBy(r => r.Name)
-                .Select(e => new Regulation() { Id = e.Id, Name = e.Name, Version = e.Version })
+                .Select(e => new Regulation() { Id = e.Id, Name = e.Name, Version = e.Version, CreationDate = e.CreationDate })
                 .ToListAsync(ct);
         }
 
