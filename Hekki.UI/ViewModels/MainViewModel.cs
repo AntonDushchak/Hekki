@@ -38,7 +38,6 @@ namespace Hekki.UI.ViewModels
             _regulationService = regulationService;
             _viewModelFactory = viewModelFactory;
 
-            System.Diagnostics.Debug.WriteLine($"MainViewModel.ctor: {this.GetHashCode()}");
             navigationService.Navigate = OnNavigate;
             NavigateToSelection();
         }

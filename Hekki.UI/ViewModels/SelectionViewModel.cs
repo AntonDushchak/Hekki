@@ -11,18 +11,25 @@ namespace Hekki.UI.ViewModels
     {
         private readonly IRegulationService _regulationService;
         private readonly IViewModelFactory _viewModelFactory;
-
-        public ObservableCollection<Regulation> Regulations { get; } = [];
+        public IPaginationService PaginationService { get; }
+        private readonly NavigationService _navigationService;
 
         [ObservableProperty]
         private bool _isLoading;
-        private readonly NavigationService _navigationService;
+        public ObservableCollection<Regulation> Regulations { get; } = new ObservableCollection<Regulation>();
 
-        public SelectionViewModel(NavigationService navigationService, IRegulationService regulationService, IViewModelFactory viewModelFactory)
+
+        
+        public SelectionViewModel(
+            NavigationService navigationService, 
+            IRegulationService regulationService, 
+            IViewModelFactory viewModelFactory, 
+            IPaginationService paginationService)
         {
             _navigationService = navigationService;
             _regulationService = regulationService;
             _viewModelFactory = viewModelFactory;
+            PaginationService = paginationService;
         }
 
         public async Task InitializeAsync()
@@ -43,6 +50,8 @@ namespace Hekki.UI.ViewModels
                 {
                     Regulations.Add(reg);
                 }
+
+                PaginationService.SetTotalItems(Regulations.Count);
             }
             finally
             {

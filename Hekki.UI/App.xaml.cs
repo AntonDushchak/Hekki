@@ -41,6 +41,7 @@ namespace Hekki.UI
 
                     services.AddTransient<IViewModelFactory, ViewModelFactory>();
 
+                    services.AddTransient<IPaginationService, PaginationService>();
                     //services.AddTransient<SelectRaceView>();
                     services.AddTransient<SelectionViewModel>();
                     //services.AddTransient<CreateRaceView>();
