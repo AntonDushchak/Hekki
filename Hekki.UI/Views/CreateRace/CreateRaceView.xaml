@@ -4,9 +4,118 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Hekki.UI.Views"
+             xmlns:converters="clr-namespace:Hekki.UI.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    </UserControl.Resources>
     <Grid>
-        <TextBlock Text="Create" Foreground="White"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBox x:Name="NameTextBox" 
+                 HorizontalAlignment="Left" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding RegulationName, UpdateSourceTrigger=PropertyChanged}" 
+                 VerticalAlignment="Top" 
+                 Width="120"
+                 />
+
+        <DockPanel x:Name="HeatsList" LastChildFill="False" Grid.Column="0" Grid.Row="1">
+            <ListBox ItemsSource="{Binding Heats}" 
+                    SelectedItem="{Binding SelectedHeat}" 
+                    DisplayMemberPath="Name" >
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </DockPanel>
+        <DockPanel x:Name="HeatDetails" 
+                   LastChildFill="False" 
+                   Grid.Column="1" Grid.Row="1"
+                   Visibility="{Binding SelectedHeat, Converter={StaticResource NullToVisibilityConverter}}">
+            
+            <ScrollViewer>
+                <StackPanel>
+                    <HeaderedContentControl Header="Name">
+                        <TextBox Text="{Binding SelectedHeat.Name, UpdateSourceTrigger=PropertyChanged}"/>
+                    </HeaderedContentControl>
+
+                    <GroupBox Header="Shuffle">
+                        <StackPanel>
+                            <ComboBox SelectedValue="{Binding SelectedHeat.Shuffle.MethodId}" 
+                                      DisplayMemberPath="Title"
+                                      SelectedValuePath="Id"
+                                      ItemsSource="{Binding AvailableShuffleMethods}"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Group Assigment">
+                        <StackPanel>
+                            <ComboBox SelectedValue="{Binding SelectedHeat.Grouping.MethodId}"
+                                      DisplayMemberPath="Title"
+                                      SelectedValuePath="Id"
+                                      ItemsSource="{Binding AvailableGroupMethods}"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Kart Assigment">
+                        <StackPanel>
+                            <ComboBox SelectedValue="{Binding SelectedHeat.KartAssignment.MethodId}" 
+                                      DisplayMemberPath="Title"
+                                      SelectedValuePath="Id"
+                                      ItemsSource="{Binding AvailableKartMethods}"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Score Assigment">
+                        <StackPanel>
+                            <ComboBox SelectedValue="{Binding SelectedHeat.Scoring.MethodId}" 
+                                      DisplayMemberPath="Title"
+                                      SelectedValuePath="Id"
+                                      ItemsSource="{Binding AvailableScoreMethods}"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
+        <CheckBox x:Name="SameScoreCheckBox" Content="Same Score" HorizontalAlignment="Left" Margin="167,388,0,0" VerticalAlignment="Top"/>
+
+        <DockPanel Grid.Column="0" Grid.Row="2">
+            <Button x:Name="AddHeatButton"
+                    Content="Add Heat" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Top" 
+                    Height="29" Width="72"
+                    Command="{Binding AddHeatCommand}"/>
+
+            <Button x:Name="SaveButton" 
+                    Command="{Binding SaveCommand}" 
+                    Content="Save" 
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Top" 
+                    Height="32" Width="73"/>
+
+
+        </DockPanel>
     </Grid>
 </UserControl>

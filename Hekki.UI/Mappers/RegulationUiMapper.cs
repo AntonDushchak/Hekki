@@ -5,7 +5,7 @@ namespace Hekki.UI.Mappers
 {
     public class RegulationUiMapper
     {
-        public static Regulation ToDomain(RegulationCreationViewModel vm, int id, int version, DateTime creationDate)
+        public static Regulation ToDomain(CreateRaceViewModel vm, int id, int version, DateTime creationDate)
         => new()
         {
             Id = id,
