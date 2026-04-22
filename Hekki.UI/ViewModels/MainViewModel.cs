@@ -44,7 +44,8 @@ namespace Hekki.UI.ViewModels
 
         private void NavigateToSelection()
         {
-            _navigationService.Go(_viewModelFactory.Create<SelectionViewModel>());
+            _navigationService.Go(_viewModelFactory.Create<CreateRaceViewModel>());
+            //_navigationService.Go(_viewModelFactory.Create<SelectionViewModel>());
         }
 
         private void OnNavigate(object vm)
