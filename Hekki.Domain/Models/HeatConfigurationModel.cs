@@ -9,6 +9,8 @@ namespace Hekki.Domain.Models
         public MethodSettings Grouping { get; set; } = new();
         public MethodSettings KartAssignment { get; set; } = new();
         public MethodSettings Scoring { get; set; } = new();
+        public int NumberOfGroups { get; set; }
+        public int GroupCapacity { get; set; }
     }
 
     public class MethodSettings

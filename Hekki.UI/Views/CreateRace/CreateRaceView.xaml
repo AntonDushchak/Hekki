@@ -9,11 +9,12 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="70" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -70,12 +71,13 @@
                        Grid.Row="0"/>
 
             <ListBox ItemsSource="{Binding Heats}" 
-                    SelectedItem="{Binding SelectedHeat}" 
-                    DisplayMemberPath="Name"
-                    Grid.Row="1"
-                    HorizontalAlignment="Left"
-                    MaxWidth="{Binding ActualWidth, ElementName=HeatsGrid}"
-                    ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                     SelectedItem="{Binding SelectedHeat}" 
+                     Grid.Row="1"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     Visibility="{Binding Heats.Count, Converter={StaticResource IntToVisibilityConverter}}">
+
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" />
@@ -84,8 +86,32 @@
 
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
-                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Margin" Value="2,0"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border x:Name="InnerBorder" 
+                                Background="#131516" 
+                                CornerRadius="2" 
+                                Padding="12,6">
+                                        <ContentPresenter Content="{Binding Name}" 
+                                              HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                                    </Border>
 
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="InnerBorder" Property="Background" Value="#1C1F21"/>
+                                            <Setter Property="Cursor" Value="Hand"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="InnerBorder" Property="Background" Value="#25292B"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
                     </Style>
                 </ListBox.ItemContainerStyle>
             </ListBox>
@@ -101,11 +127,11 @@
         </Grid>
 
         <Border x:Name="HeatDetails" 
-        Background="#121212" 
-        CornerRadius="8" 
-        Padding="20"
-        Grid.Column="0" Grid.Row="3" Grid.RowSpan="2"
-        Visibility="{Binding SelectedHeat, Converter={StaticResource NullToVisibilityConverter}}">
+                Background="#121212" 
+                CornerRadius="8" 
+                Padding="20"
+                Grid.Column="0" Grid.Row="3" Grid.RowSpan="2"
+                Visibility="{Binding SelectedHeat, Converter={StaticResource NullToVisibilityConverter}}">
 
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel>
@@ -125,18 +151,11 @@
                             <TextBlock Text="Name" Foreground="Gray" Margin="0,0,0,5"/>
                             <TextBox Text="{Binding SelectedHeat.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                            <TextBlock Text="Shuffle Method" Foreground="Gray" Margin="0,0,0,5"/>
-                            <ComboBox SelectedValue="{Binding SelectedHeat.Shuffle.MethodId}" 
-                              DisplayMemberPath="Title"
-                              SelectedValuePath="Id"
-                              ItemsSource="{Binding AvailableShuffleMethods}"
-                              Margin="0,0,0,15"/>
+                            <TextBlock Text="Number of groups" Foreground="Gray" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding SelectedHeat.NumberOfGroups, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                            <TextBlock Text="Group Assignment" Foreground="Gray" Margin="0,0,0,5"/>
-                            <ComboBox SelectedValue="{Binding SelectedHeat.Grouping.MethodId}"
-                              DisplayMemberPath="Title"
-                              SelectedValuePath="Id"
-                              ItemsSource="{Binding AvailableGroupMethods}"/>
+                            <TextBlock Text="Group capacity" Foreground="Gray" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding SelectedHeat.GroupCapacity, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="2">
@@ -152,6 +171,19 @@
                               DisplayMemberPath="Title"
                               SelectedValuePath="Id"
                               ItemsSource="{Binding AvailableScoreMethods}"/>
+
+                            <TextBlock Text="Shuffle Method" Foreground="Gray" Margin="0,0,0,5"/>
+                            <ComboBox SelectedValue="{Binding SelectedHeat.Shuffle.MethodId}" 
+                                      DisplayMemberPath="Title"
+                                      SelectedValuePath="Id"
+                                      ItemsSource="{Binding AvailableShuffleMethods}"
+                                      Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Group Assignment" Foreground="Gray" Margin="0,0,0,5"/>
+                            <ComboBox SelectedValue="{Binding SelectedHeat.Grouping.MethodId}"
+                                      DisplayMemberPath="Title"
+                                      SelectedValuePath="Id"
+                                      ItemsSource="{Binding AvailableGroupMethods}"/>
                         </StackPanel>
                     </Grid>
 
