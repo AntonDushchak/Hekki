@@ -12,6 +12,8 @@ namespace Hekki.UI.ViewModels
         public MethodSettingsVm Grouping { get; set; } = new();
         public MethodSettingsVm KartAssignment { get; set; } = new();
         public MethodSettingsVm Scoring { get; set; } = new();
+        public int NumberOfGroups { get; set; }
+        public int GroupCapacity { get; set; }
     }
 
     public partial class MethodSettingsVm : ObservableObject

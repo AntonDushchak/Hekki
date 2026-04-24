@@ -84,6 +84,7 @@ namespace Hekki.Infrastructure
 
             entity.Name = regulation.Name;
             entity.Version = regulation.Version;
+            entity.CreationDate = regulation.CreationDate;
 
             entity.Json = SerializeConfigurations(regulation.Configurations);
 

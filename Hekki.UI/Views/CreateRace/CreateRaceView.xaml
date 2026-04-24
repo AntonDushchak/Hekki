@@ -127,7 +127,6 @@
         </Grid>
 
         <Border x:Name="HeatDetails" 
-                Background="#121212" 
                 CornerRadius="8" 
                 Padding="20"
                 Grid.Column="0" Grid.Row="3" Grid.RowSpan="2"
