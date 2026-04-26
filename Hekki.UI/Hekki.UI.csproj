@@ -37,12 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Resources\Resources.en">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Controls\" />
   </ItemGroup>
 

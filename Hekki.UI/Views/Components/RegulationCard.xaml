@@ -5,64 +5,34 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:Hekki.UI.Views"
              mc:Ignorable="d" >
-    
-    <Border  CornerRadius="12" 
+
+    <Border CornerRadius="30"
+            MinHeight="80"
+            MaxWidth="300"
             Margin="0,0,0,10" 
-            Padding="20,15">
+            Padding="24"
+            Cursor="Hand"
+            Style="{StaticResource HoverBorder}">
 
-        <Border.Background>
-            <SolidColorBrush Color="#1E1E1E"/>
-        </Border.Background>
-
-        <Border.Style>
-        <Style TargetType="Border">
-
-            <Style.Triggers>
-
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Trigger.EnterActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <ColorAnimation
-                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                    To="#2A2A2A"
-                                    Duration="0:0:0.2"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </Trigger.EnterActions>
-
-                    <Trigger.ExitActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <ColorAnimation
-                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                    To="#1E1E1E"
-                                    Duration="0:0:0.2"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </Trigger.ExitActions>
-                </Trigger>
-
-            </Style.Triggers>
-
-        </Style>
-        </Border.Style>
-    
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <StackPanel>
-
-                
-                <TextBlock Text="{Binding Name}" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                    <TextBlock Foreground="#999999" FontSize="12" Text="{Binding Version, StringFormat='v{0}'}" />
-                    <TextBlock Text=" • " Foreground="#999999" FontSize="12"/>
-                    <TextBlock Foreground="#999999" FontSize="12" Text="{Binding CreationDate, StringFormat='{}{0:dd-MM-yyyy}'}" />
-                </StackPanel>
+            <TextBlock Text="{Binding Name}" 
+                       FontSize="20" 
+                       FontWeight="SemiBold" 
+                       Grid.Row="0" 
+                       TextTrimming="CharacterEllipsis"/>
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,0" Grid.Row="1">
+                <TextBlock FontSize="14" Text="{Binding Version, StringFormat='version {0}'}" />
+                <TextBlock Text=" • " FontSize="14"/>
+                <TextBlock FontSize="14" Text="{Binding CreationDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
             </StackPanel>
         </Grid>
     </Border>

@@ -21,9 +21,10 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="0">
+        <Grid Grid.Row="0" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -43,7 +44,7 @@
                      Width="120"
                      Grid.Row="1"/>
         </Grid>
-        <StackPanel Grid.Row="0" Grid.Column="1">
+        <StackPanel Grid.Row="1" Grid.Column="1">
             <Button x:Name="SaveButton" 
                     Command="{Binding SaveCommand}" 
                     Content="Save" 
@@ -53,7 +54,7 @@
         </StackPanel>
 
 
-        <Grid Grid.Column="0" Grid.Row="1" x:Name="HeatsGrid">
+        <Grid Grid.Column="1" Grid.Row="1" x:Name="HeatsGrid">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -73,7 +74,6 @@
             <ListBox ItemsSource="{Binding Heats}" 
                      SelectedItem="{Binding SelectedHeat}" 
                      Grid.Row="1"
-                     Background="Transparent"
                      BorderThickness="0"
                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
                      Visibility="{Binding Heats.Count, Converter={StaticResource IntToVisibilityConverter}}">
@@ -92,23 +92,12 @@
                             <Setter.Value>
                                 <ControlTemplate TargetType="ListBoxItem">
                                     <Border x:Name="InnerBorder" 
-                                Background="#131516" 
-                                CornerRadius="2" 
-                                Padding="12,6">
+                                            CornerRadius="2" 
+                                            Padding="12,6">
                                         <ContentPresenter Content="{Binding Name}" 
                                               HorizontalAlignment="Center" 
                                               VerticalAlignment="Center"/>
                                     </Border>
-
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="InnerBorder" Property="Background" Value="#1C1F21"/>
-                                            <Setter Property="Cursor" Value="Hand"/>
-                                        </Trigger>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter TargetName="InnerBorder" Property="Background" Value="#25292B"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -129,14 +118,14 @@
         <Border x:Name="HeatDetails" 
                 CornerRadius="8" 
                 Padding="20"
-                Grid.Column="0" Grid.Row="3" Grid.RowSpan="2"
+                Grid.Column="1" Grid.Row="2" Grid.RowSpan="2"
                 Visibility="{Binding SelectedHeat, Converter={StaticResource NullToVisibilityConverter}}">
 
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel>
                     <Grid Margin="0,0,0,20">
-                        <TextBlock Text="Heat Details" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding SelectedHeat.Name}" Foreground="Gray" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <TextBlock Text="Heat Details" FontSize="18" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding SelectedHeat.Name}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     </Grid>
 
                     <Grid>
@@ -147,38 +136,38 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="Name" Foreground="Gray" Margin="0,0,0,5"/>
+                            <TextBlock Text="Name" Margin="0,0,0,5"/>
                             <TextBox Text="{Binding SelectedHeat.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                            <TextBlock Text="Number of groups" Foreground="Gray" Margin="0,0,0,5"/>
+                            <TextBlock Text="Number of groups" Margin="0,0,0,5"/>
                             <TextBox Text="{Binding SelectedHeat.NumberOfGroups, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                            <TextBlock Text="Group capacity" Foreground="Gray" Margin="0,0,0,5"/>
+                            <TextBlock Text="Group capacity" Margin="0,0,0,5"/>
                             <TextBox Text="{Binding SelectedHeat.GroupCapacity, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="2">
-                            <TextBlock Text="Kart Assignment" Foreground="Gray" Margin="0,0,0,5"/>
+                            <TextBlock Text="Kart Assignment" Margin="0,0,0,5"/>
                             <ComboBox SelectedValue="{Binding SelectedHeat.KartAssignment.MethodId}" 
                               DisplayMemberPath="Title"
                               SelectedValuePath="Id"
                               ItemsSource="{Binding AvailableKartMethods}"
                               Margin="0,0,0,15"/>
 
-                            <TextBlock Text="Score Assignment" Foreground="Gray" Margin="0,0,0,5"/>
+                            <TextBlock Text="Score Assignment" Margin="0,0,0,5"/>
                             <ComboBox SelectedValue="{Binding SelectedHeat.Scoring.MethodId}" 
                               DisplayMemberPath="Title"
                               SelectedValuePath="Id"
                               ItemsSource="{Binding AvailableScoreMethods}"/>
 
-                            <TextBlock Text="Shuffle Method" Foreground="Gray" Margin="0,0,0,5"/>
+                            <TextBlock Text="Shuffle Method" Margin="0,0,0,5"/>
                             <ComboBox SelectedValue="{Binding SelectedHeat.Shuffle.MethodId}" 
                                       DisplayMemberPath="Title"
                                       SelectedValuePath="Id"
                                       ItemsSource="{Binding AvailableShuffleMethods}"
                                       Margin="0,0,0,15"/>
 
-                            <TextBlock Text="Group Assignment" Foreground="Gray" Margin="0,0,0,5"/>
+                            <TextBlock Text="Group Assignment" Margin="0,0,0,5"/>
                             <ComboBox SelectedValue="{Binding SelectedHeat.Grouping.MethodId}"
                                       DisplayMemberPath="Title"
                                       SelectedValuePath="Id"

@@ -7,29 +7,39 @@
              mc:Ignorable="d" >
     
     <StackPanel Margin="20">
-        <TextBlock Text="Regulations" Foreground="White" FontSize="20" FontWeight="Bold" Margin="0,0,0,15"/>
 
+        <Grid Margin="0,0,0,15">
+            <TextBlock Text="{DynamicResource m_Regulations}" FontSize="19" FontWeight="Bold" VerticalAlignment="Center"/>
+            <Button Content="{DynamicResource m_New}" 
+                    HorizontalAlignment="Right" 
+                    FontSize="18"
+                    Command="{Binding NavigateToCreationCommand}"
+                    MinWidth="55" MinHeight="30"/>
+        </Grid>
+        
         <ItemsControl ItemsSource="{Binding Regulations}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="4"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <Grid.InputBindings>
-                            <MouseBinding MouseAction="LeftClick"
-                                          Command="{Binding DataContext.NavigateToRaceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                          CommandParameter="{Binding Id}" />
-                        </Grid.InputBindings>
-                        <components:RegulationCard />
-                    </Grid>
+                    <components:RegulationCard Margin="5" Cursor="Hand" 
+                                               Command="{Binding DataContext.NavigateToRaceCommand, 
+                                                        RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                               CommandParameter="{Binding Id}">
+                    </components:RegulationCard>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
         <Grid Margin="0,15,0,0">
-            
-            <TextBlock Text="{Binding PaginationService.PagingText}" Foreground="#999999" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding PaginationService.PagingText}" VerticalAlignment="Center" FontSize="14"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Previous" Margin="0,0,10,0" Command="{Binding PrevCommand}"/>
-                <Button Content="Next" Command="{Binding NextCommand}"/>
+                <Button Content="{DynamicResource m_Prev}" Margin="0,0,10,0" Command="{Binding PrevCommand}" FontSize="18" MinWidth="55" MinHeight="30"/>
+                <Button Content="{DynamicResource m_Next}" Command="{Binding NextCommand}" FontSize="18" MinWidth="55" MinHeight="30"/>
             </StackPanel>
         </Grid>
     </StackPanel>

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Hekki.UI.Views"
              mc:Ignorable="d" d:DesignWidth="800" Height="60">
-    <Grid Background="#181A1B">
+    <Grid Background="{StaticResource Brush.SurfaceHigh}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
@@ -13,7 +13,9 @@
 
         <ContentControl Content="{Binding LeftTopPanelContent}"
                         VerticalAlignment="Center"
-                        Margin="10,0"/>
+                        Margin="10,0" 
+                        FontSize="20" 
+                        FontWeight="Bold"/>
         
         <StackPanel Grid.Column="1"
                     Orientation="Horizontal"
