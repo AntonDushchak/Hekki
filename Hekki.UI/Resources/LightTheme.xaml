@@ -1,0 +1,35 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Base -->
+    <Color x:Key="Color.Base">#FFFFFF</Color>
+    <Color x:Key="Color.SurfaceLow">#F2F2F2</Color>
+    <Color x:Key="Color.SurfaceMid">#EBEBEB</Color>
+    <Color x:Key="Color.SurfaceHigh">#D9D9D9</Color>
+    <Color x:Key="Color.UIElement">#D2D2D2</Color>
+    <Color x:Key="Color.ActionDark">#2D2D2D</Color>
+    <Color x:Key="Color.Border">#B9B9B9</Color>
+
+    <!-- Text -->
+    <Color x:Key="Color.TextPrimary">#000000</Color>
+    <Color x:Key="Color.TextModal">#1D1D1D</Color>
+    <Color x:Key="Color.TextSecondary">#4D4D4D</Color>
+    <Color x:Key="Color.TextDisabled">#747474</Color>
+    <Color x:Key="Color.TextHint">#8A8A8A</Color>
+
+    <!-- Brushes -->
+    <SolidColorBrush x:Key="Brush.Base" Color="{StaticResource Color.Base}"/>
+    <SolidColorBrush x:Key="Brush.SurfaceLow" Color="{StaticResource Color.SurfaceLow}"/>
+    <SolidColorBrush x:Key="Brush.SurfaceMid" Color="{StaticResource Color.SurfaceMid}"/>
+    <SolidColorBrush x:Key="Brush.SurfaceHigh" Color="{StaticResource Color.SurfaceHigh}"/>
+    <SolidColorBrush x:Key="Brush.UIElement" Color="{StaticResource Color.UIElement}"/>
+    <SolidColorBrush x:Key="Brush.ActionDark" Color="{StaticResource Color.ActionDark}"/>
+    <SolidColorBrush x:Key="Brush.Border" Color="{StaticResource Color.Border}"/>
+
+    <SolidColorBrush x:Key="Brush.TextPrimary" Color="{StaticResource Color.TextPrimary}"/>
+    <SolidColorBrush x:Key="Brush.TextModal" Color="{StaticResource Color.TextModal}"/>
+    <SolidColorBrush x:Key="Brush.TextSecondary" Color="{StaticResource Color.TextSecondary}"/>
+    <SolidColorBrush x:Key="Brush.TextDisabled" Color="{StaticResource Color.TextDisabled}"/>
+    <SolidColorBrush x:Key="Brush.TextHint" Color="{StaticResource Color.TextHint}"/>
+
+</ResourceDictionary>
