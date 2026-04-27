@@ -11,51 +11,45 @@
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
     </UserControl.Resources>
-    <Grid>
+
+    <Grid HorizontalAlignment="Stretch" 
+          MaxWidth="1200" 
+          Margin="40,0">
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
-        <Grid Grid.Row="0" Grid.Column="1">
+        <Grid Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            
-            <TextBlock Text="Regulation Name" 
-                       HorizontalAlignment="Left" 
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="{DynamicResource m_RegulationName}" 
                        Margin="10,10,10,10" 
-                       VerticalAlignment="Top"
-                       Grid.Row="0"/>
+                       Grid.Row="0" Grid.Column="0"/>
             
             <TextBox x:Name="NameTextBox" 
-                     HorizontalAlignment="Left" 
                      TextWrapping="Wrap" 
                      Text="{Binding RegulationName, UpdateSourceTrigger=PropertyChanged}" 
-                     VerticalAlignment="Top" 
-                     Width="120"
-                     Grid.Row="1"/>
+                     Margin="10,0,10,0"
+                     Grid.Row="1" Grid.Column="0"/>
         </Grid>
-        <StackPanel Grid.Row="1" Grid.Column="1">
-            <Button x:Name="SaveButton" 
-                    Command="{Binding SaveCommand}" 
-                    Content="Save" 
-                    Height="32" Width="73"
-                    HorizontalAlignment="Right"
-                    Margin="20"/>
-        </StackPanel>
 
 
-        <Grid Grid.Column="1" Grid.Row="1" x:Name="HeatsGrid">
+
+        <Grid Grid.Row="1" x:Name="HeatsGrid">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -65,7 +59,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Heats" 
+            <TextBlock Text="{DynamicResource m_Heats}" 
                        HorizontalAlignment="Left" 
                        Margin="10,0,10,10" 
                        VerticalAlignment="Top"
@@ -74,6 +68,7 @@
             <ListBox ItemsSource="{Binding Heats}" 
                      SelectedItem="{Binding SelectedHeat}" 
                      Grid.Row="1"
+                     Grid.ColumnSpan="2"
                      BorderThickness="0"
                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
                      Visibility="{Binding Heats.Count, Converter={StaticResource IntToVisibilityConverter}}">
@@ -106,13 +101,12 @@
             </ListBox>
 
             <Button x:Name="AddHeatButton"
-                    Content="Add Heat" 
+                    Content="{DynamicResource m_AddHeat}" 
                     HorizontalAlignment="Left" 
                     VerticalAlignment="Top" 
-                    Height="29" Width="72"
+                    MinWidth="55" MinHeight="30"
                     Command="{Binding AddHeatCommand}"
-                    Grid.Column="1"
-                    Grid.Row="1"/>
+                    Grid.Row="2"/>
         </Grid>
 
         <Border x:Name="HeatDetails" 
@@ -124,7 +118,7 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel>
                     <Grid Margin="0,0,0,20">
-                        <TextBlock Text="Heat Details" FontSize="18" FontWeight="SemiBold"/>
+                        <TextBlock Text="{DynamicResource m_HeatDetails}" FontSize="18" FontWeight="SemiBold"/>
                         <TextBlock Text="{Binding SelectedHeat.Name}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     </Grid>
 
@@ -136,38 +130,38 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="Name" Margin="0,0,0,5"/>
+                            <TextBlock Text="{DynamicResource m_Name}" Margin="0,0,0,5"/>
                             <TextBox Text="{Binding SelectedHeat.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                            <TextBlock Text="Number of groups" Margin="0,0,0,5"/>
+                            <TextBlock Text="{DynamicResource m_GroupsCount}" Margin="0,0,0,5"/>
                             <TextBox Text="{Binding SelectedHeat.NumberOfGroups, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                            <TextBlock Text="Group capacity" Margin="0,0,0,5"/>
+                            <TextBlock Text="{DynamicResource m_GroupCapacity}" Margin="0,0,0,5"/>
                             <TextBox Text="{Binding SelectedHeat.GroupCapacity, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="2">
-                            <TextBlock Text="Kart Assignment" Margin="0,0,0,5"/>
+                            <TextBlock Text="{DynamicResource m_KartAssignment}" Margin="0,0,0,5"/>
                             <ComboBox SelectedValue="{Binding SelectedHeat.KartAssignment.MethodId}" 
                               DisplayMemberPath="Title"
                               SelectedValuePath="Id"
                               ItemsSource="{Binding AvailableKartMethods}"
                               Margin="0,0,0,15"/>
 
-                            <TextBlock Text="Score Assignment" Margin="0,0,0,5"/>
+                            <TextBlock Text="{DynamicResource m_ScoringSystem}" Margin="0,0,0,5"/>
                             <ComboBox SelectedValue="{Binding SelectedHeat.Scoring.MethodId}" 
                               DisplayMemberPath="Title"
                               SelectedValuePath="Id"
                               ItemsSource="{Binding AvailableScoreMethods}"/>
 
-                            <TextBlock Text="Shuffle Method" Margin="0,0,0,5"/>
+                            <TextBlock Text="{DynamicResource m_ShuffleSystem}" Margin="0,0,0,5"/>
                             <ComboBox SelectedValue="{Binding SelectedHeat.Shuffle.MethodId}" 
                                       DisplayMemberPath="Title"
                                       SelectedValuePath="Id"
                                       ItemsSource="{Binding AvailableShuffleMethods}"
                                       Margin="0,0,0,15"/>
 
-                            <TextBlock Text="Group Assignment" Margin="0,0,0,5"/>
+                            <TextBlock Text="{DynamicResource m_GroupAssignment}" Margin="0,0,0,5"/>
                             <ComboBox SelectedValue="{Binding SelectedHeat.Grouping.MethodId}"
                                       DisplayMemberPath="Title"
                                       SelectedValuePath="Id"
@@ -179,12 +173,19 @@
             </ScrollViewer>
         </Border>
 
+        <Button x:Name="SaveButton" 
+        Command="{Binding SaveCommand}" 
+        Content="{DynamicResource m_Save}" 
+        MinWidth="55" MinHeight="30"
+        HorizontalAlignment="Right"
+        Grid.Row="3"
+        Margin="20"/>
         
         <CheckBox x:Name="SameScoreCheckBox" 
-                  Content="Same Score" 
+                  Content="{DynamicResource m_SameScores}" 
                   HorizontalAlignment="Left" 
                   VerticalAlignment="Bottom" 
-                  Grid.Row="2" Grid.Column="1"/>
+                  Grid.Row="3"/>
         
     </Grid>
 </UserControl>

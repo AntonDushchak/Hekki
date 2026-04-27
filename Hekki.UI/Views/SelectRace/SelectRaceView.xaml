@@ -6,19 +6,10 @@
              xmlns:views="clr-namespace:Hekki.UI.Views"
              mc:Ignorable="d" 
              Loaded="SelectRaceView_Loaded">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <Grid HorizontalAlignment="Stretch" 
+          MaxWidth="1200" 
+          Margin="40,0">
         
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-
-        <views:RegulationBigList HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        
+        <views:RegulationBigList />
     </Grid>
 </UserControl>

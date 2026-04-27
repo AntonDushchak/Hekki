@@ -6,33 +6,33 @@
              xmlns:views="clr-namespace:Hekki.UI.Views"
              mc:Ignorable="d" >
 
-    <Border CornerRadius="30"
+    <Border CornerRadius="16"
+            Width="280"
             MinHeight="80"
-            MaxWidth="300"
-            Margin="0,0,0,10" 
-            Padding="24"
+            MaxHeight="120"
+            Margin="0,0,12,12" 
+            Padding="20,16"
             Cursor="Hand"
             Style="{StaticResource HoverBorder}">
-
+        
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-
+            
             <TextBlock Text="{Binding Name}" 
-                       FontSize="20" 
+                       FontSize="16" 
                        FontWeight="SemiBold" 
                        Grid.Row="0" 
                        TextTrimming="CharacterEllipsis"/>
-            <StackPanel Orientation="Horizontal" Margin="0,5,0,0" Grid.Row="1">
-                <TextBlock FontSize="14" Text="{Binding Version, StringFormat='version {0}'}" />
-                <TextBlock Text=" • " FontSize="14"/>
-                <TextBlock FontSize="14" Text="{Binding CreationDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+            
+            <StackPanel Orientation="Horizontal" 
+                        Margin="0,5,0,0" 
+                        Grid.Row="1">
+                <TextBlock FontSize="13" Text="{Binding Version, StringFormat='version {0}'}"/>
+                <TextBlock Text=" • " FontSize="13"/>
+                <TextBlock FontSize="13" Text="{Binding CreationDate, StringFormat='{}{0:dd.MM.yyyy}'}"/>
             </StackPanel>
         </Grid>
     </Border>

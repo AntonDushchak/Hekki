@@ -5,42 +5,51 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:components="clr-namespace:Hekki.UI.Views"
              mc:Ignorable="d" >
-    
-    <StackPanel Margin="20">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <Grid Margin="0,0,0,15">
-            <TextBlock Text="{DynamicResource m_Regulations}" FontSize="19" FontWeight="Bold" VerticalAlignment="Center"/>
+        <Grid Grid.Row="0" Margin="0,20,0,15">
+            <TextBlock Text="{DynamicResource m_Regulations}" 
+               FontSize="19" FontWeight="Bold" 
+               VerticalAlignment="Center"/>
             <Button Content="{DynamicResource m_New}" 
-                    HorizontalAlignment="Right" 
-                    FontSize="18"
-                    Command="{Binding NavigateToCreationCommand}"
-                    MinWidth="55" MinHeight="30"/>
+            HorizontalAlignment="Right" 
+            FontSize="18"
+            Command="{Binding NavigateToCreationCommand}"
+            MinWidth="55" MinHeight="30"/>
         </Grid>
-        
-        <ItemsControl ItemsSource="{Binding Regulations}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Columns="4"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <components:RegulationCard Margin="5" Cursor="Hand" 
-                                               Command="{Binding DataContext.NavigateToRaceCommand, 
-                                                        RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                               CommandParameter="{Binding Id}">
-                    </components:RegulationCard>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
 
-        <Grid Margin="0,15,0,0">
-            <TextBlock Text="{Binding PaginationService.PagingText}" VerticalAlignment="Center" FontSize="14"/>
+
+        <ScrollViewer Grid.Row="1"
+              VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Regulations}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" VerticalAlignment="Top"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <components:RegulationCard />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+
+        <Grid Grid.Row="2" Margin="0,10,0,20">
+            <TextBlock Text="{Binding PaginationService.PagingText}" 
+               VerticalAlignment="Center" FontSize="14"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="{DynamicResource m_Prev}" Margin="0,0,10,0" Command="{Binding PrevCommand}" FontSize="18" MinWidth="55" MinHeight="30"/>
-                <Button Content="{DynamicResource m_Next}" Command="{Binding NextCommand}" FontSize="18" MinWidth="55" MinHeight="30"/>
+                <Button Content="{DynamicResource m_Prev}" Margin="0,0,10,0" 
+                Command="{Binding PrevCommand}" FontSize="18" MinWidth="55" MinHeight="30"/>
+                <Button Content="{DynamicResource m_Next}" 
+                Command="{Binding NextCommand}" FontSize="18" MinWidth="55" MinHeight="30"/>
             </StackPanel>
         </Grid>
-    </StackPanel>
+    </Grid>
 </UserControl>
