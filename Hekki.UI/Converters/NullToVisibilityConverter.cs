@@ -23,6 +23,10 @@ namespace Hekki.UI.Converters
         {
             if (value is int intValue)
             {
+                if (parameter?.ToString() == "Inverse")
+                {
+                    return intValue == 0 ? Visibility.Visible : Visibility.Collapsed;
+                }
                 return intValue > 0 ? Visibility.Visible : Visibility.Collapsed;
             }
             return Visibility.Collapsed;

@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:Hekki.UI.Views"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
+             d:DesignHeight="720" d:DesignWidth="1240"
              Loaded="SelectRaceView_Loaded">
     <Grid HorizontalAlignment="Stretch" 
           MaxWidth="1200" 

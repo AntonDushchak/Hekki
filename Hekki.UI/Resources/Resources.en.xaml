@@ -27,6 +27,7 @@
     <system:String x:Key="m_KartAssignment">Kart assignment</system:String>
     <system:String x:Key="m_ScoringSystem">Scoring system</system:String>
     <system:String x:Key="m_AdditionalSettings">Additional Settings</system:String>
+    <system:String x:Key="m_NoSetttingSelected">No setting selected</system:String>
     <system:String x:Key="m_NoAdditionalSettings">has no additional settings</system:String>
     <system:String x:Key="m_ToUp">To up</system:String>
     <system:String x:Key="m_ToDown">To down</system:String>

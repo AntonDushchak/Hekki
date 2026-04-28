@@ -18,8 +18,10 @@
 
         <views:TopPanel Grid.Row="0"
                         DataContext="{Binding TopPanelVM}" />
-        
-        <ContentControl Grid.Row="1"
-                        Content="{Binding CurrentPageVM}" />
+
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto">
+            <ContentControl Content="{Binding CurrentPageVM}" />
+        </ScrollViewer>
     </Grid>
 </Window>
