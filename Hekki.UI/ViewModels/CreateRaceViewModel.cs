@@ -159,12 +159,30 @@ namespace Hekki.UI.ViewModels
         }
 
         [RelayCommand]
-        private void SelectSettings(MethodParametersViewModel? settings)
+        private void SelectSettings(string type)
         {
             IsAdditionalSettingsPanelActivated = true;
 
-            CurrentActiveSettings = settings;
-            
+            switch (type)
+            {
+                case "Shuffle":
+                    CurrentActiveSettings = SelectedHeat?.ActiveShuffleSettings;
+                    CurrentActiveSettingsTitle = AvailableShuffleMethods.FirstOrDefault(x => x.Id == SelectedShuffleMethodId)?.Title;
+                    break;
+                case "Group":
+                    CurrentActiveSettings = SelectedHeat?.ActiveGroupingSettings;
+                    CurrentActiveSettingsTitle = AvailableGroupMethods.FirstOrDefault(x => x.Id == SelectedGroupMethodId)?.Title;
+                    break;
+                case "Kart":
+                    CurrentActiveSettings = SelectedHeat?.ActiveKartSettings;
+                    CurrentActiveSettingsTitle = AvailableKartMethods.FirstOrDefault(x => x.Id == SelectedKartMethodId)?.Title;
+                    break;
+                case "Score":
+                    CurrentActiveSettings = SelectedHeat?.ActiveScoringSettings;
+                    CurrentActiveSettingsTitle = AvailableScoreMethods.FirstOrDefault(x => x.Id == SelectedScoreMethodId)?.Title;
+                    break;
+            }
+
         }
     }
 }

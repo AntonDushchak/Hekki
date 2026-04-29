@@ -96,7 +96,7 @@
                          Grid.ColumnSpan="2"
                          BorderThickness="0"
                          Background="Transparent"
-                         Margin="0,5"
+                         Margin="0,0,0,15"
                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
                          MinHeight="50">
 
@@ -191,7 +191,7 @@
                             <Border.InputBindings>
                                 <MouseBinding MouseAction="LeftClick" 
                                       Command="{Binding SelectSettingsCommand}" 
-                                      CommandParameter="{Binding SelectedHeat.ActiveShuffleSettings}"/>
+                                      CommandParameter="Shuffle"/>
                             </Border.InputBindings>
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource m_ShuffleSystem}" Margin="0,0,0,5"/>
@@ -208,7 +208,7 @@
                             <Border.InputBindings>
                                 <MouseBinding MouseAction="LeftClick" 
                                       Command="{Binding SelectSettingsCommand}" 
-                                      CommandParameter="{Binding SelectedHeat.ActiveGroupingSettings}"/>
+                                      CommandParameter="Group"/>
                             </Border.InputBindings>
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource m_GroupAssignment}" Margin="0,0,0,5"/>
@@ -225,7 +225,7 @@
                             <Border.InputBindings>
                                 <MouseBinding MouseAction="LeftClick" 
                                       Command="{Binding SelectSettingsCommand}" 
-                                      CommandParameter="{Binding SelectedHeat.ActiveKartSettings}"/>
+                                      CommandParameter="Kart"/>
                             </Border.InputBindings>
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource m_KartAssignment}" Margin="0,0,0,5"/>
@@ -242,7 +242,7 @@
                             <Border.InputBindings>
                                 <MouseBinding MouseAction="LeftClick" 
                                       Command="{Binding SelectSettingsCommand}" 
-                                      CommandParameter="{Binding SelectedHeat.ActiveScoringSettings}"/>
+                                      CommandParameter="Score"/>
                             </Border.InputBindings>
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource m_ScoringSystem}" Margin="0,0,0,5"/>
