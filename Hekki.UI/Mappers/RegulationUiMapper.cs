@@ -1,5 +1,6 @@
 ﻿using Hekki.Domain.Models;
 using Hekki.UI.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Hekki.UI.Mappers
 {
@@ -11,7 +12,7 @@ namespace Hekki.UI.Mappers
             Id = id,
             Name = vm.RegulationName,
             Version = version,
-            CreationDate = creationDate,
+            CreationDate = DateTime.SpecifyKind(creationDate, DateTimeKind.Utc),
             Configurations = vm.Heats.Select(h => new HeatConfigurationModel
             {
                 Name = h.Name,

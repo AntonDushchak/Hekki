@@ -12,13 +12,10 @@ namespace Hekki.UI.ViewModels
     {
         private readonly NavigationService _navigationService;
         private readonly IViewModelFactory _viewModelFactory;
+        private readonly IMethodCatalogService _methodCatalog;
         private readonly IRegulationRepository _regulationRepository;
 
         private string _regulationName = string.Empty;
-        private readonly IParticipantShuffleCatalog _shuffleCatalog;
-        private readonly IGroupAssignmentCatalog _groupCatalog;
-        private readonly IKartNummerAssignmentCatalog _kartCatalog;
-        private readonly IScoreAssignmentCatalog _scoreCatalog;
         [ObservableProperty] private string? _selectedShuffleMethodId;
         [ObservableProperty] private string? _selectedGroupMethodId;
         [ObservableProperty] private string? _selectedKartMethodId;
@@ -42,29 +39,123 @@ namespace Hekki.UI.ViewModels
         public CreateRaceViewModel(
             NavigationService navigationService,
             IViewModelFactory viewModelFactory,
-            IParticipantShuffleCatalog shuffleCatalog,
-            IGroupAssignmentCatalog groupCatalog,
-            IKartNummerAssignmentCatalog kartCatalog,
-            IScoreAssignmentCatalog scoreCatalog,
+            IMethodCatalogService methodCatalog,
             IRegulationRepository regulationRepository)
         {
             _navigationService = navigationService;
             _viewModelFactory = viewModelFactory;
-            _shuffleCatalog = shuffleCatalog;
-            _groupCatalog = groupCatalog;
-            _kartCatalog = kartCatalog;
-            _scoreCatalog = scoreCatalog;
+            _methodCatalog = methodCatalog;
             _regulationRepository = regulationRepository;
 
-            Fill(AvailableShuffleMethods, _shuffleCatalog.GetAll());
-            Fill(AvailableGroupMethods, _groupCatalog.GetAll());
-            Fill(AvailableKartMethods, _kartCatalog.GetAll());
-            Fill(AvailableScoreMethods, _scoreCatalog.GetAll());
+            foreach (var o in _methodCatalog.GetShuffleOptions()) AvailableShuffleMethods.Add(o);
+            foreach (var o in _methodCatalog.GetGroupOptions()) AvailableGroupMethods.Add(o);
+            foreach (var o in _methodCatalog.GetKartOptions()) AvailableKartMethods.Add(o);
+            foreach (var o in _methodCatalog.GetScoreOptions()) AvailableScoreMethods.Add(o);
 
-            _selectedShuffleMethodId = AvailableShuffleMethods.FirstOrDefault()?.Id;
-            _selectedGroupMethodId = AvailableGroupMethods.FirstOrDefault()?.Id;
-            _selectedKartMethodId = AvailableKartMethods.FirstOrDefault()?.Id;
-            _selectedScoreMethodId = AvailableScoreMethods.FirstOrDefault()?.Id;
+            SetDefaultSelectedMethods();
+        }
+
+        private void SetDefaultSelectedMethods()
+        {
+            SelectedShuffleMethodId = AvailableShuffleMethods.FirstOrDefault()?.Id;
+            SelectedGroupMethodId = AvailableGroupMethods.FirstOrDefault()?.Id;
+            SelectedKartMethodId = AvailableKartMethods.FirstOrDefault()?.Id;
+            SelectedScoreMethodId = AvailableScoreMethods.FirstOrDefault()?.Id;
+        }
+
+        
+
+        partial void OnSelectedGroupMethodIdChanged(string? value)
+        {
+            UpdateSelectedMethod(
+                value,
+                v => SelectedHeat!.Grouping.MethodId = v,
+                vm => SelectedHeat!.ActiveGroupingSettings = vm,
+                AvailableGroupMethods,
+                SelectedHeat?.ActiveGroupingSettings);
+        }
+
+        partial void OnSelectedShuffleMethodIdChanged(string? value)
+        {
+            UpdateSelectedMethod(
+                value,
+                v => SelectedHeat!.Shuffle.MethodId = v,
+                vm => SelectedHeat!.ActiveShuffleSettings = vm,
+                AvailableShuffleMethods, 
+                SelectedHeat?.ActiveShuffleSettings);
+        }
+
+        partial void OnSelectedKartMethodIdChanged(string? value)
+        {
+            UpdateSelectedMethod(
+                value,
+                v => SelectedHeat!.KartAssignment.MethodId = v,
+                vm => SelectedHeat!.ActiveKartSettings = vm,
+                AvailableKartMethods,
+                SelectedHeat?.ActiveKartSettings);
+        }
+
+        partial void OnSelectedScoreMethodIdChanged(string? value)
+        {
+            UpdateSelectedMethod(
+                value,
+                v => SelectedHeat!.Scoring.MethodId = v,
+                vm => SelectedHeat!.ActiveScoringSettings = vm,
+                AvailableScoreMethods,
+                SelectedHeat?.ActiveScoringSettings);
+        }
+        private void SyncHeatWithDefaults(HeatConfiguration heat)
+        {
+            if (heat == null) return;
+
+            UpdateSelectedMethod(SelectedShuffleMethodId,
+                v => heat.Shuffle.MethodId = v,
+                vm => heat.ActiveShuffleSettings = vm,
+                AvailableShuffleMethods, heat.ActiveShuffleSettings);
+
+            UpdateSelectedMethod(SelectedGroupMethodId,
+                v => heat.Grouping.MethodId = v,
+                vm => heat.ActiveGroupingSettings = vm,
+                AvailableGroupMethods, heat.ActiveGroupingSettings);
+
+            UpdateSelectedMethod(SelectedKartMethodId,
+                v => heat.KartAssignment.MethodId = v,
+                vm => heat.ActiveKartSettings = vm,
+                AvailableKartMethods, heat.ActiveKartSettings);
+
+            UpdateSelectedMethod(SelectedScoreMethodId,
+                v => heat.Scoring.MethodId = v,
+                vm => heat.ActiveScoringSettings = vm,
+                AvailableScoreMethods, heat.ActiveScoringSettings);
+        }
+        private void UpdateSelectedMethod(
+            string? value,
+            Action<string> setMethodId,
+            Action<MethodParametersViewModel?> setActiveSettings,
+            ObservableCollection<MethodOptionViewModel> availableMethods,
+            MethodParametersViewModel? existingVm)
+        {
+            IsAdditionalSettingsPanelActivated = true;
+            if (SelectedHeat == null) return;
+
+
+            setMethodId(value ?? string.Empty);
+
+            var vm = existingVm;
+            if (vm == null || GetIdByVm(vm) != value)
+            {
+                vm = CreateParametersVm(value);
+                setActiveSettings(vm);
+            }
+
+            CurrentActiveSettings = vm;
+            CurrentActiveSettingsTitle = availableMethods.FirstOrDefault(n => n.Id == value)?.Title ?? string.Empty;
+        }
+
+        partial void OnSelectedHeatChanged(HeatConfiguration? value)
+        {
+            CurrentActiveSettings = null;
+            SetDefaultSelectedMethods();
         }
 
         private MethodParametersViewModel? CreateParametersVm(string? methodId) => methodId switch
@@ -73,75 +164,19 @@ namespace Hekki.UI.ViewModels
             _ => null
         };
 
-        partial void OnSelectedGroupMethodIdChanged(string? value)
+        private string GetIdByVm(MethodParametersViewModel? vm) => vm switch
         {
-            IsAdditionalSettingsPanelActivated = true;
-            if (SelectedHeat != null)
-            {
-                SelectedHeat.Grouping.MethodId = value ?? string.Empty;
-                SelectedHeat.ActiveGroupingSettings = CreateParametersVm(value);
-                CurrentActiveSettings = SelectedHeat.ActiveGroupingSettings;
-                CurrentActiveSettingsTitle = AvailableGroupMethods.FirstOrDefault(n => n.Id == value)?.Title ?? string.Empty;
-            }
-        }
-
-        partial void OnSelectedShuffleMethodIdChanged(string? value)
-        {
-            IsAdditionalSettingsPanelActivated = true;
-            if (SelectedHeat != null)
-            {
-                SelectedHeat.Shuffle.MethodId = value ?? string.Empty;
-                SelectedHeat.ActiveShuffleSettings = CreateParametersVm(value);
-                CurrentActiveSettings = SelectedHeat.ActiveShuffleSettings;
-                CurrentActiveSettingsTitle = AvailableShuffleMethods.FirstOrDefault(n => n.Id == value)?.Title ?? string.Empty;
-            }
-        }
-
-        partial void OnSelectedKartMethodIdChanged(string? value)
-        {
-            IsAdditionalSettingsPanelActivated = true;
-            if (SelectedHeat != null)
-            {
-                SelectedHeat.KartAssignment.MethodId = value ?? string.Empty;
-                SelectedHeat.ActiveKartSettings = CreateParametersVm(value);
-                CurrentActiveSettings = SelectedHeat.ActiveKartSettings;
-                CurrentActiveSettingsTitle = AvailableKartMethods.FirstOrDefault(n => n.Id == value)?.Title ?? string.Empty;
-            }
-        }
-
-        partial void OnSelectedScoreMethodIdChanged(string? value)
-        {
-            IsAdditionalSettingsPanelActivated = true;
-            if (SelectedHeat != null)
-            {
-                SelectedHeat.Scoring.MethodId = value ?? string.Empty;
-                SelectedHeat.ActiveScoringSettings = CreateParametersVm(value);
-                CurrentActiveSettings = SelectedHeat.ActiveScoringSettings;
-                CurrentActiveSettingsTitle = AvailableScoreMethods.FirstOrDefault(n => n.Id == value)?.Title ?? string.Empty;
-            }
-        }
-
-        partial void OnSelectedHeatChanged(HeatConfiguration? value)
-        {
-            CurrentActiveSettings = null;
-        }
-
-        private static void Fill<TMethod>(
-            ObservableCollection<MethodOptionViewModel> target,
-            IReadOnlyList<TMethod> methods)
-            where TMethod : class
-        {
-            target.Clear();
-
-            foreach (dynamic m in methods)
-                target.Add(new MethodOptionViewModel(m.Id, m.Title, m.Description));
-        }
+            ReplacementParametersViewModel => "replacement_group_assignment",
+            _ => string.Empty
+        };
 
         [RelayCommand]
         private void AddHeat()
         {
             int nextNumber = Heats.Count + 1;
             Heats.Add(new HeatConfiguration { Name = $"Heat {nextNumber}" });
+            SelectedHeat = Heats.Last();
+            SyncHeatWithDefaults(Heats.Last());
         }
 
         [RelayCommand]
@@ -149,7 +184,7 @@ namespace Hekki.UI.ViewModels
         {
             try
             {
-                await _regulationRepository.AddAsync(RegulationUiMapper.ToDomain(this, 0, 1, DateTime.Now));
+                await _regulationRepository.AddAsync(RegulationUiMapper.ToDomain(this, 0, 1, DateTime.UtcNow));
             }
             catch
             {

@@ -63,24 +63,24 @@ namespace Hekki.UI
             services.AddSingleton<IParticipantShuffleMethod, RandomShuffle>();
             services.AddSingleton<IParticipantShuffleMethod, ScoreAscShuffle>();
             services.AddSingleton<IParticipantShuffleMethod, TimeDescShuffle>();
-
             services.AddSingleton<IParticipantShuffleCatalog, ParticipantShuffleCatalog>();
 
             services.AddSingleton<IGroupAssignmentMethod, RandomGroupAssignment>();
             services.AddSingleton<IGroupAssignmentMethod, CardGroupAssignment>();
             services.AddSingleton<IGroupAssignmentMethod, ListGroupAssignment>();
             services.AddSingleton<IGroupAssignmentMethod, ReplacementGroupAssignment>();
-
             services.AddSingleton<IGroupAssignmentCatalog, GroupAssigmentCatalog>();
 
             services.AddSingleton<IKartNummerAssignmentMethod, RandomKartAssignment>();
             services.AddSingleton<IKartNummerAssignmentMethod, RandomNoRepeatKartAssignment>();
-
             services.AddSingleton<IKartNummerAssignmentCatalog, KartNummerAssigmentCatalog>();
 
             services.AddSingleton<IScoreAssignmentMethod, DefaultScoreAssignment>();
-
             services.AddSingleton<IScoreAssignmentCatalog, ScoreAssignmentCatalog>();
+
+
+            services.AddSingleton<IMethodCatalogService, MethodCatalogService>();
+
         }
 
         protected override async void OnStartup(StartupEventArgs e)
