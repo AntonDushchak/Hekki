@@ -5,12 +5,23 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Hekki.UI.Views"
              xmlns:converters="clr-namespace:Hekki.UI.Converters"
+             xmlns:vm="clr-namespace:Hekki.UI.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="1240">
     
     <UserControl.Resources>
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
+        
+        <DataTemplate DataType="{x:Type vm:ReplacementParametersViewModel}">
+            <StackPanel Margin="10">
+                <TextBlock Text="{DynamicResource m_ToDown}"/>
+                <TextBox Text="{Binding NumberToDown, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBlock Text="{DynamicResource m_ToUp}"/>
+                <TextBox Text="{Binding NumberToUp, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid HorizontalAlignment="Stretch" 
@@ -137,73 +148,108 @@
 
 
         <Border x:Name="HeatDetails" 
-                CornerRadius="8" 
-                Padding="20"
-                Grid.Column="0" Grid.Row="2"
-                Visibility="{Binding SelectedHeat, Converter={StaticResource NullToVisibilityConverter}}"
-                Background="{DynamicResource Brush.SurfaceLow}">
+        CornerRadius="8" 
+        Padding="20"
+        Grid.Column="0" Grid.Row="2"
+        Visibility="{Binding SelectedHeat, Converter={StaticResource NullToVisibilityConverter}}"
+        Background="{DynamicResource Brush.SurfaceLow}">
             <StackPanel>
-                    <Grid Margin="0,0,0,20">
-                        <TextBlock Text="{DynamicResource m_HeatDetails}" FontSize="18" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding SelectedHeat.Name}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                    </Grid>
+                <Grid Margin="0,0,0,20">
+                    <TextBlock Text="{DynamicResource m_HeatDetails}" FontSize="18" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding SelectedHeat.Name}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                </Grid>
 
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="40" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="{DynamicResource m_Name}" Margin="0,0,0,5"/>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{DynamicResource m_Name}" Margin="0,0,0,5"/>
                         <TextBox MinHeight="30" Text="{Binding SelectedHeat.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                            <TextBlock Text="{DynamicResource m_GroupsCount}" Margin="0,0,0,5"/>
-                            <TextBox MinHeight="30" Text="{Binding SelectedHeat.NumberOfGroups, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                        <TextBlock Text="{DynamicResource m_GroupsCount}" Margin="0,0,0,5"/>
+                        <TextBox MinHeight="30" Text="{Binding SelectedHeat.NumberOfGroups, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                            <TextBlock Text="{DynamicResource m_GroupCapacity}" Margin="0,0,0,5"/>
-                            <TextBox MinHeight="30" Text="{Binding SelectedHeat.GroupCapacity, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
-                        </StackPanel>
+                        <TextBlock Text="{DynamicResource m_GroupCapacity}" Margin="0,0,0,5"/>
+                        <TextBox MinHeight="30" Text="{Binding SelectedHeat.GroupCapacity, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                    </StackPanel>
 
                     <StackPanel Grid.Column="2">
-                        <TextBlock Text="{DynamicResource m_ShuffleSystem}" Margin="0,0,0,5"/>
-                        <ComboBox SelectedValue="{Binding SelectedHeat.Shuffle.MethodId}" 
+
+                        <Border Background="Transparent">
+                            <Border.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" 
+                                      Command="{Binding SelectSettingsCommand}" 
+                                      CommandParameter="{Binding SelectedHeat.ActiveShuffleSettings}"/>
+                            </Border.InputBindings>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource m_ShuffleSystem}" Margin="0,0,0,5"/>
+                                <ComboBox SelectedValue="{Binding SelectedShuffleMethodId, Mode=TwoWay}" 
                                   DisplayMemberPath="Title"
                                   SelectedValuePath="Id"
                                   ItemsSource="{Binding AvailableShuffleMethods}"
                                   Margin="0,0,0,15"
                                   MinHeight="30"/>
+                            </StackPanel>
+                        </Border>
 
-                        <TextBlock Text="{DynamicResource m_GroupAssignment}" Margin="0,0,0,5"/>
-                        <ComboBox SelectedValue="{Binding SelectedHeat.Grouping.MethodId}"
+                        <Border Background="Transparent">
+                            <Border.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" 
+                                      Command="{Binding SelectSettingsCommand}" 
+                                      CommandParameter="{Binding SelectedHeat.ActiveGroupingSettings}"/>
+                            </Border.InputBindings>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource m_GroupAssignment}" Margin="0,0,0,5"/>
+                                <ComboBox SelectedValue="{Binding SelectedGroupMethodId, Mode=TwoWay}"
                                   DisplayMemberPath="Title"
                                   SelectedValuePath="Id"
                                   Margin="0,0,0,15"
                                   ItemsSource="{Binding AvailableGroupMethods}"
                                   MinHeight="30"/>
+                            </StackPanel>
+                        </Border>
 
-                        <TextBlock Text="{DynamicResource m_KartAssignment}" Margin="0,0,0,5"/>
-                        <ComboBox SelectedValue="{Binding SelectedHeat.KartAssignment.MethodId}" 
+                        <Border Background="Transparent">
+                            <Border.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" 
+                                      Command="{Binding SelectSettingsCommand}" 
+                                      CommandParameter="{Binding SelectedHeat.ActiveKartSettings}"/>
+                            </Border.InputBindings>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource m_KartAssignment}" Margin="0,0,0,5"/>
+                                <ComboBox SelectedValue="{Binding SelectedKartMethodId, Mode=TwoWay}" 
                                   DisplayMemberPath="Title"
                                   SelectedValuePath="Id"
                                   ItemsSource="{Binding AvailableKartMethods}"
                                   Margin="0,0,0,15"
                                   MinHeight="30"/>
+                            </StackPanel>
+                        </Border>
 
-                        <TextBlock Text="{DynamicResource m_ScoringSystem}" Margin="0,0,0,5"/>
-                        <ComboBox SelectedValue="{Binding SelectedHeat.Scoring.MethodId}" 
+                        <Border Background="Transparent">
+                            <Border.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" 
+                                      Command="{Binding SelectSettingsCommand}" 
+                                      CommandParameter="{Binding SelectedHeat.ActiveScoringSettings}"/>
+                            </Border.InputBindings>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource m_ScoringSystem}" Margin="0,0,0,5"/>
+                                <ComboBox SelectedValue="{Binding SelectedScoreMethodId, Mode=TwoWay}" 
                                   DisplayMemberPath="Title"
                                   SelectedValuePath="Id"
                                   Margin="0,0,0,15"
                                   ItemsSource="{Binding AvailableScoreMethods}"
-                                  MinHeight="30"
-                                  />
+                                  MinHeight="30"/>
+                            </StackPanel>
+                        </Border>
+
                     </StackPanel>
-                    </Grid>
-
-                </StackPanel>
-
+                </Grid>
+            </StackPanel>
         </Border>
 
         <Border Grid.Row="2"
@@ -215,15 +261,54 @@
 
             <Grid>
                 <TextBlock Text="{DynamicResource m_AdditionalSettings}"
-                   FontSize="18"
-                   FontWeight="SemiBold"/>
+                           FontSize="18"
+                           FontWeight="SemiBold"/>
 
                 <TextBlock HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Opacity="0.6">
-                    <Run Text="{Binding SelectedHeat.Name, Mode=OneWay}" />
-                    <Run Text="{DynamicResource m_NoSetttingSelected}" />
+                           VerticalAlignment="Center"
+                           Opacity="0.6"
+                           Text="{DynamicResource m_NoSetttingSelected}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsAdditionalSettingsPanelActivated}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
                 </TextBlock>
+
+
+                <StackPanel HorizontalAlignment="Center" 
+            VerticalAlignment="Center" 
+            Opacity="0.6">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsAdditionalSettingsPanelActivated}" Value="True" />
+                                        <Condition Binding="{Binding CurrentActiveSettings}" Value="{x:Null}" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+
+                    <TextBlock Text="{Binding CurrentActiveSettingsTitle}" 
+                               HorizontalAlignment="Center" 
+                               FontWeight="Bold" 
+                               Margin="0,0,0,5"/>
+
+                    <TextBlock Text="{DynamicResource m_NoAdditionalSettings}" 
+                                HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <ContentControl Content="{Binding CurrentActiveSettings}" />
             </Grid>
         </Border>
 
@@ -234,12 +319,6 @@
                     MinWidth="55" MinHeight="30"
                     HorizontalAlignment="Right"
                     Margin="20"/>
-
-            <CheckBox x:Name="SameScoreCheckBox" 
-                      Content="{DynamicResource m_SameScores}" 
-                      HorizontalAlignment="Left" 
-                      VerticalAlignment="Bottom"
-                      Margin="20"/>
         </Grid>
         
         

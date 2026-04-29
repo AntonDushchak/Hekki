@@ -23,8 +23,10 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty] private string? _selectedGroupMethodId;
         [ObservableProperty] private string? _selectedKartMethodId;
         [ObservableProperty] private string? _selectedScoreMethodId;
-        [ObservableProperty]
-        private HeatConfiguration? _selectedHeat;
+        [ObservableProperty] private HeatConfiguration? _selectedHeat;
+        [ObservableProperty] private MethodParametersViewModel? _currentActiveSettings;
+        [ObservableProperty] private string? _currentActiveSettingsTitle;
+        [ObservableProperty] private bool _isAdditionalSettingsPanelActivated = false;
 
         public string RegulationName
         {
@@ -65,6 +67,64 @@ namespace Hekki.UI.ViewModels
             _selectedScoreMethodId = AvailableScoreMethods.FirstOrDefault()?.Id;
         }
 
+        private MethodParametersViewModel? CreateParametersVm(string? methodId) => methodId switch
+        {
+            "replacement_group_assignment" => new ReplacementParametersViewModel(),
+            _ => null
+        };
+
+        partial void OnSelectedGroupMethodIdChanged(string? value)
+        {
+            IsAdditionalSettingsPanelActivated = true;
+            if (SelectedHeat != null)
+            {
+                SelectedHeat.Grouping.MethodId = value ?? string.Empty;
+                SelectedHeat.ActiveGroupingSettings = CreateParametersVm(value);
+                CurrentActiveSettings = SelectedHeat.ActiveGroupingSettings;
+                CurrentActiveSettingsTitle = AvailableGroupMethods.FirstOrDefault(n => n.Id == value)?.Title ?? string.Empty;
+            }
+        }
+
+        partial void OnSelectedShuffleMethodIdChanged(string? value)
+        {
+            IsAdditionalSettingsPanelActivated = true;
+            if (SelectedHeat != null)
+            {
+                SelectedHeat.Shuffle.MethodId = value ?? string.Empty;
+                SelectedHeat.ActiveShuffleSettings = CreateParametersVm(value);
+                CurrentActiveSettings = SelectedHeat.ActiveShuffleSettings;
+                CurrentActiveSettingsTitle = AvailableShuffleMethods.FirstOrDefault(n => n.Id == value)?.Title ?? string.Empty;
+            }
+        }
+
+        partial void OnSelectedKartMethodIdChanged(string? value)
+        {
+            IsAdditionalSettingsPanelActivated = true;
+            if (SelectedHeat != null)
+            {
+                SelectedHeat.KartAssignment.MethodId = value ?? string.Empty;
+                SelectedHeat.ActiveKartSettings = CreateParametersVm(value);
+                CurrentActiveSettings = SelectedHeat.ActiveKartSettings;
+                CurrentActiveSettingsTitle = AvailableKartMethods.FirstOrDefault(n => n.Id == value)?.Title ?? string.Empty;
+            }
+        }
+
+        partial void OnSelectedScoreMethodIdChanged(string? value)
+        {
+            IsAdditionalSettingsPanelActivated = true;
+            if (SelectedHeat != null)
+            {
+                SelectedHeat.Scoring.MethodId = value ?? string.Empty;
+                SelectedHeat.ActiveScoringSettings = CreateParametersVm(value);
+                CurrentActiveSettings = SelectedHeat.ActiveScoringSettings;
+                CurrentActiveSettingsTitle = AvailableScoreMethods.FirstOrDefault(n => n.Id == value)?.Title ?? string.Empty;
+            }
+        }
+
+        partial void OnSelectedHeatChanged(HeatConfiguration? value)
+        {
+            CurrentActiveSettings = null;
+        }
 
         private static void Fill<TMethod>(
             ObservableCollection<MethodOptionViewModel> target,
@@ -96,6 +156,15 @@ namespace Hekki.UI.ViewModels
                 //TODO: Handle error
             }
 
+        }
+
+        [RelayCommand]
+        private void SelectSettings(MethodParametersViewModel? settings)
+        {
+            IsAdditionalSettingsPanelActivated = true;
+
+            CurrentActiveSettings = settings;
+            
         }
     }
 }

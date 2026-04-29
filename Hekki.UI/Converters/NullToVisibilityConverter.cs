@@ -8,7 +8,15 @@ namespace Hekki.UI.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value == null ? Visibility.Collapsed : Visibility.Visible;
+            bool isNull = value == null;
+            bool isInverse = parameter?.ToString() == "Inverse";
+
+            if (isInverse)
+            {
+                return isNull ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            return isNull ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
