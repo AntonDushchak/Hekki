@@ -9,6 +9,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
         <ContentControl Content="{Binding LeftTopPanelContent}"
@@ -17,7 +18,9 @@
                         FontSize="20" 
                         FontWeight="Bold"/>
         
-        <StackPanel Grid.Column="1"
+        
+        
+        <StackPanel Grid.Column="2"
                     Orientation="Horizontal"
                     VerticalAlignment="Center"
                     Margin="10,0">

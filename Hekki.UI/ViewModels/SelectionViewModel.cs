@@ -4,6 +4,8 @@ using Hekki.Application.Abstrations;
 using Hekki.Domain.Models;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace Hekki.UI.ViewModels
 {
@@ -17,8 +19,14 @@ namespace Hekki.UI.ViewModels
         private bool _isLoading;
         public ObservableCollection<Regulation> Regulations { get; } = [];
         public IPaginationService PaginationService { get; }
-
-
+        public ObservableCollection<Regulation> PagedRegulations
+        {
+            get
+            {
+                var start = Math.Max(0, PaginationService.StartItem - 1);
+                return new ObservableCollection<Regulation>(Regulations.Skip(start).Take(PaginationService.PageCapacity));
+            }
+        }
 
         public SelectionViewModel(
             NavigationService navigationService,
@@ -30,11 +38,24 @@ namespace Hekki.UI.ViewModels
             _regulationService = regulationService;
             _viewModelFactory = viewModelFactory;
             PaginationService = paginationService;
-        }
 
+            Regulations.CollectionChanged += Regulations_CollectionChanged;
+            PaginationService.PropertyChanged += PaginationService_PropertyChanged;
+        }
+        
         public async Task InitializeAsync()
         {
             await LoadRegulationsAsync();
+        }
+
+        private void Regulations_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(PagedRegulations));
+        }
+
+        private void PaginationService_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(PagedRegulations));
         }
 
         private async Task LoadRegulationsAsync()
