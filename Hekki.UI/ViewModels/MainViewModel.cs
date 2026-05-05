@@ -7,7 +7,7 @@ namespace Hekki.UI.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private readonly NavigationService _navigationService;
+        private readonly INavigationService _navigationService;
         private readonly IRegulationService _regulationService;
         private readonly IViewModelFactory _viewModelFactory;
 
@@ -30,7 +30,7 @@ namespace Hekki.UI.ViewModels
         protected void OnPropertyChanged(string name)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        public MainViewModel(NavigationService navigationService, IRegulationService regulationService, IViewModelFactory viewModelFactory)
+        public MainViewModel(INavigationService navigationService, IRegulationService regulationService, IViewModelFactory viewModelFactory)
         {
             TopPanelVM = new TopPanelViewModel();
 

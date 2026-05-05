@@ -38,7 +38,7 @@ namespace Hekki.UI
 
                     services.AddTransient<IRegulationService, RegulationService>();
 
-                    services.AddSingleton<NavigationService>();
+                    services.AddSingleton<INavigationService, NavigationService>();
                     services.AddTransient<IPaginationService, PaginationService>();
 
                     services.AddTransient<IViewModelFactory, ViewModelFactory>();

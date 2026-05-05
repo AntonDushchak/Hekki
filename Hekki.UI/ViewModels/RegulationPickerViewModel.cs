@@ -10,7 +10,7 @@ namespace Hekki.UI.ViewModels
     public class RegulationPickerViewModel : INotifyPropertyChanged
     {
         private readonly IRegulationRepository _regulationRepository;
-        private readonly NavigationService _navigationService;
+        private readonly INavigationService _navigationService;
 
         private RegulationChoiceItem? _selectedItem;
         private bool _initialized = false;
@@ -30,7 +30,7 @@ namespace Hekki.UI.ViewModels
             }
         }
 
-        public RegulationPickerViewModel(IRegulationRepository regulationRepository, NavigationService navigationService)
+        public RegulationPickerViewModel(IRegulationRepository regulationRepository, INavigationService navigationService)
         {
             _regulationRepository = regulationRepository;
             _navigationService = navigationService;

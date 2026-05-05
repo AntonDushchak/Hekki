@@ -9,7 +9,7 @@ namespace Hekki.UI.ViewModels
 {
     public partial class CreateRaceViewModel : ObservableObject
     {
-        private readonly NavigationService _navigationService;
+        private readonly INavigationService _navigationService;
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IMethodCatalogService _methodCatalog;
         private readonly IRegulationRepository _regulationRepository;
@@ -36,7 +36,7 @@ namespace Hekki.UI.ViewModels
         public ObservableCollection<MethodOptionViewModel> AvailableScoreMethods { get; } = [];
 
         public CreateRaceViewModel(
-            NavigationService navigationService,
+            INavigationService navigationService,
             IViewModelFactory viewModelFactory,
             IMethodCatalogService methodCatalog,
             IRegulationRepository regulationRepository)

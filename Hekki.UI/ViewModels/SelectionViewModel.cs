@@ -13,7 +13,7 @@ namespace Hekki.UI.ViewModels
     {
         private readonly IRegulationService _regulationService;
         private readonly IViewModelFactory _viewModelFactory;
-        private readonly NavigationService _navigationService;
+        private readonly INavigationService _navigationService;
 
         [ObservableProperty]
         private bool _isLoading;
@@ -29,7 +29,7 @@ namespace Hekki.UI.ViewModels
         }
 
         public SelectionViewModel(
-            NavigationService navigationService,
+            INavigationService navigationService,
             IRegulationService regulationService,
             IViewModelFactory viewModelFactory,
             IPaginationService paginationService)
