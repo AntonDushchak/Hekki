@@ -365,3 +365,5 @@ FodyWeavers.xsd
 # Local development settings with sensitive data
 **/appsettings.Development.json
 **/appsettings.Local.json
+/.github/instructions
+/Hekki.UI/unrelesed
