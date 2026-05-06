@@ -30,7 +30,8 @@
     </DataTemplate>
 
 
-    
+
+
     <Style x:Key="HoverBorder" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource Brush.SurfaceMid}"/>
 

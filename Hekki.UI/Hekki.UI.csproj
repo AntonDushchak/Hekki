@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <Folder Include="Controls\" />
+    <Folder Include="Messages\" />
   </ItemGroup>
 
 </Project>

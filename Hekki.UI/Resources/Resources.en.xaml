@@ -63,5 +63,26 @@
     <system:String x:Key="m_DeleteConfirmMessage">Do you really want to delete this regulation?</system:String>
     <system:String x:Key="m_No">No</system:String>
     <system:String x:Key="m_Yes">Yes</system:String>
-    
+    <system:String x:Key="m_Details">Details</system:String>
+    <system:String x:Key="m_Close">Close</system:String>
+
+
+
+    <system:String x:Key="m_Warning">Warning</system:String>
+    <system:String x:Key="m_Information">Information</system:String>
+    <system:String x:Key="m_CriticalError">Critical Error</system:String>
+    <system:String x:Key="m_UnexpectedError">Unexpected Error</system:String>
+    <system:String x:Key="m_BusinessLogicError">Operation Error</system:String>
+    <system:String x:Key="m_ValidationError">Incorrect Data</system:String>
+    <system:String x:Key="m_TimeoutError">Timeout</system:String>
+    <system:String x:Key="m_AccessDeniedError">Access Denied</system:String>
+    <system:String x:Key="m_Confirmation">Confirmation</system:String>
+    <system:String x:Key="m_UnexpectedErrorMessage">An unexpected error occurred: {0}</system:String>
+    <system:String x:Key="m_BusinessLogicErrorMessage">Business logic error: {0}</system:String>
+    <system:String x:Key="m_ValidationErrorMessage">Validation error: {0}</system:String>
+    <system:String x:Key="m_TimeoutErrorMessage">The operation took too long. Please try again later.</system:String>
+    <system:String x:Key="m_AccessDeniedErrorMessage">You do not have sufficient rights to perform this operation.</system:String>
+    <system:String x:Key="m_InitializationContext">Initialization of regulations list</system:String>
+    <system:String x:Key="m_NavigationToCreationContext">Navigation to race creation</system:String>
+    <system:String x:Key="m_NavigationToRaceContext">Navigation to race {0}</system:String>
 </ResourceDictionary>

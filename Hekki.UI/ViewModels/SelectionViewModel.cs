@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
 using Hekki.Domain.Models;
 using Hekki.UI.Services;
@@ -87,9 +88,12 @@ namespace Hekki.UI.ViewModels
         }
 
         [RelayCommand]
-        private void NavigateToRace(int id)
+        private void NavigateToRace(object index)
         {
-            _navigationService.Go(_viewModelFactory.CreateRaceViewModel(id));
+            WeakReferenceMessenger.Default.Send(new AppErrorMessage("Not implemented yet"));
+            throw new Exception("Not implemented yet");
+            //var id = Regulations[index].Id;
+            //_navigationService.Go(_viewModelFactory.CreateRaceViewModel(id));
         }
 
         [RelayCommand]

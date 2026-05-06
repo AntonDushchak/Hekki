@@ -1,4 +1,5 @@
-﻿using Hekki.Application.Abstrations;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using Hekki.Application.Abstrations;
 using Hekki.Application.Methods;
 using Hekki.Infrastructure;
 using Hekki.UI.Services;
@@ -8,7 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace Hekki.UI
 {
@@ -28,8 +31,16 @@ namespace Hekki.UI
                 })
                 .ConfigureServices((context, services) =>
                 {
+                    services.AddLogging(builder =>
+                    {
+                        builder.AddConsole();
+                        builder.AddDebug();
+                    });
+
+
                     services.AddDbContextFactory<HekkiDbContext>(options =>
                         options.UseNpgsql(context.Configuration.GetConnectionString("HekkiDb")));
+
 
                     services.AddTransient<IRegulationRepository, RegulationRepository>();
 
@@ -43,13 +54,10 @@ namespace Hekki.UI
 
                     services.AddTransient<IViewModelFactory, ViewModelFactory>();
 
-                    //services.AddTransient<SelectRaceView>();
-                    //services.AddTransient<CreateRaceView>();
-                    //services.AddTransient<RaceView>();
+
                     services.AddTransient<SelectionViewModel>();
                     services.AddTransient<CreateRaceViewModel>();
                     services.AddTransient<RaceViewModel>();
-                    //services.AddTransient<SelectionTopPanelViewModel>();
 
                     services.AddSingleton<MainViewModel>();
                     services.AddSingleton<MainWindow>();
@@ -85,6 +93,7 @@ namespace Hekki.UI
 
         protected override async void OnStartup(StartupEventArgs e)
         {
+            SetupGlobalExceptionHandling();
             await Host.StartAsync();
 
             using (var scope = Host.Services.CreateScope())
@@ -97,6 +106,41 @@ namespace Hekki.UI
             base.OnStartup(e);
             var main = _uiScope.ServiceProvider.GetRequiredService<MainWindow>();
             main.Show();
+        }
+
+        private void SetupGlobalExceptionHandling()
+        {
+            WeakReferenceMessenger.Default.Register<AppErrorMessage>(this, (r, m) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    var errorWin = new ErrorWindow(m.Message);
+                    errorWin.Owner = Current.MainWindow;
+                    errorWin.ShowDialog();
+                });
+            });
+
+            this.DispatcherUnhandledException += (s, e) =>
+            {
+                UiServices?.GetService<ILogger<App>>()?.LogError(e.Exception, "UI exception");
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage(e.Exception.Message));
+                e.Handled = true;
+            };
+
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+            {
+                var ex = e.ExceptionObject as Exception;
+                UiServices?.GetService<ILogger<App>>()?.LogCritical(ex, "Critical exception");
+                if (!e.IsTerminating && ex != null)
+                    WeakReferenceMessenger.Default.Send(new AppErrorMessage(ex.Message));
+            };
+
+            TaskScheduler.UnobservedTaskException += (s, e) =>
+            {
+                UiServices?.GetService<ILogger<App>>()?.LogError(e.Exception, "Task exception");
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage(e.Exception.Message));
+                e.SetObserved();
+            };
         }
 
         protected override async void OnExit(ExitEventArgs e)

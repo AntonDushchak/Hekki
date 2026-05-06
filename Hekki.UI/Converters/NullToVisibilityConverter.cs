@@ -1,6 +1,8 @@
+using Hekki.UI.ViewModels;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace Hekki.UI.Converters
 {
@@ -38,6 +40,20 @@ namespace Hekki.UI.Converters
                 return intValue > 0 ? Visibility.Visible : Visibility.Collapsed;
             }
             return Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class StringToVisibilityConverter : IValueConverter
+    {
+        public static StringToVisibilityConverter Instance { get; } = new();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return string.IsNullOrWhiteSpace(value as string) ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
