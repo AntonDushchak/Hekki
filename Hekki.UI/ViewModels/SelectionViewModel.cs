@@ -88,11 +88,10 @@ namespace Hekki.UI.ViewModels
         }
 
         [RelayCommand]
-        private void NavigateToRace(object index)
+        private void NavigateToRace(Regulation regulation)
         {
             WeakReferenceMessenger.Default.Send(new AppErrorMessage("Not implemented yet"));
-            throw new Exception("Not implemented yet");
-            //var id = Regulations[index].Id;
+            //var id = regulation.Id;
             //_navigationService.Go(_viewModelFactory.CreateRaceViewModel(id));
         }
 
