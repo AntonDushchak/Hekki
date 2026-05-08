@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Hekki.UI.Views"
              xmlns:converters="clr-namespace:Hekki.UI.Converters"
+             xmlns:controls="clr-namespace:Hekki.UI.Views.Controls"
              xmlns:vm="clr-namespace:Hekki.UI.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="1240">
@@ -187,73 +188,41 @@
 
                     <StackPanel Grid.Column="2">
 
-                        <Border Background="Transparent">
-                            <Border.InputBindings>
-                                <MouseBinding MouseAction="LeftClick" 
-                                      Command="{Binding SelectSettingsCommand}" 
-                                      CommandParameter="Shuffle"/>
-                            </Border.InputBindings>
-                            <StackPanel>
-                                <TextBlock Text="{DynamicResource m_ShuffleSystem}" Margin="0,0,0,5"/>
-                                <ComboBox SelectedValue="{Binding SelectedShuffleMethodId, Mode=TwoWay}" 
-                                  DisplayMemberPath="Title"
-                                  SelectedValuePath="Id"
-                                  ItemsSource="{Binding AvailableShuffleMethods}"
-                                  Margin="0,0,0,15"
-                                  MinHeight="30"/>
-                            </StackPanel>
-                        </Border>
+                        <controls:MethodSelectorControl 
+                                Label="{DynamicResource m_ShuffleSystem}"
+                                SelectedMethodId="{Binding SelectedShuffleMethodId, Mode=TwoWay}"
+                                AvailableMethods="{Binding AvailableShuffleMethods}"
+                                ShowSettingsCommand="{Binding ShowSettingsCommand}"
+                                SettingsType="Shuffle"
+                                HasSettings="{Binding HasShuffleSettings}"
+                                IsActive="{Binding IsShuffleActive}"/>
 
-                        <Border Background="Transparent">
-                            <Border.InputBindings>
-                                <MouseBinding MouseAction="LeftClick" 
-                                      Command="{Binding SelectSettingsCommand}" 
-                                      CommandParameter="Group"/>
-                            </Border.InputBindings>
-                            <StackPanel>
-                                <TextBlock Text="{DynamicResource m_GroupAssignment}" Margin="0,0,0,5"/>
-                                <ComboBox SelectedValue="{Binding SelectedGroupMethodId, Mode=TwoWay}"
-                                  DisplayMemberPath="Title"
-                                  SelectedValuePath="Id"
-                                  Margin="0,0,0,15"
-                                  ItemsSource="{Binding AvailableGroupMethods}"
-                                  MinHeight="30"/>
-                            </StackPanel>
-                        </Border>
+                        <controls:MethodSelectorControl 
+                                Label="{DynamicResource m_GroupAssignment}"
+                                SelectedMethodId="{Binding SelectedGroupMethodId, Mode=TwoWay}"
+                                AvailableMethods="{Binding AvailableGroupMethods}"
+                                ShowSettingsCommand="{Binding ShowSettingsCommand}"
+                                SettingsType="Group"
+                                HasSettings="{Binding HasGroupSettings}"
+                                IsActive="{Binding IsGroupActive}"/>
 
-                        <Border Background="Transparent">
-                            <Border.InputBindings>
-                                <MouseBinding MouseAction="LeftClick" 
-                                      Command="{Binding SelectSettingsCommand}" 
-                                      CommandParameter="Kart"/>
-                            </Border.InputBindings>
-                            <StackPanel>
-                                <TextBlock Text="{DynamicResource m_KartAssignment}" Margin="0,0,0,5"/>
-                                <ComboBox SelectedValue="{Binding SelectedKartMethodId, Mode=TwoWay}" 
-                                  DisplayMemberPath="Title"
-                                  SelectedValuePath="Id"
-                                  ItemsSource="{Binding AvailableKartMethods}"
-                                  Margin="0,0,0,15"
-                                  MinHeight="30"/>
-                            </StackPanel>
-                        </Border>
+                        <controls:MethodSelectorControl 
+                                Label="{DynamicResource m_KartAssignment}"
+                                SelectedMethodId="{Binding SelectedKartMethodId, Mode=TwoWay}"
+                                AvailableMethods="{Binding AvailableKartMethods}"
+                                ShowSettingsCommand="{Binding ShowSettingsCommand}"
+                                SettingsType="Kart"
+                                HasSettings="{Binding HasKartSettings}"
+                                IsActive="{Binding IsKartActive}"/>
 
-                        <Border Background="Transparent">
-                            <Border.InputBindings>
-                                <MouseBinding MouseAction="LeftClick" 
-                                      Command="{Binding SelectSettingsCommand}" 
-                                      CommandParameter="Score"/>
-                            </Border.InputBindings>
-                            <StackPanel>
-                                <TextBlock Text="{DynamicResource m_ScoringSystem}" Margin="0,0,0,5"/>
-                                <ComboBox SelectedValue="{Binding SelectedScoreMethodId, Mode=TwoWay}" 
-                                  DisplayMemberPath="Title"
-                                  SelectedValuePath="Id"
-                                  Margin="0,0,0,15"
-                                  ItemsSource="{Binding AvailableScoreMethods}"
-                                  MinHeight="30"/>
-                            </StackPanel>
-                        </Border>
+                        <controls:MethodSelectorControl 
+                                Label="{DynamicResource m_ScoringSystem}"
+                                SelectedMethodId="{Binding SelectedScoreMethodId, Mode=TwoWay}"
+                                AvailableMethods="{Binding AvailableScoreMethods}"
+                                ShowSettingsCommand="{Binding ShowSettingsCommand}"
+                                SettingsType="Score"
+                                HasSettings="{Binding HasScoreSettings}"
+                                IsActive="{Binding IsScoreActive}"/>
 
                     </StackPanel>
                 </Grid>

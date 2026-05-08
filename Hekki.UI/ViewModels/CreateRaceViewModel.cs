@@ -14,15 +14,19 @@ namespace Hekki.UI.ViewModels
         private readonly IMethodCatalogService _methodCatalog;
         private readonly IRegulationRepository _regulationRepository;
 
+        private readonly Dictionary<MethodSettingsType, MethodConfiguration> _methodConfigurations;
+
         private string _regulationName = string.Empty;
         [ObservableProperty] private string? _selectedShuffleMethodId;
         [ObservableProperty] private string? _selectedGroupMethodId;
         [ObservableProperty] private string? _selectedKartMethodId;
         [ObservableProperty] private string? _selectedScoreMethodId;
         [ObservableProperty] private HeatConfiguration? _selectedHeat;
+
         [ObservableProperty] private MethodParametersViewModel? _currentActiveSettings;
         [ObservableProperty] private string? _currentActiveSettingsTitle;
         [ObservableProperty] private bool _isAdditionalSettingsPanelActivated = false;
+        [ObservableProperty] private MethodSettingsType? _currentSettingsType;
 
         public string RegulationName
         {
@@ -34,6 +38,16 @@ namespace Hekki.UI.ViewModels
         public ObservableCollection<MethodOptionViewModel> AvailableGroupMethods { get; } = [];
         public ObservableCollection<MethodOptionViewModel> AvailableKartMethods { get; } = [];
         public ObservableCollection<MethodOptionViewModel> AvailableScoreMethods { get; } = [];
+
+        public bool HasShuffleSettings => GetHasSettings(MethodSettingsType.Shuffle);
+        public bool HasGroupSettings => GetHasSettings(MethodSettingsType.Group);
+        public bool HasKartSettings => GetHasSettings(MethodSettingsType.Kart);
+        public bool HasScoreSettings => GetHasSettings(MethodSettingsType.Score);
+
+        public bool IsShuffleActive => CurrentSettingsType == MethodSettingsType.Shuffle;
+        public bool IsGroupActive => CurrentSettingsType == MethodSettingsType.Group;
+        public bool IsKartActive => CurrentSettingsType == MethodSettingsType.Kart;
+        public bool IsScoreActive => CurrentSettingsType == MethodSettingsType.Score;
 
         public CreateRaceViewModel(
             INavigationService navigationService,
@@ -51,110 +65,76 @@ namespace Hekki.UI.ViewModels
             foreach (var o in _methodCatalog.GetKartOptions()) AvailableKartMethods.Add(o);
             foreach (var o in _methodCatalog.GetScoreOptions()) AvailableScoreMethods.Add(o);
 
-            SetDefaultSelectedMethods();
+            _methodConfigurations = new()
+            {
+                [MethodSettingsType.Shuffle] = new(
+                    () => SelectedShuffleMethodId,
+                    v => SelectedHeat!.Shuffle.MethodId = v,
+                    vm => SelectedHeat!.ActiveShuffleSettings = vm,
+                    () => SelectedHeat?.ActiveShuffleSettings,
+                    AvailableShuffleMethods
+                ),
+                [MethodSettingsType.Group] = new(
+                    () => SelectedGroupMethodId,
+                    v => SelectedHeat!.Grouping.MethodId = v,
+                    vm => SelectedHeat!.ActiveGroupingSettings = vm,
+                    () => SelectedHeat?.ActiveGroupingSettings,
+                    AvailableGroupMethods
+                ),
+                [MethodSettingsType.Kart] = new(
+                    () => SelectedKartMethodId,
+                    v => SelectedHeat!.KartAssignment.MethodId = v,
+                    vm => SelectedHeat!.ActiveKartSettings = vm,
+                    () => SelectedHeat?.ActiveKartSettings,
+                    AvailableKartMethods
+                ),
+                [MethodSettingsType.Score] = new(
+                    () => SelectedScoreMethodId,
+                    v => SelectedHeat!.Scoring.MethodId = v,
+                    vm => SelectedHeat!.ActiveScoringSettings = vm,
+                    () => SelectedHeat?.ActiveScoringSettings,
+                    AvailableScoreMethods
+                )
+            };
         }
 
-        private void SetDefaultSelectedMethods()
-        {
-            SelectedShuffleMethodId = AvailableShuffleMethods.FirstOrDefault()?.Id;
-            SelectedGroupMethodId = AvailableGroupMethods.FirstOrDefault()?.Id;
-            SelectedKartMethodId = AvailableKartMethods.FirstOrDefault()?.Id;
-            SelectedScoreMethodId = AvailableScoreMethods.FirstOrDefault()?.Id;
-        }
+        partial void OnSelectedShuffleMethodIdChanged(string? value) =>
+           UpdateMethod(MethodSettingsType.Shuffle, value);
 
-        
+        partial void OnSelectedGroupMethodIdChanged(string? value) =>
+            UpdateMethod(MethodSettingsType.Group, value);
 
-        partial void OnSelectedGroupMethodIdChanged(string? value)
-        {
-            UpdateSelectedMethod(
-                value,
-                v => SelectedHeat!.Grouping.MethodId = v,
-                vm => SelectedHeat!.ActiveGroupingSettings = vm,
-                AvailableGroupMethods,
-                SelectedHeat?.ActiveGroupingSettings);
-        }
+        partial void OnSelectedKartMethodIdChanged(string? value) =>
+            UpdateMethod(MethodSettingsType.Kart, value);
 
-        partial void OnSelectedShuffleMethodIdChanged(string? value)
-        {
-            UpdateSelectedMethod(
-                value,
-                v => SelectedHeat!.Shuffle.MethodId = v,
-                vm => SelectedHeat!.ActiveShuffleSettings = vm,
-                AvailableShuffleMethods, 
-                SelectedHeat?.ActiveShuffleSettings);
-        }
+        partial void OnSelectedScoreMethodIdChanged(string? value) =>
+            UpdateMethod(MethodSettingsType.Score, value);
 
-        partial void OnSelectedKartMethodIdChanged(string? value)
-        {
-            UpdateSelectedMethod(
-                value,
-                v => SelectedHeat!.KartAssignment.MethodId = v,
-                vm => SelectedHeat!.ActiveKartSettings = vm,
-                AvailableKartMethods,
-                SelectedHeat?.ActiveKartSettings);
-        }
-
-        partial void OnSelectedScoreMethodIdChanged(string? value)
-        {
-            UpdateSelectedMethod(
-                value,
-                v => SelectedHeat!.Scoring.MethodId = v,
-                vm => SelectedHeat!.ActiveScoringSettings = vm,
-                AvailableScoreMethods,
-                SelectedHeat?.ActiveScoringSettings);
-        }
-        private void SyncHeatWithDefaults(HeatConfiguration heat)
-        {
-            if (heat == null) return;
-
-            UpdateSelectedMethod(SelectedShuffleMethodId,
-                v => heat.Shuffle.MethodId = v,
-                vm => heat.ActiveShuffleSettings = vm,
-                AvailableShuffleMethods, heat.ActiveShuffleSettings);
-
-            UpdateSelectedMethod(SelectedGroupMethodId,
-                v => heat.Grouping.MethodId = v,
-                vm => heat.ActiveGroupingSettings = vm,
-                AvailableGroupMethods, heat.ActiveGroupingSettings);
-
-            UpdateSelectedMethod(SelectedKartMethodId,
-                v => heat.KartAssignment.MethodId = v,
-                vm => heat.ActiveKartSettings = vm,
-                AvailableKartMethods, heat.ActiveKartSettings);
-
-            UpdateSelectedMethod(SelectedScoreMethodId,
-                v => heat.Scoring.MethodId = v,
-                vm => heat.ActiveScoringSettings = vm,
-                AvailableScoreMethods, heat.ActiveScoringSettings);
-        }
-        private void UpdateSelectedMethod(
-            string? value,
-            Action<string> setMethodId,
-            Action<MethodParametersViewModel?> setActiveSettings,
-            ObservableCollection<MethodOptionViewModel> availableMethods,
-            MethodParametersViewModel? existingVm)
+        private void UpdateMethod(MethodSettingsType type, string? value)
         {
             IsAdditionalSettingsPanelActivated = true;
             if (SelectedHeat == null) return;
 
+            var config = _methodConfigurations[type];
+            config.SetMethodId(value ?? string.Empty);
 
-            setMethodId(value ?? string.Empty);
-
+            var existingVm = config.GetExistingVm();
             var vm = existingVm;
+
             if (vm == null || GetIdByVm(vm) != value)
             {
                 vm = CreateParametersVm(value);
-                setActiveSettings(vm);
+                config.SetActiveSettings(vm);
             }
 
             CurrentActiveSettings = vm;
-            CurrentActiveSettingsTitle = availableMethods.FirstOrDefault(n => n.Id == value)?.Title ?? string.Empty;
+            CurrentActiveSettingsTitle = config.AvailableMethods.FirstOrDefault(n => n.Id == value)?.Title ?? string.Empty;
         }
 
         partial void OnSelectedHeatChanged(HeatConfiguration? value)
         {
             CurrentActiveSettings = null;
-            SetDefaultSelectedMethods();
+            CurrentSettingsType = null;
         }
 
         private MethodParametersViewModel? CreateParametersVm(string? methodId) => methodId switch
@@ -169,13 +149,16 @@ namespace Hekki.UI.ViewModels
             _ => string.Empty
         };
 
+        private bool GetHasSettings(MethodSettingsType type) =>
+            _methodConfigurations[type].GetExistingVm() != null;
+
+
         [RelayCommand]
         private void AddHeat()
         {
             int nextNumber = Heats.Count + 1;
             Heats.Add(new HeatConfiguration { Name = $"Heat {nextNumber}" });
             SelectedHeat = Heats.Last();
-            SyncHeatWithDefaults(Heats.Last());
         }
 
         [RelayCommand]
@@ -193,30 +176,31 @@ namespace Hekki.UI.ViewModels
         }
 
         [RelayCommand]
-        private void SelectSettings(string type)
+        private void ShowSettings(MethodSettingsType type)
         {
+            CurrentSettingsType = type;
             IsAdditionalSettingsPanelActivated = true;
 
-            switch (type)
-            {
-                case "Shuffle":
-                    CurrentActiveSettings = SelectedHeat?.ActiveShuffleSettings;
-                    CurrentActiveSettingsTitle = AvailableShuffleMethods.FirstOrDefault(x => x.Id == SelectedShuffleMethodId)?.Title;
-                    break;
-                case "Group":
-                    CurrentActiveSettings = SelectedHeat?.ActiveGroupingSettings;
-                    CurrentActiveSettingsTitle = AvailableGroupMethods.FirstOrDefault(x => x.Id == SelectedGroupMethodId)?.Title;
-                    break;
-                case "Kart":
-                    CurrentActiveSettings = SelectedHeat?.ActiveKartSettings;
-                    CurrentActiveSettingsTitle = AvailableKartMethods.FirstOrDefault(x => x.Id == SelectedKartMethodId)?.Title;
-                    break;
-                case "Score":
-                    CurrentActiveSettings = SelectedHeat?.ActiveScoringSettings;
-                    CurrentActiveSettingsTitle = AvailableScoreMethods.FirstOrDefault(x => x.Id == SelectedScoreMethodId)?.Title;
-                    break;
-            }
+            var config = _methodConfigurations[type];
 
+            CurrentActiveSettings = config.GetExistingVm();
+            CurrentActiveSettingsTitle = config.AvailableMethods
+                .FirstOrDefault(x => x.Id == config.GetSelectedMethodId())?.Title;
         }
+
+        private record MethodConfiguration(
+                Func<string?> GetSelectedMethodId,
+                Action<string> SetMethodId,
+                Action<MethodParametersViewModel?> SetActiveSettings,
+                Func<MethodParametersViewModel?> GetExistingVm,
+                ObservableCollection<MethodOptionViewModel> AvailableMethods);
+    }
+
+    public enum MethodSettingsType
+    {
+        Shuffle,
+        Group,
+        Kart,
+        Score
     }
 }

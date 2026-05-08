@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="Hekki.UI.Views.Controls.MethodSelectorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Hekki.UI.Views.Controls"
+             xmlns:converters="clr-namespace:Hekki.UI.Converters"
+             x:Name="Root">
+
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid Margin="0,0,0,15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0">
+            <TextBlock Text="{Binding Label, ElementName=Root}" Margin="0,0,0,5"/>
+            <ComboBox SelectedValue="{Binding SelectedMethodId, ElementName=Root, Mode=TwoWay}"
+                      DisplayMemberPath="Title"
+                      SelectedValuePath="Id"
+                      ItemsSource="{Binding AvailableMethods, ElementName=Root}"
+                      MinHeight="30"/>
+        </StackPanel>
+
+        <Button Grid.Column="1" 
+                VerticalAlignment="Bottom"
+                Width="35" Height="30"
+                Margin="8,0,0,0"
+                Content="⚙"
+                FontSize="16"
+                Command="{Binding ShowSettingsCommand, ElementName=Root}"
+                CommandParameter="{Binding SettingsType, ElementName=Root}"
+                ToolTip="Configure settings"
+                Visibility="{Binding HasSettings, ElementName=Root, Converter={StaticResource BoolToVisibilityConverter}}"
+                Background="{DynamicResource Brush.SurfaceHigh}">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsActive, ElementName=Root}" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource Brush.Primary}"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+    </Grid>
+</UserControl>
