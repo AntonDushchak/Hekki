@@ -193,7 +193,7 @@
                                 SelectedMethodId="{Binding SelectedShuffleMethodId, Mode=TwoWay}"
                                 AvailableMethods="{Binding AvailableShuffleMethods}"
                                 ShowSettingsCommand="{Binding ShowSettingsCommand}"
-                                SettingsType="Shuffle"
+                                SettingsType="{x:Static vm:MethodSettingsType.Shuffle}"
                                 HasSettings="{Binding HasShuffleSettings}"
                                 IsActive="{Binding IsShuffleActive}"/>
 
@@ -202,7 +202,7 @@
                                 SelectedMethodId="{Binding SelectedGroupMethodId, Mode=TwoWay}"
                                 AvailableMethods="{Binding AvailableGroupMethods}"
                                 ShowSettingsCommand="{Binding ShowSettingsCommand}"
-                                SettingsType="Group"
+                                SettingsType="{x:Static vm:MethodSettingsType.Group}"
                                 HasSettings="{Binding HasGroupSettings}"
                                 IsActive="{Binding IsGroupActive}"/>
 
@@ -211,7 +211,7 @@
                                 SelectedMethodId="{Binding SelectedKartMethodId, Mode=TwoWay}"
                                 AvailableMethods="{Binding AvailableKartMethods}"
                                 ShowSettingsCommand="{Binding ShowSettingsCommand}"
-                                SettingsType="Kart"
+                                SettingsType="{x:Static vm:MethodSettingsType.Kart}"
                                 HasSettings="{Binding HasKartSettings}"
                                 IsActive="{Binding IsKartActive}"/>
 
@@ -220,7 +220,7 @@
                                 SelectedMethodId="{Binding SelectedScoreMethodId, Mode=TwoWay}"
                                 AvailableMethods="{Binding AvailableScoreMethods}"
                                 ShowSettingsCommand="{Binding ShowSettingsCommand}"
-                                SettingsType="Score"
+                                SettingsType="{x:Static vm:MethodSettingsType.Score}"
                                 HasSettings="{Binding HasScoreSettings}"
                                 IsActive="{Binding IsScoreActive}"/>
 

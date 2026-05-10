@@ -22,7 +22,7 @@ namespace Hekki.UI.Views.Controls
             DependencyProperty.Register(nameof(ShowSettingsCommand), typeof(ICommand), typeof(MethodSelectorControl));
 
         public static readonly DependencyProperty SettingsTypeProperty =
-            DependencyProperty.Register(nameof(SettingsType), typeof(string), typeof(MethodSelectorControl));
+            DependencyProperty.Register(nameof(SettingsType), typeof(MethodSettingsType), typeof(MethodSelectorControl));
 
         public static readonly DependencyProperty HasSettingsProperty =
            DependencyProperty.Register(nameof(HasSettings), typeof(bool), typeof(MethodSelectorControl));
@@ -54,9 +54,9 @@ namespace Hekki.UI.Views.Controls
             set => SetValue(ShowSettingsCommandProperty, value);
         }
 
-        public string SettingsType
+        public MethodSettingsType SettingsType
         {
-            get => (string)GetValue(SettingsTypeProperty);
+            get => (MethodSettingsType)GetValue(SettingsTypeProperty);
             set => SetValue(SettingsTypeProperty, value);
         }
 
