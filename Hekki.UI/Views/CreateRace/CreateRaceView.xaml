@@ -14,7 +14,7 @@
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
         
-        <DataTemplate DataType="{x:Type vm:ReplacementParametersViewModel}">
+        <DataTemplate DataType="{x:Type vm:ReplacementParameters}">
             <StackPanel Margin="10">
                 <TextBlock Text="{DynamicResource m_ToDown}"/>
                 <TextBox Text="{Binding NumberToDown, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -37,7 +37,7 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="20"/>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
@@ -262,7 +262,7 @@
                         <Style TargetType="TextBlock">
                             <Setter Property="Visibility" Value="Collapsed" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsAdditionalSettingsPanelActivated}" Value="False">
+                                <DataTrigger Binding="{Binding CurrentSettingsType}" Value="{x:Null}">
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -271,19 +271,17 @@
                 </TextBlock>
 
 
-                <StackPanel HorizontalAlignment="Center" 
-                            VerticalAlignment="Center" 
-                            Opacity="0.6"  
-                            Grid.Column="1"
-                            Grid.Row="1">
+                <StackPanel Grid.Row="1"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Top">
                     <StackPanel.Style>
                         <Style TargetType="StackPanel">
                             <Setter Property="Visibility" Value="Collapsed" />
                             <Style.Triggers>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsAdditionalSettingsPanelActivated}" Value="True" />
-                                        <Condition Binding="{Binding CurrentActiveSettings}" Value="{x:Null}" />
+                                        <Condition Binding="{Binding CurrentSettingsType, Converter={StaticResource NullToVisibilityConverter}}" Value="Visible" />
+                                        <Condition Binding="{Binding CurrentActiveSettings, Converter={StaticResource NullToVisibilityConverter}}" Value="Visible" />
                                     </MultiDataTrigger.Conditions>
                                     <Setter Property="Visibility" Value="Visible" />
                                 </MultiDataTrigger>
@@ -293,16 +291,13 @@
 
                     <TextBlock Text="{Binding CurrentActiveSettingsTitle}" 
                                HorizontalAlignment="Center" 
-                               FontWeight="Bold" 
-                               Margin="0,0,0,5"/>
+                               FontWeight="SemiBold"
+                               FontSize="16"
+                               Margin="0,0,0,15"/>
 
-                    <TextBlock Text="{DynamicResource m_NoAdditionalSettings}" 
-                                HorizontalAlignment="Center"/>
+                    <ContentControl Content="{Binding CurrentActiveSettings}"
+                                    HorizontalAlignment="Stretch"/>
                 </StackPanel>
-
-                <ContentControl Content="{Binding CurrentActiveSettings}"  
-                                Grid.Column="1"
-                                Grid.Row="1"/>
             </Grid>
         </Border>
 

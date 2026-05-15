@@ -10,10 +10,10 @@ namespace Hekki.UI.Services
         private readonly IKartNummerAssignmentCatalog _kart;
         private readonly IScoreAssignmentCatalog _score;
 
-        private readonly Lazy<IReadOnlyList<MethodOptionViewModel>> _shuffleOptions;
-        private readonly Lazy<IReadOnlyList<MethodOptionViewModel>> _groupOptions;
-        private readonly Lazy<IReadOnlyList<MethodOptionViewModel>> _kartOptions;
-        private readonly Lazy<IReadOnlyList<MethodOptionViewModel>> _scoreOptions;
+        private readonly Lazy<IReadOnlyList<MethodOption>> _shuffleOptions;
+        private readonly Lazy<IReadOnlyList<MethodOption>> _groupOptions;
+        private readonly Lazy<IReadOnlyList<MethodOption>> _kartOptions;
+        private readonly Lazy<IReadOnlyList<MethodOption>> _scoreOptions;
 
         public MethodCatalogService(
             IParticipantShuffleCatalog shuffle,
@@ -26,18 +26,18 @@ namespace Hekki.UI.Services
             _kart = kart;
             _score = score;
 
-            _shuffleOptions = new Lazy<IReadOnlyList<MethodOptionViewModel>>(() => Map(_shuffle.GetAll()));
-            _groupOptions = new Lazy<IReadOnlyList<MethodOptionViewModel>>(() => Map(_group.GetAll()));
-            _kartOptions = new Lazy<IReadOnlyList<MethodOptionViewModel>>(() => Map(_kart.GetAll()));
-            _scoreOptions = new Lazy<IReadOnlyList<MethodOptionViewModel>>(() => Map(_score.GetAll()));
+            _shuffleOptions = new Lazy<IReadOnlyList<MethodOption>>(() => Map(_shuffle.GetAll()));
+            _groupOptions = new Lazy<IReadOnlyList<MethodOption>>(() => Map(_group.GetAll()));
+            _kartOptions = new Lazy<IReadOnlyList<MethodOption>>(() => Map(_kart.GetAll()));
+            _scoreOptions = new Lazy<IReadOnlyList<MethodOption>>(() => Map(_score.GetAll()));
         }
 
-        public IReadOnlyList<MethodOptionViewModel> GetShuffleOptions() => _shuffleOptions.Value;
-        public IReadOnlyList<MethodOptionViewModel> GetGroupOptions() => _groupOptions.Value;
-        public IReadOnlyList<MethodOptionViewModel> GetKartOptions() => _kartOptions.Value;
-        public IReadOnlyList<MethodOptionViewModel> GetScoreOptions() => _scoreOptions.Value;
+        public IReadOnlyList<MethodOption> GetShuffleOptions() => _shuffleOptions.Value;
+        public IReadOnlyList<MethodOption> GetGroupOptions() => _groupOptions.Value;
+        public IReadOnlyList<MethodOption> GetKartOptions() => _kartOptions.Value;
+        public IReadOnlyList<MethodOption> GetScoreOptions() => _scoreOptions.Value;
 
-        public MethodOptionViewModel? FindById(string id)
+        public MethodOption? FindById(string id)
         {
             return _shuffleOptions.Value.FirstOrDefault(x => x.Id == id)
                 ?? _groupOptions.Value.FirstOrDefault(x => x.Id == id)
@@ -45,11 +45,11 @@ namespace Hekki.UI.Services
                 ?? _scoreOptions.Value.FirstOrDefault(x => x.Id == id);
         }
 
-        private static IReadOnlyList<MethodOptionViewModel> Map<T>(IReadOnlyList<T> src)
+        private static IReadOnlyList<MethodOption> Map<T>(IReadOnlyList<T> src)
         {
-            var list = new List<MethodOptionViewModel>(src.Count);
+            var list = new List<MethodOption>(src.Count);
             foreach (dynamic m in src)
-                list.Add(new MethodOptionViewModel(m.Id, m.Title, m.Description));
+                list.Add(new MethodOption(m.Id, m.Title, m.Description));
             return list;
         }
     }

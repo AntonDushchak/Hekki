@@ -16,7 +16,7 @@ namespace Hekki.UI.Views.Controls
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public static readonly DependencyProperty AvailableMethodsProperty =
-            DependencyProperty.Register(nameof(AvailableMethods), typeof(ObservableCollection<MethodOptionViewModel>), typeof(MethodSelectorControl));
+            DependencyProperty.Register(nameof(AvailableMethods), typeof(ObservableCollection<MethodOption>), typeof(MethodSelectorControl));
 
         public static readonly DependencyProperty ShowSettingsCommandProperty =
             DependencyProperty.Register(nameof(ShowSettingsCommand), typeof(ICommand), typeof(MethodSelectorControl));
@@ -42,9 +42,9 @@ namespace Hekki.UI.Views.Controls
             set => SetValue(SelectedMethodIdProperty, value);
         }
 
-        public ObservableCollection<MethodOptionViewModel> AvailableMethods
+        public ObservableCollection<MethodOption> AvailableMethods
         {
-            get => (ObservableCollection<MethodOptionViewModel>)GetValue(AvailableMethodsProperty);
+            get => (ObservableCollection<MethodOption>)GetValue(AvailableMethodsProperty);
             set => SetValue(AvailableMethodsProperty, value);
         }
 

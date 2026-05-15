@@ -1,6 +1,6 @@
 ﻿using Hekki.Domain.Models;
 using Hekki.UI.ViewModels;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Text.Json;
 
 namespace Hekki.UI.Mappers
 {
@@ -16,11 +16,50 @@ namespace Hekki.UI.Mappers
             Configurations = vm.Heats.Select(h => new HeatConfigurationModel
             {
                 Name = h.Name,
-                Shuffle = new MethodSettings { MethodId = h.Shuffle.MethodId, Arguments = new(h.Shuffle.Arguments) },
-                Grouping = new MethodSettings { MethodId = h.Grouping.MethodId, Arguments = new(h.Grouping.Arguments) },
-                KartAssignment = new MethodSettings { MethodId = h.KartAssignment.MethodId, Arguments = new(h.KartAssignment.Arguments) },
-                Scoring = new MethodSettings { MethodId = h.Scoring.MethodId, Arguments = new(h.Scoring.Arguments) },
+                Shuffle = new MethodSettings
+                {
+                    MethodId = h.ShuffleMethodId,
+                    Arguments = ConvertParametersToArguments(h.ShuffleParameters)
+                },
+                Grouping = new MethodSettings
+                {
+                    MethodId = h.GroupMethodId,
+                    Arguments = ConvertParametersToArguments(h.GroupParameters)
+                },
+                KartAssignment = new MethodSettings
+                {
+                    MethodId = h.KartMethodId,
+                    Arguments = ConvertParametersToArguments(h.KartParameters)
+                },
+                Scoring = new MethodSettings
+                {
+                    MethodId = h.ScoreMethodId,
+                    Arguments = ConvertParametersToArguments(h.ScoreParameters)
+                },
             }).ToList()
         };
+
+        private static Dictionary<string, JsonElement> ConvertParametersToArguments(MethodParameters? parameters)
+        {
+            if (parameters == null)
+                return [];
+
+            return parameters switch
+            {
+                ReplacementParameters replacement => new()
+                {
+                    ["numberToDown"] = JsonSerializer.SerializeToElement(replacement.NumberToDown),
+                    ["numberToUp"] = JsonSerializer.SerializeToElement(replacement.NumberToUp)
+                },
+
+                _ => []
+            };
+        }
+
+        public static CreateRaceViewModel FromDomain(Regulation regulation)
+        {
+            // TODO: Implement reverse mapping
+            throw new NotImplementedException();
+        }
     }
 }

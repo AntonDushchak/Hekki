@@ -4,10 +4,10 @@ namespace Hekki.UI.Services
 {
     public interface IMethodCatalogService
     {
-        IReadOnlyList<MethodOptionViewModel> GetShuffleOptions();
-        IReadOnlyList<MethodOptionViewModel> GetGroupOptions();
-        IReadOnlyList<MethodOptionViewModel> GetKartOptions();
-        IReadOnlyList<MethodOptionViewModel> GetScoreOptions();
-        MethodOptionViewModel? FindById(string id);
+        IReadOnlyList<MethodOption> GetShuffleOptions();
+        IReadOnlyList<MethodOption> GetGroupOptions();
+        IReadOnlyList<MethodOption> GetKartOptions();
+        IReadOnlyList<MethodOption> GetScoreOptions();
+        MethodOption? FindById(string id);
     }
 }
