@@ -201,8 +201,6 @@ namespace Hekki.UI.ViewModels
             CurrentActiveSettings = config.GetExistingVm();
             CurrentActiveSettingsTitle = config.AvailableMethods
                 .FirstOrDefault(x => x.Id == config.GetSelectedMethodId())?.Title;
-
-            System.Diagnostics.Debug.WriteLine($"ShowSettings: Type={type}, Settings={CurrentActiveSettings}, Title={CurrentActiveSettingsTitle}");
         }
 
         private record MethodConfiguration(

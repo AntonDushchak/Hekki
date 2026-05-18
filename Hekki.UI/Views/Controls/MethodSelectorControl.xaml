@@ -26,7 +26,8 @@
                       MinHeight="30"/>
         </StackPanel>
 
-        <Button Grid.Column="1" 
+        <Button Grid.Column="1"
+                Padding="0"
                 VerticalAlignment="Bottom"
                 Width="35" Height="30"
                 Margin="8,0,0,0"
