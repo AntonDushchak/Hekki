@@ -55,9 +55,9 @@ namespace Hekki.UI
                     services.AddTransient<IViewModelFactory, ViewModelFactory>();
 
 
+                    services.AddSingleton<RegulationPickerViewModel>();
                     services.AddTransient<SelectionViewModel>();
                     services.AddTransient<CreateRaceViewModel>();
-                    services.AddTransient<RaceViewModel>();
 
                     services.AddSingleton<MainViewModel>();
                     services.AddSingleton<MainWindow>();

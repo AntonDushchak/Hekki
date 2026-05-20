@@ -17,21 +17,6 @@
     </DataTemplate>
     
 
-    <DataTemplate DataType="{x:Type vm:RaceTopPanelViewModel}">
-        <views:RaceTopPanelView />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type vm:CreateRaceTopPanelViewModel}">
-        <views:JustTextTopPanel />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type vm:SelectionTopPanelViewModel}">
-        <views:JustTextTopPanel />
-    </DataTemplate>
-
-
-
-
     <Style x:Key="HoverBorder" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource Brush.SurfaceMid}"/>
 

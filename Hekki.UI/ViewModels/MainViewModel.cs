@@ -9,13 +9,12 @@ namespace Hekki.UI.ViewModels
     {
         private readonly INavigationService _navigationService;
         private readonly IRegulationService _regulationService;
-        private readonly IViewModelFactory _viewModelFactory;
 
         public TopPanelViewModel TopPanelVM { get; }
 
-        private object _currentPageVM;
+        private object? _currentPageVM;
 
-        public object CurrentPageVM
+        public object? CurrentPageVM
         {
             get => _currentPageVM;
             set
@@ -25,50 +24,33 @@ namespace Hekki.UI.ViewModels
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged(string name)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        public MainViewModel(INavigationService navigationService, IRegulationService regulationService, IViewModelFactory viewModelFactory)
+        public MainViewModel(INavigationService navigationService, IRegulationService regulationService, RegulationPickerViewModel regulationPicker)
         {
-            TopPanelVM = new TopPanelViewModel();
+            TopPanelVM = new TopPanelViewModel(regulationPicker);
 
             _navigationService = navigationService;
             _regulationService = regulationService;
-            _viewModelFactory = viewModelFactory;
 
-            navigationService.Navigate = OnNavigate;
-            NavigateToSelection();
-        }
-
-        private void NavigateToSelection()
-        {
-            //_navigationService.Go(_viewModelFactory.Create<CreateRaceViewModel>());
-            _navigationService.Go(_viewModelFactory.Create<SelectionViewModel>());
+            _navigationService.Navigated += OnNavigate;
+            _navigationService.NavigateToSelection();
         }
 
         private void OnNavigate(object vm)
         {
             CurrentPageVM = vm;
 
-            switch (vm)
+            TopPanelVM.Title = vm switch
             {
-                case RaceViewModel:
-                    TopPanelVM.LeftTopPanelContent = new RaceTopPanelViewModel();
-                    break;
-
-                case CreateRaceViewModel:
-                    TopPanelVM.LeftTopPanelContent = new CreateRaceTopPanelViewModel();
-                    break;
-
-                case SelectionViewModel:
-                    TopPanelVM.LeftTopPanelContent = new SelectionTopPanelViewModel();
-                    break;
-
-                default:
-                    break;
-            }
+                RaceViewModel => "Race",
+                CreateRaceViewModel => "Create",
+                SelectionViewModel => "Selection",
+                _ => string.Empty
+            };
         }
     }
 }

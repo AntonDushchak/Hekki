@@ -12,7 +12,6 @@ namespace Hekki.UI.ViewModels
     public partial class CreateRaceViewModel : ObservableValidator
     {
         private readonly INavigationService _navigationService;
-        private readonly IViewModelFactory _viewModelFactory;
         private readonly IMethodCatalogService _methodCatalog;
         private readonly IRegulationRepository _regulationRepository;
 
@@ -51,20 +50,12 @@ namespace Hekki.UI.ViewModels
         public bool IsKartActive => CurrentSettingsType == MethodSettingsType.Kart;
         public bool IsScoreActive => CurrentSettingsType == MethodSettingsType.Score;
 
-        public string RegulationName
-        {
-            get => _regulationName;
-            set => SetProperty(ref _regulationName, value);
-        }
-
         public CreateRaceViewModel(
             INavigationService navigationService,
-            IViewModelFactory viewModelFactory,
             IMethodCatalogService methodCatalog,
             IRegulationRepository regulationRepository)
         {
             _navigationService = navigationService;
-            _viewModelFactory = viewModelFactory;
             _methodCatalog = methodCatalog;
             _regulationRepository = regulationRepository;
 

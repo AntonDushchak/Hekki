@@ -19,7 +19,7 @@ namespace Hekki.UI.Services
 
         public RaceViewModel CreateRaceViewModel(int regulationId)
         {
-            throw new NotImplementedException();
+            return new RaceViewModel(regulationId);
         }
     }
 

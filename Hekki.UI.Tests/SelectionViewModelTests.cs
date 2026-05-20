@@ -9,7 +9,6 @@ namespace Hekki.UI.Tests
     public class SelectionViewModelTests
     {
         private Mock<IRegulationService> _mockRegulationService;
-        private Mock<IViewModelFactory> _mockViewModelFactory;
         private Mock<INavigationService> _mockNavigationService;
         private Mock<IPaginationService> _mockPaginationService;
         private SelectionViewModel _viewModel;
@@ -19,7 +18,6 @@ namespace Hekki.UI.Tests
         public void Setup()
         {
             _mockRegulationService = new Mock<IRegulationService>();
-            _mockViewModelFactory = new Mock<IViewModelFactory>();
             _mockNavigationService = new Mock<INavigationService>();
             _mockPaginationService = new Mock<IPaginationService>();
 
@@ -45,7 +43,6 @@ namespace Hekki.UI.Tests
             _viewModel = new SelectionViewModel(
                 _mockNavigationService.Object,
                 _mockRegulationService.Object,
-                _mockViewModelFactory.Object,
                 _mockPaginationService.Object);
         }
 
@@ -141,26 +138,20 @@ namespace Hekki.UI.Tests
             _viewModel.NavigateToCreationCommand.Execute(null);
 
             // Assert
-            _mockViewModelFactory.Verify(x => x.Create<CreateRaceViewModel>(), Times.Once);
-            _mockNavigationService.Verify(x => x.Go(It.IsAny<CreateRaceViewModel>()), Times.Once);
+            _mockNavigationService.Verify(x => x.NavigateToCreateRace(), Times.Once);
         }
 
         [Test]
         public void NavigateToRaceCommand_ShouldCallNavigationServiceWithId()
         {
             // Arrange
-            const int testId = 123;
-            var mockRaceViewModel = new Mock<RaceViewModel>();
-            _mockViewModelFactory
-                .Setup(x => x.CreateRaceViewModel(testId))
-                .Returns(mockRaceViewModel.Object);
+            var regulation = new Regulation { Id = 123, Name = "Test" };
 
             // Act
-            _viewModel.NavigateToRaceCommand.Execute(testId);
+            _viewModel.NavigateToRaceCommand.Execute(regulation);
 
             // Assert
-            _mockViewModelFactory.Verify(x => x.CreateRaceViewModel(testId), Times.Once);
-            _mockNavigationService.Verify(x => x.Go(mockRaceViewModel.Object), Times.Once);
+            _mockNavigationService.Verify(x => x.NavigateToRace(123), Times.Once);
         }
 
         [Test]

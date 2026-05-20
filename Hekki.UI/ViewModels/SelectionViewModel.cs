@@ -13,7 +13,6 @@ namespace Hekki.UI.ViewModels
     public partial class SelectionViewModel : ObservableObject
     {
         private readonly IRegulationService _regulationService;
-        private readonly IViewModelFactory _viewModelFactory;
         private readonly INavigationService _navigationService;
 
         [ObservableProperty]
@@ -32,12 +31,10 @@ namespace Hekki.UI.ViewModels
         public SelectionViewModel(
             INavigationService navigationService,
             IRegulationService regulationService,
-            IViewModelFactory viewModelFactory,
             IPaginationService paginationService)
         {
             _navigationService = navigationService;
             _regulationService = regulationService;
-            _viewModelFactory = viewModelFactory;
             PaginationService = paginationService;
 
             Regulations.CollectionChanged += Regulations_CollectionChanged;
@@ -84,15 +81,13 @@ namespace Hekki.UI.ViewModels
         [RelayCommand]
         private void NavigateToCreation()
         {
-            _navigationService.Go(_viewModelFactory.Create<CreateRaceViewModel>());
+            _navigationService.NavigateToCreateRace();
         }
 
         [RelayCommand]
         private void NavigateToRace(Regulation regulation)
         {
-            WeakReferenceMessenger.Default.Send(new AppErrorMessage("Not implemented yet"));
-            //var id = regulation.Id;
-            //_navigationService.Go(_viewModelFactory.CreateRaceViewModel(id));
+            _navigationService.NavigateToRace(regulation.Id);
         }
 
         [RelayCommand]

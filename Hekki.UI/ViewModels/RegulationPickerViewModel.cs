@@ -41,9 +41,9 @@ namespace Hekki.UI.ViewModels
             if (SelectedItem is null) return;
 
             if (SelectedItem.Kind == RegulationChoiceKind.Create)
-                _navigationService.Navigate(new Uri("/Pages/RegulationCreation.xaml", UriKind.Relative));
-            else
-                _navigationService.Navigate(new Uri($"/Pages/Race.xaml?regulationId={SelectedItem.RegulationId}", UriKind.Relative));
+                _navigationService.NavigateToCreateRace();
+            else if (SelectedItem.RegulationId.HasValue)
+                _navigationService.NavigateToRace(SelectedItem.RegulationId.Value);
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
