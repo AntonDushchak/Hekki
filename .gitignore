@@ -367,3 +367,5 @@ FodyWeavers.xsd
 **/appsettings.Local.json
 /.github/instructions
 /Hekki.UI/unrelesed
+/.github/copilot-instructions.md
+/.github/create commit message instructions.prompt.md
