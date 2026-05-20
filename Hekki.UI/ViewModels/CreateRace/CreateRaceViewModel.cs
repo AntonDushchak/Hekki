@@ -1,13 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
 using Hekki.UI.Mappers;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hekki.UI.ViewModels
 {
-    public partial class CreateRaceViewModel : ObservableObject
+    public partial class CreateRaceViewModel : ObservableValidator
     {
         private readonly INavigationService _navigationService;
         private readonly IViewModelFactory _viewModelFactory;
@@ -16,6 +18,11 @@ namespace Hekki.UI.ViewModels
 
         private readonly Dictionary<MethodSettingsType, MethodConfiguration> _methodConfigurations;
 
+        [ObservableProperty]
+        [Required(ErrorMessage = "Regulation name is required")]
+        [MinLength(3, ErrorMessage = "Regulation name must be at least 3 characters")]
+        [MaxLength(100, ErrorMessage = "Regulation name cannot exceed 100 characters")]
+        [NotifyDataErrorInfo]
         private string _regulationName = string.Empty;
         [ObservableProperty] private HeatConfigurationViewModel? _selectedHeat;
 
@@ -176,18 +183,35 @@ namespace Hekki.UI.ViewModels
             SelectedHeat = Heats.Last();
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanSave))]
         private async Task Save()
         {
-            try
+            ValidateAllProperties();
+            if (HasErrors)
             {
-                await _regulationRepository.AddAsync(RegulationUiMapper.ToDomain(this, 0, 1, DateTime.UtcNow));
-            }
-            catch
-            {
-                //TODO: Handle error
+                var errors = string.Join("\n", GetErrors().Select(e => e.ErrorMessage));
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage($"Validation failed:\n{errors}"));
+                return;
             }
 
+            if (!Heats.Any())
+            {
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage("At least one heat is required"));
+                return;
+            }
+
+            try
+            {
+                await _regulationRepository.AddAsync(
+                    RegulationUiMapper.ToDomain(this, 0, 1, DateTime.UtcNow));
+
+                WeakReferenceMessenger.Default.Send(new AppSuccessMessage("Regulation saved successfully!"));
+                
+            }
+            catch (Exception ex)
+            {
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage($"Failed to save: {ex.Message}"));
+            }
         }
 
         [RelayCommand]
@@ -202,6 +226,8 @@ namespace Hekki.UI.ViewModels
             CurrentActiveSettingsTitle = config.AvailableMethods
                 .FirstOrDefault(x => x.Id == config.GetSelectedMethodId())?.Title;
         }
+
+        private bool CanSave() => !HasErrors && !string.IsNullOrWhiteSpace(RegulationName);
 
         private record MethodConfiguration(
                 Func<string?> GetSelectedMethodId,
