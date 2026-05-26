@@ -4,9 +4,98 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Hekki.UI.Views"
+             xmlns:components="clr-namespace:Hekki.UI.Views.Components"
+             xmlns:vm="clr-namespace:Hekki.UI.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+             d:DesignHeight="720" d:DesignWidth="1240">
+    <Grid HorizontalAlignment="Stretch"
+          Margin="40,0">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Container: Add Pilot + Total Table -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Add Pilot Control -->
+            <Border Grid.Row="0"
+                    Background="{DynamicResource Brush.SurfaceLow}"
+                    CornerRadius="4"
+                    Padding="15"
+                    Margin="0,0,0,20">
+                <components:AddPilotControl DataContext="{Binding}"/>
+            </Border>
+
+            <!-- Total Table Container -->
+            <Border Grid.Row="1"
+                    x:Name="TotalTable"
+                    Background="{DynamicResource Brush.SurfaceLow}"
+                    CornerRadius="8"
+                    Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{DynamicResource m_TotalTable}"
+                               FontSize="20"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,15"
+                               Grid.Row="0"/>
+
+                    <ScrollViewer Grid.Row="1"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding Pilots}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <local:PilotCard Margin="0,0,0,10"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Right Container: Heats Table -->
+        <Border Grid.Column="2"
+                x:Name="HeatsTable"
+                Background="{DynamicResource Brush.SurfaceLow}"
+                CornerRadius="8"
+                Padding="20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="{DynamicResource m_Heats}"
+                           FontSize="20"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,15"
+                           Grid.Row="0"/>
+
+                <ScrollViewer Grid.Row="1"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Heats}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <components:HeatCard Margin="0,0,0,15"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

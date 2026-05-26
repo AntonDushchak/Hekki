@@ -54,10 +54,19 @@ namespace Hekki.UI
 
                     services.AddTransient<IViewModelFactory, ViewModelFactory>();
 
+                    services.AddTransient<IPilotRepository, PilotRepository>();
+                    services.AddTransient<IRaceParticipantRepository, RaceParticipantRepository>();
+                    services.AddTransient<IHeatRepository, HeatRepository>();
+                    services.AddTransient<IRaceRepository, RaceRepository>();
+
+
+                    services.AddTransient<IPilotService, PilotService>();
+                    services.AddTransient<IRaceService, RaceService>();
+
 
                     services.AddSingleton<RegulationPickerViewModel>();
                     services.AddTransient<SelectionViewModel>();
-                    services.AddTransient<CreateRaceViewModel>();
+                    services.AddTransient<CreateRegulationViewModel>();
 
                     services.AddSingleton<MainViewModel>();
                     services.AddSingleton<MainWindow>();

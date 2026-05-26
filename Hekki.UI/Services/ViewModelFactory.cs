@@ -1,4 +1,5 @@
-﻿using Hekki.UI.ViewModels;
+﻿using Hekki.Application.Abstrations;
+using Hekki.UI.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hekki.UI.Services
@@ -17,15 +18,17 @@ namespace Hekki.UI.Services
             return _serviceProvider.GetRequiredService<T>();
         }
 
-        public RaceViewModel CreateRaceViewModel(int regulationId)
+        public RaceViewModel CreateRaceViewModel(int regulationId, int? raceId = null)
         {
-            return new RaceViewModel(regulationId);
+            var raceService = _serviceProvider.GetRequiredService<IRaceService>();
+            var pilotService = _serviceProvider.GetRequiredService<IPilotService>();
+            return new RaceViewModel(regulationId, raceId, raceService, pilotService);
         }
     }
 
     public interface IViewModelFactory
     {
         T Create<T>() where T : class;
-        RaceViewModel CreateRaceViewModel(int regulationId);
+        RaceViewModel CreateRaceViewModel(int regulationId, int? raceId = null);
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Hekki.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Hekki.Infrastructure.Migrations
 {
     [DbContext(typeof(HekkiDbContext))]
-    partial class HekkiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260526160034_AddConfigurationIndexToHeat")]
+    partial class AddConfigurationIndexToHeat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

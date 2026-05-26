@@ -47,7 +47,7 @@ namespace Hekki.UI.ViewModels
             TopPanelVM.Title = vm switch
             {
                 RaceViewModel => "Race",
-                CreateRaceViewModel => "Create",
+                CreateRegulationViewModel => "Create",
                 SelectionViewModel => "Selection",
                 _ => string.Empty
             };

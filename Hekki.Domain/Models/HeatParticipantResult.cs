@@ -2,10 +2,10 @@
 
 namespace Hekki.Domain.Models
 {
-    public class HeatPilotResult
+    public class HeatParticipantResult
     {
         public int HeatId { get; set; }
-        public int RacePilotId { get; set; }
+        public int ParticipantId { get; set; }
         public int? FinishPosition { get; set; }
         public long? TotalTimeMs { get; set; }
         public long? BestLapMs { get; set; }

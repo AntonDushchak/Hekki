@@ -3,7 +3,7 @@
     public class HeatEntry
     {
         public int HeatId { get; set; }
-        public int RacePilotId { get; set; }
+        public int ParticipantId { get; set; }
 
         public int SeedOrder { get; set; }
         public int? GridPosition { get; set; }

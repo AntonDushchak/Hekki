@@ -5,8 +5,92 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Hekki.UI.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+             d:DesignHeight="80" d:DesignWidth="1000">
+    <Border Background="White"
+            BorderBrush="{DynamicResource Brush.Border}"
+            BorderThickness="1"
+            CornerRadius="8">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Category vertical bar -->
+            <Border Grid.Column="0"
+                    Width="30"
+                    Background="#4A90E2"
+                    CornerRadius="8,0,0,8">
+                <TextBlock Text="{Binding Category}"
+                           Foreground="White"
+                           FontWeight="Bold"
+                           FontSize="12"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="-90"/>
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+            </Border>
+
+            <!-- Photo and numbers section -->
+            <StackPanel Grid.Column="1"
+                        Orientation="Vertical"
+                        VerticalAlignment="Center"
+                        Margin="15,10">
+                <!-- Photo placeholder -->
+                <Border Width="50"
+                        Height="50"
+                        Background="{DynamicResource Brush.SurfaceMid}"
+                        CornerRadius="4"
+                        Margin="0,0,0,5">
+                    <TextBlock Text="👤"
+                               FontSize="24"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource Brush.TextHint}"/>
+                </Border>
+
+                <!-- Kart numbers below name -->
+                <TextBlock Text="{Binding KartNumbers}"
+                           HorizontalAlignment="Center"
+                           FontSize="11"
+                           Foreground="{DynamicResource Brush.TextSecondary}"/>
+            </StackPanel>
+
+            <!-- Name -->
+            <TextBlock Grid.Column="2"
+                       Text="{Binding Name}"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       Margin="15,0,20,0"
+                       MinWidth="150"/>
+
+            <!-- Dynamic data columns -->
+            <ItemsControl Grid.Column="3"
+                          ItemsSource="{Binding DynamicData}"
+                          VerticalAlignment="Center"
+                          Margin="10,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"
+                                   FontSize="16"
+                                   Margin="20,0"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   MinWidth="40"
+                                   TextAlignment="Center"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </Border>
 </UserControl>

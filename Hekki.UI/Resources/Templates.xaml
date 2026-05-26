@@ -8,8 +8,8 @@
         <views:RaceView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type vm:CreateRaceViewModel}">
-        <views:CreateRaceView />
+    <DataTemplate DataType="{x:Type vm:CreateRegulationViewModel}">
+        <views:CreateRegulationView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type vm:SelectionViewModel}">

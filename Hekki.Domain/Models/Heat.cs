@@ -9,6 +9,7 @@ namespace Hekki.Domain.Models
         public string Name { get; set; } = string.Empty;
         public string? RoleLabel { get; set; }
         public int RegulationId { get; set; }
+        public int ConfigurationIndex { get; set; }
         public HeatStatus Status { get; set; }
     }
 }

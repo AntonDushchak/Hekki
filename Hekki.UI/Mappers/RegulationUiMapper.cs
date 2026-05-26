@@ -6,7 +6,7 @@ namespace Hekki.UI.Mappers
 {
     public class RegulationUiMapper
     {
-        public static Regulation ToDomain(CreateRaceViewModel vm, int id, int version, DateTime creationDate)
+        public static Regulation ToDomain(CreateRegulationViewModel vm, int id, int version, DateTime creationDate)
         => new()
         {
             Id = id,
@@ -56,7 +56,7 @@ namespace Hekki.UI.Mappers
             };
         }
 
-        public static CreateRaceViewModel FromDomain(Regulation regulation)
+        public static CreateRegulationViewModel FromDomain(Regulation regulation)
         {
             // TODO: Implement reverse mapping
             throw new NotImplementedException();

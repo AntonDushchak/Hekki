@@ -140,6 +140,9 @@ namespace Hekki.Infrastructure
                 entity.Property(e => e.RoleLabel)
                     .HasMaxLength(100);
 
+                entity.Property(e => e.ConfigurationIndex)
+                    .IsRequired();
+
                 entity.Property(e => e.Status)
                     .IsRequired();
 
@@ -190,7 +193,7 @@ namespace Hekki.Infrastructure
                     .IsRequired();
 
                 entity.HasOne(e => e.Heat)
-                    .WithMany(h => h.HeatPilotResults)
+                    .WithMany(h => h.HeatParticipantResults)
                     .HasForeignKey(e => e.HeatId)
                     .OnDelete(DeleteBehavior.Cascade);
 

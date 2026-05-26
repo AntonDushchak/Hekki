@@ -1,0 +1,52 @@
+<UserControl x:Class="Hekki.UI.Views.Components.AddPilotControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Hekki.UI.Views.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="60" d:DesignWidth="400">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <TextBox x:Name="SearchTextBox"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     VerticalContentAlignment="Center"
+                     MinHeight="40"
+                     Padding="10,0"/>
+
+            <Popup x:Name="SuggestionsPopup"
+                   PlacementTarget="{Binding ElementName=SearchTextBox}"
+                   Placement="Bottom"
+                   StaysOpen="False"
+                   Width="{Binding ElementName=SearchTextBox, Path=ActualWidth}"
+                   MaxHeight="200">
+                <ListBox ItemsSource="{Binding FilteredPilots}"
+                         Background="{DynamicResource Brush.SurfaceHigh}"
+                         BorderBrush="{DynamicResource Brush.UIElement}"
+                         BorderThickness="1">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                                <TextBlock Text="{Binding Number}" Foreground="{DynamicResource Brush.TextSecondary}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Popup>
+        </Grid>
+
+        <Button Grid.Column="1"
+                Content="{DynamicResource m_Add}"
+                Command="{Binding AddPilotCommand}"
+                MinWidth="80"
+                MinHeight="40"
+                Margin="10,0,0,0"
+                Background="{DynamicResource Brush.SurfaceHigh}"/>
+    </Grid>
+</UserControl>

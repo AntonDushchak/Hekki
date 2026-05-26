@@ -2,9 +2,9 @@
 
 namespace Hekki.UI.Views
 {
-    public partial class CreateRaceView : UserControl
+    public partial class CreateRegulationView : UserControl
     {
-        public CreateRaceView()
+        public CreateRegulationView()
         {
             InitializeComponent();
         }
