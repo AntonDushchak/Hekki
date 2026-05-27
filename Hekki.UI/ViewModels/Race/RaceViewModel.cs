@@ -1,9 +1,11 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
 using Hekki.Domain.Models;
 using Hekki.UI.Mappers;
 using System.Collections.ObjectModel;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Hekki.UI.ViewModels
 {
@@ -13,28 +15,24 @@ namespace Hekki.UI.ViewModels
         private readonly IPilotService _pilotService;
         private Regulation? _regulation;
 
-        [ObservableProperty]
-        private int _regulationId;
+        [ObservableProperty] private int _regulationId;
 
-        [ObservableProperty]
-        private int? _raceId;
+        [ObservableProperty] private int? _raceId;
 
-        [ObservableProperty]
-        private string _raceName = string.Empty;
+        [ObservableProperty] private string _raceName = string.Empty;
 
-        [ObservableProperty]
-        private string _location = string.Empty;
+        [ObservableProperty] private string _location = string.Empty;
 
-        [ObservableProperty]
-        private DateTime _raceDate = DateTime.Today;
+        [ObservableProperty] private DateTime _raceDate = DateTime.Today;
 
         public bool IsNewRace => RaceId == null;
 
-        [ObservableProperty]
-        private string _searchText = string.Empty;
+        [ObservableProperty] private string _searchText = string.Empty;
 
-        [ObservableProperty]
-        private PilotViewModel? _selectedPilot;
+        [ObservableProperty] private PilotViewModel? _selectedPilot;
+        [ObservableProperty] private bool _isPopupOpen;
+        private bool _isUpdatingFromSelection;
+        private CancellationTokenSource? _searchCancellation;
 
         public ObservableCollection<RaceParticipantViewModel> Participants { get; } = [];
         public ObservableCollection<PilotViewModel> FilteredPilots { get; } = [];
@@ -59,7 +57,7 @@ namespace Hekki.UI.ViewModels
 
             if (RaceId == null)
             {
-                //TODO: New race
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage($"Not implemented"));
             }
             else
             {
@@ -98,18 +96,18 @@ namespace Hekki.UI.ViewModels
             // Load participants with pilot info first
             var participants = await _raceService.GetRaceParticipantsAsync(RaceId.Value);
             Participants.Clear();
-            foreach (var participant in participants)
+            foreach (var pilot in participants)
             {
                 Participants.Add(new RaceParticipantViewModel
                 {
-                    Id = participant.Participant.Id,
-                    RaceId = participant.Participant.RaceId,
-                    PilotId = participant.Participant.PilotId,
-                    PilotName = participant.PilotName,
-                    Team = participant.Participant.Team,
-                    IsActive = participant.Participant.IsActive,
-                    PilotPhotoPath = participant.PilotPhotoPath,
-                    PilotProfileUrl = participant.PilotProfileUrl
+                    Id = pilot.ParticipantId,
+                    RaceId = RaceId.Value,
+                    PilotId = pilot.PilotId,
+                    PilotName = pilot.Name,
+                    Team = pilot.Team,
+                    IsActive = true,
+                    PilotPhotoPath = pilot.PhotoPath,
+                    PilotProfileUrl = pilot.ProfileUrl
                 });
             }
 
@@ -131,15 +129,82 @@ namespace Hekki.UI.ViewModels
             }
         }
 
-        private void LoadPilots()
+        partial void OnSelectedPilotChanged(PilotViewModel? value)
         {
-            // TODO: Load pilots for search from IPilotService.GetAllPilotsAsync()
-            // This is only for pilot search/selection, not for participant management
+            if (value == null) return;
+
+            _isUpdatingFromSelection = true;
+
+            SearchText = value.Name;
+
+            IsPopupOpen = false;
+
+            _isUpdatingFromSelection = false;
         }
 
         partial void OnSearchTextChanged(string value)
         {
-            FilterPilotsForSearch(value);
+            if (_isUpdatingFromSelection) return;
+
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                FilteredPilots.Clear();
+                IsPopupOpen = false;
+                return;
+            }
+
+            if (SelectedPilot != null && SelectedPilot.Name != value)
+            {
+                SelectedPilot = null;
+            }
+
+            _ = FilterPilotsForSearchAsync(value);
+        }
+
+        private async Task FilterPilotsForSearchAsync(string searchText)
+        {
+            _searchCancellation?.Cancel();
+            _searchCancellation = new CancellationTokenSource();
+            var ct = _searchCancellation.Token;
+
+            if (string.IsNullOrWhiteSpace(searchText) || searchText.Length < 3)
+            {
+                FilteredPilots.Clear();
+                IsPopupOpen = false;
+                return;
+            }
+
+            try
+            {
+                await Task.Delay(300, ct);
+
+                var pilots = await _pilotService.SearchPilotsByNameAsync(searchText, ct);
+
+                if (ct.IsCancellationRequested)
+                    return;
+
+                FilteredPilots.Clear();
+                foreach (var pilot in pilots)
+                {
+                    FilteredPilots.Add(new PilotViewModel
+                    {
+                        PilotId = pilot.Id,
+                        Name = pilot.Name,
+                        PhotoPath = pilot.PhotoPath,
+                        ProfileUrl = pilot.ProfileUrl
+                    });
+                }
+
+                IsPopupOpen = FilteredPilots.Count > 0;
+            }
+            catch (Exception ex) when (ex is OperationCanceledException || ex is TaskCanceledException)
+            {
+                System.Diagnostics.Debug.WriteLine("Search canceled: user continues typing.");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error searching pilots: {ex.Message}");
+            }
         }
 
         [RelayCommand]
@@ -147,21 +212,22 @@ namespace Hekki.UI.ViewModels
         {
             if (pilot == null || RaceId == null) return;
 
-            var exists = await _raceService.IsParticipantInRaceAsync(RaceId.Value, pilot.Id);
+            var exists = await _raceService.IsParticipantInRaceAsync(RaceId.Value, pilot.PilotId);
             if (exists)
                 return;
 
-            var participantId = await _raceService.AddParticipantAsync(RaceId.Value, pilot.Id, string.Empty);
+            var participantId = await _raceService.AddParticipantAsync(RaceId.Value, pilot.PilotId, string.Empty);
 
             Participants.Add(new RaceParticipantViewModel
             {
                 Id = participantId,
                 RaceId = RaceId.Value,
-                PilotId = pilot.Id,
+                PilotId = pilot.PilotId,
                 PilotName = pilot.Name,
                 Team = string.Empty,
                 IsActive = true,
                 PilotPhotoPath = pilot.PhotoPath,
+                PilotProfileUrl = pilot.ProfileUrl
             });
 
             SearchText = string.Empty;
@@ -174,25 +240,6 @@ namespace Hekki.UI.ViewModels
 
             await _raceService.RemoveParticipantAsync(participant.Id);
             Participants.Remove(participant);
-        }
-
-        private void FilterPilotsForSearch(string searchText)
-        {
-            FilteredPilots.Clear();
-
-            if (string.IsNullOrWhiteSpace(searchText))
-            {
-                return;
-            }
-
-            // TODO: Load pilots from IPilotService and filter
-            // var filtered = allPilots.Where(p => 
-            //     p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
-            //
-            // foreach (var pilot in filtered)
-            // {
-            //     FilteredPilots.Add(pilot);
-            // }
         }
     }
 }

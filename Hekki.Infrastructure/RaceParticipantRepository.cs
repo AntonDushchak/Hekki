@@ -47,6 +47,31 @@ namespace Hekki.Infrastructure
             return entities.Select(e => e.ToDomain()).ToList();
         }
 
+        public async Task<IReadOnlyList<ParticipantWithPilotData>> GetByRaceIdWithPilotsAsync(int raceId, CancellationToken ct = default)
+        {
+            await using var db = await _dbFactory.CreateDbContextAsync(ct);
+
+            var results = await db.RaceParticipants
+                .AsNoTracking()
+                .Include(rp => rp.Pilot)
+                .Where(rp => rp.RaceId == raceId)
+                .OrderBy(rp => rp.Id)
+                .Select(rp => new ParticipantWithPilotData
+                {
+                    ParticipantId = rp.Id,
+                    RaceId = rp.RaceId,
+                    PilotId = rp.PilotId,
+                    Team = rp.Team,
+                    IsActive = rp.IsActive,
+                    PilotName = rp.Pilot.Name,
+                    PilotProfileUrl = rp.Pilot.ProfileUrl,
+                    PilotPhotoPath = rp.Pilot.PhotoPath
+                })
+                .ToListAsync(ct);
+
+            return results;
+        }
+
         public async Task<int> AddAsync(RaceParticipant participant, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);

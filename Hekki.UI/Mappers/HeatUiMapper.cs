@@ -1,4 +1,5 @@
 ﻿using Hekki.Application.Abstrations;
+using Hekki.Application.DTOs;
 using Hekki.Domain.Models;
 using Hekki.UI.ViewModels;
 using System.Collections.ObjectModel;
@@ -15,7 +16,7 @@ namespace Hekki.UI.Mappers
             HeatConfigurationModel config,
             IReadOnlyList<HeatEntry> entries,
             IReadOnlyList<HeatParticipantResult> results,
-            IReadOnlyList<RaceParticipantWithPilot> participants)
+            IReadOnlyList<PilotDto> participants)
         {
             var heatViewModel = new HeatViewModel
             {
@@ -39,7 +40,7 @@ namespace Hekki.UI.Mappers
             HeatConfigurationModel config,
             IReadOnlyList<HeatEntry> entries,
             IReadOnlyList<HeatParticipantResult> results,
-            IReadOnlyList<RaceParticipantWithPilot> participants)
+            IReadOnlyList<PilotDto> participants)
         {
             var numberOfGroups = config.NumberOfGroups > 0 ? config.NumberOfGroups : 1;
             var groupCapacity = config.GroupCapacity > 0 ? config.GroupCapacity : 8;
@@ -60,7 +61,7 @@ namespace Hekki.UI.Mappers
 
                 foreach (var entry in groupEntries)
                 {
-                    var participant = participants.FirstOrDefault(p => p.Participant.Id == entry.ParticipantId);
+                    var participant = participants.FirstOrDefault(p => p.ParticipantId == entry.ParticipantId);
                     var result = results.FirstOrDefault(r => r.ParticipantId == entry.ParticipantId);
 
                     if (participant != null)
@@ -69,7 +70,7 @@ namespace Hekki.UI.Mappers
                         {
                             Position = result?.FinishPosition ?? 0,
                             KartNumber = entry.KartNumber?.ToString() ?? "-",
-                            PilotName = participant.PilotName
+                            PilotName = participant.Name
                         };
 
                         // Add dynamic data if needed (laps, times, etc.)

@@ -1,9 +1,30 @@
+using Hekki.Application.DTOs;
 using Hekki.Domain.Models;
 
 namespace Hekki.Application.Abstrations
 {
     public interface IRaceService
     {
+        /// <summary>
+        /// Get complete race data with participants and heats for UI
+        /// </summary>
+        Task<RaceDataDto> GetRaceDataAsync(int raceId, CancellationToken ct = default);
+
+        /// <summary>
+        /// Search pilots by name or kart number within race
+        /// </summary>
+        Task<IReadOnlyList<PilotDto>> SearchPilotsAsync(int raceId, string searchText, CancellationToken ct = default);
+
+        /// <summary>
+        /// Add pilot to race as participant
+        /// </summary>
+        Task<int> AddPilotToRaceAsync(int raceId, int pilotId, string? team = null, CancellationToken ct = default);
+
+        /// <summary>
+        /// Remove participant from race
+        /// </summary>
+        Task RemoveParticipantFromRaceAsync(int raceId, int participantId, CancellationToken ct = default);
+
         /// <summary>
         /// Get race by ID
         /// </summary>
@@ -27,7 +48,7 @@ namespace Hekki.Application.Abstrations
         /// <summary>
         /// Get all participants for a race with pilot information
         /// </summary>
-        Task<IReadOnlyList<RaceParticipantWithPilot>> GetRaceParticipantsAsync(int raceId, CancellationToken ct = default);
+        Task<IReadOnlyList<PilotDto>> GetRaceParticipantsAsync(int raceId, CancellationToken ct = default);
 
         /// <summary>
         /// Get heat entries for a specific heat
@@ -53,18 +74,5 @@ namespace Hekki.Application.Abstrations
         /// Check if pilot is already participant in race
         /// </summary>
         Task<bool> IsParticipantInRaceAsync(int raceId, int pilotId, CancellationToken ct = default);
-    }
-
-    /// <summary>
-    /// Aggregated model combining RaceParticipant with Pilot information
-    /// </summary>
-    public class RaceParticipantWithPilot
-    {
-        public RaceParticipant Participant { get; set; } = null!;
-
-        // Pilot information
-        public string PilotName { get; set; } = string.Empty;
-        public string? PilotProfileUrl { get; set; }
-        public string? PilotPhotoPath { get; set; }
     }
 }

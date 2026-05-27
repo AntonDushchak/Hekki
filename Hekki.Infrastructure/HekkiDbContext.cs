@@ -164,6 +164,9 @@ namespace Hekki.Infrastructure
             {
                 entity.ToTable("heat_entries");
 
+                entity.Property(e => e.GroupNumber)
+                    .IsRequired();
+
                 entity.HasKey(e => new { e.HeatId, e.ParticipantId });
 
                 entity.Property(e => e.SeedOrder)

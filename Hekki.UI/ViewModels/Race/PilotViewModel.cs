@@ -5,7 +5,12 @@ namespace Hekki.UI.ViewModels
 {
     public partial class PilotViewModel : ObservableObject
     {
-        public int Id { get; set; }
+        [ObservableProperty]
+        private int _pilotId;
+
+        [ObservableProperty]
+        private int _participantId;
+
         [ObservableProperty]
         private string _name = string.Empty;
 
@@ -17,6 +22,9 @@ namespace Hekki.UI.ViewModels
 
         [ObservableProperty]
         private string? _photoPath;
+
+        [ObservableProperty]
+        private string? _profileUrl;
 
         public ObservableCollection<string> DynamicData { get; } = [];
     }

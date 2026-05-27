@@ -58,6 +58,8 @@ namespace Hekki.UI
                     services.AddTransient<IRaceParticipantRepository, RaceParticipantRepository>();
                     services.AddTransient<IHeatRepository, HeatRepository>();
                     services.AddTransient<IRaceRepository, RaceRepository>();
+                    services.AddTransient<IHeatResultRepository, HeatResultRepository>();
+                    services.AddTransient<IHeatEntryRepository, HeatEntryRepository>();
 
 
                     services.AddTransient<IPilotService, PilotService>();

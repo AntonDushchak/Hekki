@@ -1,29 +1,145 @@
 using Hekki.Application.Abstrations;
+using Hekki.Application.DTOs;
 using Hekki.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Hekki.Infrastructure
 {
     public class RaceService : IRaceService
     {
-        private readonly IDbContextFactory<HekkiDbContext> _dbFactory;
         private readonly IRaceRepository _raceRepository;
         private readonly IHeatRepository _heatRepository;
         private readonly IRegulationRepository _regulationRepository;
         private readonly IRaceParticipantRepository _raceParticipantRepository;
+        private readonly IHeatResultRepository _heatResultRepository;
+        private readonly IHeatEntryRepository _heatEntryRepository;
 
         public RaceService(
-            IDbContextFactory<HekkiDbContext> dbFactory,
             IRaceRepository raceRepository,
             IHeatRepository heatRepository,
             IRegulationRepository regulationRepository,
-            IRaceParticipantRepository raceParticipantRepository)
+            IRaceParticipantRepository raceParticipantRepository,
+            IHeatResultRepository heatResultRepository,
+            IHeatEntryRepository heatEntryRepository)
         {
-            _dbFactory = dbFactory;
             _raceRepository = raceRepository;
             _heatRepository = heatRepository;
             _regulationRepository = regulationRepository;
             _raceParticipantRepository = raceParticipantRepository;
+            _heatResultRepository = heatResultRepository;
+            _heatEntryRepository = heatEntryRepository;
+        }
+
+        public async Task<RaceDataDto> GetRaceDataAsync(int raceId, CancellationToken ct = default)
+        {
+            var race = await _raceRepository.GetByIdAsync(raceId, ct);
+            if (race == null)
+                throw new InvalidOperationException($"Race with ID {raceId} not found");
+
+            var participants = await _raceParticipantRepository.GetByRaceIdWithPilotsAsync(raceId, ct);
+            var activeParticipants = participants.Where(p => p.IsActive).OrderBy(p => p.PilotName).ToList();
+
+            var heats = await _heatRepository.GetByRaceIdAsync(raceId, ct);
+            var heatIds = heats.Select(h => h.Id).ToList();
+
+            var heatResults = await _heatResultRepository.GetByHeatIdsWithPilotInfoAsync(heatIds, ct);
+
+            var heatEntries = await _heatEntryRepository.GetByHeatIdsAsync(heatIds, ct);
+
+            var pilotDtos = activeParticipants.Select(p => new PilotDto
+            {
+                PilotId = p.PilotId,
+                ParticipantId = p.ParticipantId,
+                Name = p.PilotName,
+                PhotoPath = p.PilotPhotoPath,
+                Team = p.Team,
+                KartNumbers = heatEntries
+                    .Where(he => he.ParticipantId == p.ParticipantId && he.KartNumber.HasValue)
+                    .Select(he => he.KartNumber!.Value.ToString())
+                    .Distinct()
+                    .ToList(),
+                Statistics = new Dictionary<string, string>() // TODO: Calculate statistics
+            }).ToList();
+
+            var heatDtos = heats.Select(h =>
+            {
+                var results = heatResults.Where(hr => hr.HeatId == h.Id).ToList();
+
+                return new HeatDto
+                {
+                    HeatId = h.Id,
+                    Name = h.Name,
+                    GroupNumber = h.ConfigurationIndex + 1,
+                    HeatNumber = h.ConfigurationIndex + 1,
+                    DynamicColumns = ["Time"], // TODO: Get from configuration
+                    Results = results
+                        .OrderBy(r => r.FinishPosition ?? int.MaxValue)
+                        .Select((r, index) => new HeatResultDto
+                        {
+                            Position = r.FinishPosition ?? index + 1,
+                            KartNumber = heatEntries
+                                .FirstOrDefault(e => e.HeatId == h.Id && e.ParticipantId == r.ParticipantId)
+                                ?.KartNumber?.ToString() ?? "-",
+                            PilotName = r.PilotName,
+                            DynamicData = new Dictionary<string, string>
+                            {
+                                ["Time"] = FormatTime(r.TotalTimeMs)
+                            }
+                        }).ToList()
+                };
+            }).ToList();
+
+            return new RaceDataDto
+            {
+                RaceId = raceId,
+                RaceName = race.Name,
+                Participants = pilotDtos,
+                Heats = heatDtos
+            };
+        }
+
+        public async Task<IReadOnlyList<PilotDto>> SearchPilotsAsync(int raceId, string searchText, CancellationToken ct = default)
+        {
+            if (string.IsNullOrWhiteSpace(searchText))
+                return [];
+
+            var participants = await _raceParticipantRepository.GetByRaceIdWithPilotsAsync(raceId, ct);
+
+            var filteredParticipants = participants
+                .Where(p => p.IsActive && p.PilotName.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(p => p.PilotName)
+                .Take(10)
+                .ToList();
+
+            return filteredParticipants.Select(p => new PilotDto
+            {
+                PilotId = p.PilotId,
+                ParticipantId = p.ParticipantId,
+                Name = p.PilotName,
+                PhotoPath = p.PilotPhotoPath,
+                Team = p.Team
+            }).ToList();
+        }
+
+        public async Task<int> AddPilotToRaceAsync(int raceId, int pilotId, string? team = null, CancellationToken ct = default)
+        {
+            if (await IsParticipantInRaceAsync(raceId, pilotId, ct))
+                throw new InvalidOperationException($"Pilot {pilotId} is already in race {raceId}");
+
+            return await AddParticipantAsync(raceId, pilotId, team ?? string.Empty, ct);
+        }
+
+        public async Task RemoveParticipantFromRaceAsync(int raceId, int participantId, CancellationToken ct = default)
+        {
+            await RemoveParticipantAsync(participantId, ct);
+        }
+
+        private static string FormatTime(long? timeMs)
+        {
+            if (!timeMs.HasValue || timeMs.Value == 0)
+                return "-";
+
+            var ts = TimeSpan.FromMilliseconds(timeMs.Value);
+            return $"{(int)ts.TotalMinutes}:{ts.Seconds:D2}.{ts.Milliseconds:D3}";
         }
 
         public async Task<Race?> GetRaceByIdAsync(int raceId, CancellationToken ct = default)
@@ -74,62 +190,29 @@ namespace Hekki.Infrastructure
             return await _regulationRepository.GetByIdAsync(regulationId, ct);
         }
 
-        public async Task<IReadOnlyList<RaceParticipantWithPilot>> GetRaceParticipantsAsync(int raceId, CancellationToken ct = default)
+        public async Task<IReadOnlyList<PilotDto>> GetRaceParticipantsAsync(int raceId, CancellationToken ct = default)
         {
-            await using var db = await _dbFactory.CreateDbContextAsync(ct);
+            var participants = await _raceParticipantRepository.GetByRaceIdWithPilotsAsync(raceId, ct);
 
-            var participants = await db.RaceParticipants
-                .AsNoTracking()
-                .Include(rp => rp.Pilot)
-                .Where(rp => rp.RaceId == raceId)
-                .OrderBy(rp => rp.Pilot.Name)
-                .ToListAsync(ct);
-
-            return participants.Select(rp => new RaceParticipantWithPilot
+            return participants.Select(p => new PilotDto
             {
-                Participant = new RaceParticipant
-                {
-                    Id = rp.Id,
-                    RaceId = rp.RaceId,
-                    PilotId = rp.PilotId,
-                    Team = rp.Team,
-                    IsActive = rp.IsActive
-                },
-                PilotName = rp.Pilot.Name,
-                PilotProfileUrl = rp.Pilot.ProfileUrl,
-                PilotPhotoPath = rp.Pilot.PhotoPath
+                PilotId = p.PilotId,
+                ParticipantId = p.ParticipantId,
+                Name = p.PilotName,
+                PhotoPath = p.PilotPhotoPath,
+                ProfileUrl = p.PilotProfileUrl,
+                Team = p.Team
             }).ToList();
         }
 
         public async Task<IReadOnlyList<HeatEntry>> GetHeatEntriesAsync(int heatId, CancellationToken ct = default)
         {
-            await using var db = await _dbFactory.CreateDbContextAsync(ct);
-
-            var entries = await db.HeatEntries
-                .AsNoTracking()
-                .Where(he => he.HeatId == heatId)
-                .OrderBy(he => he.SeedOrder)
-                .ToListAsync(ct);
-
-            return entries.Select(e => new HeatEntry
-            {
-                HeatId = e.HeatId,
-                ParticipantId = e.ParticipantId,
-                SeedOrder = e.SeedOrder,
-                GridPosition = e.GridPosition,
-                KartNumber = e.KartNumber
-            }).ToList();
+            return await _heatEntryRepository.GetByHeatIdAsync(heatId, ct);
         }
 
         public async Task<IReadOnlyList<HeatParticipantResult>> GetHeatResultsAsync(int heatId, CancellationToken ct = default)
         {
-            await using var db = await _dbFactory.CreateDbContextAsync(ct);
-
-            var results = await db.HeatResults
-                .AsNoTracking()
-                .Where(hr => hr.HeatId == heatId)
-                .OrderBy(hr => hr.FinishPosition)
-                .ToListAsync(ct);
+            var results = await _heatResultRepository.GetByHeatIdAsync(heatId, ct);
 
             return results.Select(r => new HeatParticipantResult
             {

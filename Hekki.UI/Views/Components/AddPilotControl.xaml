@@ -20,30 +20,49 @@
                      Padding="10,0"/>
 
             <Popup x:Name="SuggestionsPopup"
+				   IsOpen="{Binding IsPopupOpen, Mode=TwoWay}"
                    PlacementTarget="{Binding ElementName=SearchTextBox}"
                    Placement="Bottom"
                    StaysOpen="False"
+                   AllowsTransparency="True"
                    Width="{Binding ElementName=SearchTextBox, Path=ActualWidth}"
                    MaxHeight="200">
-                <ListBox ItemsSource="{Binding FilteredPilots}"
+                <ListBox x:Name="SuggestionsList"
+                         ItemsSource="{Binding FilteredPilots}"
+                         SelectedItem="{Binding SelectedPilot, Mode=TwoWay}"
                          Background="{DynamicResource Brush.SurfaceHigh}"
                          BorderBrush="{DynamicResource Brush.UIElement}"
-                         BorderThickness="1">
+                         BorderThickness="1"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="5">
-                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Margin="0,0,10,0"/>
-                                <TextBlock Text="{Binding Number}" Foreground="{DynamicResource Brush.TextSecondary}"/>
+                            <StackPanel Orientation="Horizontal" Margin="5" Cursor="Hand">
+                                <TextBlock Text="{Binding Name}" 
+                                          FontWeight="SemiBold" 
+                                          Margin="0,0,10,0"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="8,4"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource Brush.Surface}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
                 </ListBox>
             </Popup>
         </Grid>
 
         <Button Grid.Column="1"
                 Content="{DynamicResource m_Add}"
-                Command="{Binding AddPilotCommand}"
+                Command="{Binding AddParticipantCommand}"
+                CommandParameter="{Binding SelectedPilot}"
                 MinWidth="80"
                 MinHeight="40"
                 Margin="10,0,0,0"

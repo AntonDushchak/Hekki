@@ -2,6 +2,7 @@
 {
     public class HeatEntryEntity
     {
+        public int GroupNumber { get; set; }
         public int HeatId { get; set; }
         public HeatEntity Heat { get; set; } = null!;
         public int ParticipantId { get; set; }
