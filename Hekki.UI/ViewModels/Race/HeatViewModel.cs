@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using Hekki.Application.Regulations;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels
@@ -10,8 +11,10 @@ namespace Hekki.UI.ViewModels
 
         [ObservableProperty]
         private int _heatNumber = 0;
-
-        public ObservableCollection<string> DynamicColumns { get; } = [];
+        public HeatConfig Config { get; set; }
+        public bool ShowTime => Config.HeatStructure.ScoringMode is ScoringMode.TimeBased or ScoringMode.Hybrid;
+        public bool ShowScore => Config.HeatStructure.ScoringMode is ScoringMode.PointsBased or ScoringMode.Hybrid;
+        public bool ShowPenalty => Config.HeatStructure.ScoringMode is ScoringMode.PointsBased or ScoringMode.Hybrid;
         public ObservableCollection<HeatGroupViewModel> Groups { get; } = [];
     }
 
@@ -22,21 +25,37 @@ namespace Hekki.UI.ViewModels
 
         [ObservableProperty]
         private int _groupCapacity = 8;
+        [ObservableProperty]
+        private int _groupIndex = 0;
 
-        public ObservableCollection<HeatResultViewModel> Results { get; } = [];
+        public ObservableCollection<HeatRowViewModel> Rows { get; set; } = [];
+    }
+
+    public class HeatRowViewModel
+    {
+        public HeatEntryViewModel Entry { get; set; } = null!;
+        public HeatResultViewModel? Result { get; set; }
+    }
+
+    public partial class HeatEntryViewModel : ObservableObject
+    {
+        [ObservableProperty] private int _participantId;
+        [ObservableProperty] private string _pilotName = string.Empty;
+        [ObservableProperty] private int? _kartNumber;
+        [ObservableProperty] private int? _gridPosition;
+        [ObservableProperty] private int _seedOrder;
     }
 
     public partial class HeatResultViewModel : ObservableObject
     {
-        [ObservableProperty]
-        private int _position;
+        [ObservableProperty] private int _participantId;
+        [ObservableProperty] private int? _finishPosition;
+        [ObservableProperty] private long? _totalTimeMs;
+        [ObservableProperty] private long? _bestLapMs;
+        [ObservableProperty] private int? _laps;
+        [ObservableProperty] private int? _score;
+        [ObservableProperty] private int? _penalty;
 
-        [ObservableProperty]
-        private string _kartNumber = string.Empty;
-
-        [ObservableProperty]
-        private string _pilotName = string.Empty;
-
-        public ObservableCollection<string> DynamicData { get; } = [];
+        public int TotalScore => (Score ?? 0) - (Penalty ?? 0);
     }
 }

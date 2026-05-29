@@ -1,6 +1,7 @@
+using AutoMapper;
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs;
-using Hekki.Infrastructure.Mappers;
+using Hekki.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hekki.Infrastructure.Repositories
@@ -8,42 +9,53 @@ namespace Hekki.Infrastructure.Repositories
     public class HeatEntryRepository : IHeatEntryRepository
     {
         private readonly IDbContextFactory<HekkiDbContext> _dbFactory;
+        private readonly IMapper _mapper;
 
-        public HeatEntryRepository(IDbContextFactory<HekkiDbContext> dbFactory)
-            => _dbFactory = dbFactory;
+        public HeatEntryRepository(IDbContextFactory<HekkiDbContext> dbFactory, IMapper mapper)
+        {
+            _dbFactory = dbFactory;
+            _mapper = mapper;
+        }
 
-        public async Task<IReadOnlyList<HeatResultDto>> GetByHeatIdAsync(int heatId, CancellationToken ct = default)
+        public async Task<IReadOnlyList<HeatEntryDto>> GetByHeatIdAsync(int heatId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
             var entries = await db.HeatEntries
                 .Where(x => x.HeatId == heatId)
+                .Include(x => x.Participant)
+                    .ThenInclude(x => x.Pilot)
                 .ToListAsync(ct);
 
-            return entries.Select(e => HeatEntryMapper.ToDto(e)).ToList();
+            return entries.Select(e => _mapper.Map<HeatEntryDto>(e)).ToList();
         }
 
-        public async Task<IReadOnlyList<HeatResultDto>> GetByHeatIdAndGroupAsync(int heatId, int groupNumber, CancellationToken ct = default)
+        public async Task<IReadOnlyList<HeatEntryDto>> GetByHeatIdAndGroupAsync(int heatId, int groupNumber, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
             var entries = await db.HeatEntries
                 .Where(x => x.HeatId == heatId && x.GroupNumber == groupNumber)
+                .Include(x => x.Participant)
+                    .ThenInclude(x => x.Pilot)
                 .ToListAsync(ct);
 
-            return entries.Select(e => HeatEntryMapper.ToDto(e)).ToList();
+            return entries.Select(e => _mapper.Map<HeatEntryDto>(e)).ToList();
         }
 
-        public async Task AddAsync(int heatId, int groupNumber, HeatResultDto entry, CancellationToken ct = default)
+        public async Task AddAsync(int heatId, int groupNumber, HeatEntryDto entry, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = HeatEntryMapper.ToEntity(entry, heatId, groupNumber);
+            var entity = _mapper.Map<HeatEntryEntity>(entry);
+            entity.HeatId = heatId;
+            entity.GroupNumber = groupNumber;
+            entity.SeedOrder = 0;
             db.HeatEntries.Add(entity);
             await db.SaveChangesAsync(ct);
         }
 
-        public async Task UpdateAsync(int heatId, int groupNumber, HeatResultDto entry, CancellationToken ct = default)
+        public async Task UpdateAsync(int heatId, int groupNumber, HeatEntryDto entry, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
@@ -53,7 +65,8 @@ namespace Hekki.Infrastructure.Repositories
             if (entity is null)
                 throw new InvalidOperationException($"Heat entry not found for HeatId {heatId} and ParticipantId {entry.ParticipantId}");
 
-            HeatEntryMapper.UpdateEntity(entity, entry);
+            entity.KartNumber = entry.KartNumber;
+            entity.GridPosition = entry.GridPosition;
             await db.SaveChangesAsync(ct);
         }
 

@@ -1,6 +1,7 @@
+using AutoMapper;
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs;
-using Hekki.Infrastructure.Mappers;
+using Hekki.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hekki.Infrastructure.Repositories
@@ -8,9 +9,13 @@ namespace Hekki.Infrastructure.Repositories
     public class RaceRepository : IRaceRepository
     {
         private readonly IDbContextFactory<HekkiDbContext> _dbFactory;
+        private readonly IMapper _mapper;
 
-        public RaceRepository(IDbContextFactory<HekkiDbContext> dbFactory)
-            => _dbFactory = dbFactory;
+        public RaceRepository(IDbContextFactory<HekkiDbContext> dbFactory, IMapper mapper)
+        {
+            _dbFactory = dbFactory;
+            _mapper = mapper;
+        }
 
         public async Task<IReadOnlyList<RaceDataDto>> GetAllAsync(CancellationToken ct = default)
         {
@@ -25,7 +30,7 @@ namespace Hekki.Infrastructure.Repositories
                     .ThenInclude(x => x.HeatParticipantResults)
                 .ToListAsync(ct);
 
-            return raceEntities.Select(e => RaceMapper.ToDto(e)).ToList();
+            return raceEntities.Select(e => _mapper.Map<RaceDataDto>(e)).ToList();
         }
 
         public async Task<RaceDataDto?> GetByIdAsync(int id, CancellationToken ct = default)
@@ -46,14 +51,14 @@ namespace Hekki.Infrastructure.Repositories
                 return null; //TODO: error handler/logger
             }
 
-            return RaceMapper.ToDto(raceEntity);
+            return _mapper.Map<RaceDataDto>(raceEntity);
         }
 
         public async Task<int> AddAsync(RaceDataDto race, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = RaceMapper.ToEntity(race);
+            var entity = _mapper.Map<RaceEntity>(race);
             db.Races.Add(entity);
             await db.SaveChangesAsync(ct);
 
@@ -68,7 +73,9 @@ namespace Hekki.Infrastructure.Repositories
             if (entity is null)
                 throw new InvalidOperationException($"Race with ID {race.RaceId} not found");
 
-            RaceMapper.UpdateEntity(entity, race);
+            entity.Name = race.RaceName;
+            entity.Date = race.Date;
+            entity.Location = race.Location;
             await db.SaveChangesAsync(ct);
         }
 

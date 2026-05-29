@@ -2,10 +2,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
-using Hekki.Domain.Models;
+using Hekki.Application.DTOs;
 using Hekki.UI.Mappers;
 using System.Collections.ObjectModel;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Hekki.UI.ViewModels
 {
@@ -13,7 +12,7 @@ namespace Hekki.UI.ViewModels
     {
         private readonly IRaceService _raceService;
         private readonly IPilotService _pilotService;
-        private Regulation? _regulation;
+        private RegulationEditDto? _regulation;
 
         [ObservableProperty] private int _regulationId;
 
@@ -39,8 +38,8 @@ namespace Hekki.UI.ViewModels
         public ObservableCollection<HeatViewModel> Heats { get; } = [];
 
         public RaceViewModel(
-            int regulationId, 
-            int? raceId, 
+            int regulationId,
+            int? raceId,
             IRaceService raceService,
             IPilotService pilotService)
         {
@@ -71,9 +70,9 @@ namespace Hekki.UI.ViewModels
                 return;
 
             var newRaceId = await _raceService.CreateRaceAsync(
-                RaceName, 
-                Location, 
-                RaceDate, 
+                RaceName,
+                Location,
+                RaceDate,
                 RegulationId);
 
             RaceId = newRaceId;
@@ -85,11 +84,11 @@ namespace Hekki.UI.ViewModels
             if (RaceId == null)
                 return;
 
-            var race = await _raceService.GetRaceByIdAsync(RaceId.Value);
+            var race = await _raceService.GetRaceDataAsync(RaceId.Value);
             if (race == null)
                 return;
 
-            RaceName = race.Name;
+            RaceName = race.RaceName;
             Location = race.Location;
             RaceDate = race.Date;
 
@@ -100,9 +99,9 @@ namespace Hekki.UI.ViewModels
             {
                 Participants.Add(new RaceParticipantViewModel
                 {
-                    Id = pilot.ParticipantId,
+                    Id = pilot.Id,
                     RaceId = RaceId.Value,
-                    PilotId = pilot.PilotId,
+                    //PilotId = pilot.,
                     PilotName = pilot.Name,
                     Team = pilot.Team,
                     IsActive = true,
@@ -111,19 +110,14 @@ namespace Hekki.UI.ViewModels
                 });
             }
 
-            // Load heats with entries and results
+            // Load heats with groups and results
             if (_regulation != null)
             {
                 var heats = await _raceService.GetRaceHeatsAsync(RaceId.Value);
                 Heats.Clear();
-
                 foreach (var heat in heats)
                 {
-                    var config = _regulation.Configurations[heat.ConfigurationIndex];
-                    var entries = await _raceService.GetHeatEntriesAsync(heat.Id);
-                    var results = await _raceService.GetHeatResultsAsync(heat.Id);
-
-                    var heatVm = HeatUiMapper.MapToHeatViewModel(heat, config, entries, results, participants.ToList());
+                    var heatVm = HeatUiMapper.MapToHeatViewModel(heat);
                     Heats.Add(heatVm);
                 }
             }

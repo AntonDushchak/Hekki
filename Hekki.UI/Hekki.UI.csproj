@@ -22,6 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1">
       <PrivateAssets>all</PrivateAssets>
@@ -34,12 +36,12 @@
 
   <ItemGroup>
     <Folder Include="Controls\" />
-    <Folder Include="Messages\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Hekki.Application\Hekki.Application.csproj" />
     <ProjectReference Include="..\Hekki.Domain\Hekki.Domain.csproj" />
+    <ProjectReference Include="..\Hekki.Infrastructure\Hekki.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

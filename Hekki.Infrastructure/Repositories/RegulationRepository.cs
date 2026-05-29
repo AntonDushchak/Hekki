@@ -1,7 +1,9 @@
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs;
+using Hekki.Application.Regulations;
 using Hekki.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace Hekki.Infrastructure.Repositories
 {
@@ -38,16 +40,14 @@ namespace Hekki.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task AddAsync(RegulationEditDto regulationDto, CancellationToken ct = default)
+        public async Task<int> AddAsync(RegulationEditDto regulationDto, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
             var entity = new RegulationEntity
             {
-                Name = regulation.Name,
-                Version = regulation.Version,
-                Json = regulation.Json,
-                CreationDate = regulation.CreationDate
+                Name = regulationDto.Name,
+                Json = JsonSerializer.Serialize(regulationDto.Config),
             };
 
             db.Regulations.Add(entity);
@@ -74,27 +74,13 @@ namespace Hekki.Infrastructure.Repositories
             return await db.Regulations.AnyAsync(r => r.Id == id, ct);
         }
 
-        private static RegulationEntity ToEntity(RegulationEditDto dto)
-        {
-            return new RegulationEntity
-            {
-                Id = dto.Id,
-                Name = dto.Name,
-                Version = dto.Version,
-                Json = dto.Json,
-                CreationDate = dto.CreationDate
-            };
-        }
-
         private static RegulationEditDto ToEditDto(RegulationEntity entity)
         {
             return new RegulationEditDto
             {
                 Id = entity.Id,
                 Name = entity.Name,
-                Version = entity.Version,
-                Json = entity.Json,
-                CreationDate = entity.CreationDate
+                Config = JsonSerializer.Deserialize<RegulationConfig>(entity.Json)
             };
         }
 
@@ -105,8 +91,18 @@ namespace Hekki.Infrastructure.Repositories
                 Id = entity.Id,
                 Name = entity.Name,
                 Version = entity.Version,
-                Json = entity.Json,
                 CreationDate = entity.CreationDate
+            };
+        }
+
+        private static RegulationEntity ToEntity(RegulationSummaryDto dto)
+        {
+            return new RegulationEntity
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                Version = dto.Version,
+                CreationDate = dto.CreationDate
             };
         }
     }

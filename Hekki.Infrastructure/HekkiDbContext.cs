@@ -116,7 +116,7 @@ namespace Hekki.Infrastructure
                     .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(e => e.Pilot)
-                    .WithMany(p => p.Participations)
+                    .WithMany()
                     .HasForeignKey(e => e.PilotId)
                     .OnDelete(DeleteBehavior.Restrict);
 
@@ -136,6 +136,9 @@ namespace Hekki.Infrastructure
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(200);
+
+                entity.Property(e => e.HeatNumber)
+                    .IsRequired();
 
                 entity.Property(e => e.RoleLabel)
                     .HasMaxLength(100);

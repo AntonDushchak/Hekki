@@ -1,6 +1,7 @@
+using AutoMapper;
 using Hekki.Application.Abstrations;
+using Hekki.Application.DTOs;
 using Hekki.Infrastructure.Entities;
-using Hekki.Infrastructure.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hekki.Infrastructure.Repositories
@@ -8,11 +9,15 @@ namespace Hekki.Infrastructure.Repositories
     public class PilotRepository : IPilotRepository
     {
         private readonly IDbContextFactory<HekkiDbContext> _dbFactory;
+        private readonly IMapper _mapper;
 
-        public PilotRepository(IDbContextFactory<HekkiDbContext> dbFactory)
-            => _dbFactory = dbFactory;
+        public PilotRepository(IDbContextFactory<HekkiDbContext> dbFactory, IMapper mapper)
+        {
+            _dbFactory = dbFactory;
+            _mapper = mapper;
+        }
 
-        public async Task<IReadOnlyList<PilotEntity>> GetAllAsync(CancellationToken ct = default)
+        public async Task<IReadOnlyList<PilotDto>> GetAllAsync(CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
@@ -21,10 +26,10 @@ namespace Hekki.Infrastructure.Repositories
                 .OrderBy(p => p.Name)
                 .ToListAsync(ct);
 
-            return entities.Select(e => e.ToDomain()).ToList();
+            return entities.Select(e => _mapper.Map<PilotDto>(e)).ToList();
         }
 
-        public async Task<PilotEntity?> GetByIdAsync(int id, CancellationToken ct = default)
+        public async Task<PilotDto?> GetByIdAsync(int id, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
@@ -32,21 +37,21 @@ namespace Hekki.Infrastructure.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == id, ct);
 
-            return entity?.ToDomain();
+            return entity == null ? null : _mapper.Map<PilotDto>(entity);
         }
 
-        public async Task<int> AddAsync(PilotEntity pilot, CancellationToken ct = default)
+        public async Task<int> AddAsync(PilotDto pilot, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = pilot.ToEntity();
+            var entity = _mapper.Map<PilotEntity>(pilot);
             db.Pilots.Add(entity);
             await db.SaveChangesAsync(ct);
 
             return entity.Id;
         }
 
-        public async Task UpdateAsync(PilotEntity pilot, CancellationToken ct = default)
+        public async Task UpdateAsync(PilotDto pilot, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
@@ -54,7 +59,7 @@ namespace Hekki.Infrastructure.Repositories
             if (entity is null)
                 throw new InvalidOperationException($"Pilot with ID {pilot.Id} not found");
 
-            pilot.UpdateEntity(entity);
+            _mapper.Map(pilot, entity);
             await db.SaveChangesAsync(ct);
         }
 

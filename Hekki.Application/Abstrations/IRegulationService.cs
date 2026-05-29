@@ -1,9 +1,10 @@
-﻿using Hekki.Domain.Models;
+﻿using Hekki.Application.DTOs;
 
-namespace Hekki.Application.Abstrations
+namespace Hekki.Application.Services
 {
     public interface IRegulationService
     {
-        Task<IReadOnlyList<Regulation>> GetLookupAsync(CancellationToken ct = default);
+        Task<List<RegulationSummaryDto>> GetRegulationsAsync();
+        Task<RegulationEditDto> GetRegulationEditAsync(int id);
     }
 }

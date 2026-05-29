@@ -1,6 +1,7 @@
+using AutoMapper;
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs;
-using Hekki.Infrastructure.Mappers;
+using Hekki.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hekki.Infrastructure.Repositories
@@ -8,11 +9,15 @@ namespace Hekki.Infrastructure.Repositories
     public class RaceParticipantRepository : IRaceParticipantRepository
     {
         private readonly IDbContextFactory<HekkiDbContext> _dbFactory;
+        private readonly IMapper _mapper;
 
-        public RaceParticipantRepository(IDbContextFactory<HekkiDbContext> dbFactory)
-            => _dbFactory = dbFactory;
+        public RaceParticipantRepository(IDbContextFactory<HekkiDbContext> dbFactory, IMapper mapper)
+        {
+            _dbFactory = dbFactory;
+            _mapper = mapper;
+        }
 
-        public async Task<IReadOnlyList<PilotDto>> GetAllAsync(CancellationToken ct = default)
+        public async Task<IReadOnlyList<RaceParticipantDto>> GetAllAsync(CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
@@ -20,10 +25,10 @@ namespace Hekki.Infrastructure.Repositories
                 .Include(x => x.Pilot)
                 .ToListAsync(ct);
 
-            return participants.Select(p => RaceParticipantMapper.ToDto(p)).ToList();
+            return participants.Select(p => _mapper.Map<RaceParticipantDto>(p)).ToList();
         }
 
-        public async Task<PilotDto?> GetByIdAsync(int id, CancellationToken ct = default)
+        public async Task<RaceParticipantDto?> GetByIdAsync(int id, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
@@ -36,10 +41,10 @@ namespace Hekki.Infrastructure.Repositories
                 return null;
             }
 
-            return RaceParticipantMapper.ToDto(participant);
+            return _mapper.Map<RaceParticipantDto>(participant);
         }
 
-        public async Task<IReadOnlyList<PilotDto>> GetByRaceIdAsync(int raceId, CancellationToken ct = default)
+        public async Task<IReadOnlyList<RaceParticipantDto>> GetByRaceIdAsync(int raceId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
@@ -48,21 +53,23 @@ namespace Hekki.Infrastructure.Repositories
                 .Include(x => x.Pilot)
                 .ToListAsync(ct);
 
-            return participants.Select(p => RaceParticipantMapper.ToDto(p)).ToList();
+            return participants.Select(p => _mapper.Map<RaceParticipantDto>(p)).ToList();
         }
 
-        public async Task<int> AddAsync(int raceId, PilotDto participant, CancellationToken ct = default)
+        public async Task<int> AddAsync(int raceId, RaceParticipantDto participant, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = RaceParticipantMapper.ToEntity(participant, raceId);
+            var entity = _mapper.Map<RaceParticipantEntity>(participant);
+            entity.RaceId = raceId;
+            entity.IsActive = true;
             db.RaceParticipants.Add(entity);
             await db.SaveChangesAsync(ct);
 
             return entity.Id;
         }
 
-        public async Task UpdateAsync(PilotDto participant, CancellationToken ct = default)
+        public async Task UpdateAsync(RaceParticipantDto participant, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
@@ -70,7 +77,9 @@ namespace Hekki.Infrastructure.Repositories
             if (entity is null)
                 throw new InvalidOperationException($"Race participant with ID {participant.ParticipantId} not found");
 
-            RaceParticipantMapper.UpdateEntity(entity, participant);
+            entity.Team = participant.Team;
+            entity.League = participant.League;
+            entity.IsActive = participant.IsActive;
             await db.SaveChangesAsync(ct);
         }
 

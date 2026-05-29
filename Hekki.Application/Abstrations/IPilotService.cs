@@ -1,4 +1,4 @@
-using Hekki.Domain.Models;
+using Hekki.Application.DTOs;
 
 namespace Hekki.Application.Abstrations
 {
@@ -7,16 +7,16 @@ namespace Hekki.Application.Abstrations
         /// <summary>
         /// Get all pilots with basic information
         /// </summary>
-        Task<IReadOnlyList<Pilot>> GetAllPilotsAsync(CancellationToken ct = default);
+        Task<IReadOnlyList<PilotDto>> GetAllPilotsAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get pilot by ID with basic information
         /// </summary>
-        Task<Pilot?> GetPilotByIdAsync(int pilotId, CancellationToken ct = default);
+        Task<PilotDto?> GetPilotByIdAsync(int pilotId, CancellationToken ct = default);
 
         /// <summary>
         /// Search pilots by name
         /// </summary>
-        Task<IReadOnlyList<Pilot>> SearchPilotsByNameAsync(string searchText, CancellationToken ct = default);
+        Task<IReadOnlyList<PilotDto>> SearchPilotsByNameAsync(string searchText, CancellationToken ct = default);
     }
 }

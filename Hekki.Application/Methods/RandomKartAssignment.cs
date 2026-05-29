@@ -1,4 +1,4 @@
-﻿using Hekki.Domain.Models;
+﻿using Hekki.Application.DTOs;
 
 namespace Hekki.Application.Methods
 {
@@ -8,7 +8,7 @@ namespace Hekki.Application.Methods
         public string Title => "Random Kart Assignment";
         public string Description => "Randomly assigns kart numbers to participants.";
 
-        public List<RaceParticipant> AssignKartNummer(List<RaceParticipant> participants, List<int> kartNummers)
+        public List<PilotDto> AssignKartNummer(List<PilotDto> participants, List<int> kartNummers)
         {
             throw new NotImplementedException();
         }
@@ -20,7 +20,7 @@ namespace Hekki.Application.Methods
         public string Title => "Random No Repeat Kart Assignment";
         public string Description => "Randomly assigns kart numbers to participants without repetition.";
 
-        public List<RaceParticipant> AssignKartNummer(List<RaceParticipant> participants, List<int> kartNummers)
+        public List<PilotDto> AssignKartNummer(List<PilotDto> participants, List<int> kartNummers)
         {
             throw new NotImplementedException();
         }

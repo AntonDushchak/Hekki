@@ -1,4 +1,4 @@
-﻿using Hekki.Domain.Models;
+﻿using Hekki.Application.DTOs;
 
 namespace Hekki.Application.Methods
 {
@@ -8,7 +8,7 @@ namespace Hekki.Application.Methods
         public string Title => "Default Score Assignment";
         public string Description => "Assigns scores using the default method.";
 
-        public List<RaceParticipant> AssignScores(List<RaceParticipant> participants, List<int> scores)
+        public List<PilotDto> AssignScores(List<PilotDto> participants, List<int> scores)
         {
             return participants;
         }

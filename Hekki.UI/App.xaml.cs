@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
 using Hekki.Application.Methods;
+using Hekki.Application.Services;
 using Hekki.Infrastructure;
 using Hekki.Infrastructure.Repositories;
 using Hekki.UI.Services;
@@ -42,6 +43,8 @@ namespace Hekki.UI
                     services.AddDbContextFactory<HekkiDbContext>(options =>
                         options.UseNpgsql(context.Configuration.GetConnectionString("HekkiDb")));
 
+                    // AutoMapper
+                    services.AddAutoMapper(typeof(Hekki.Infrastructure.Mapping.MappingProfile));
 
                     services.AddTransient<IRegulationRepository, RegulationRepository>();
 

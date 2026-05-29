@@ -1,4 +1,4 @@
-﻿using Hekki.Domain.Models;
+﻿using Hekki.Application.DTOs;
 
 namespace Hekki.Application.Methods
 {
@@ -7,7 +7,7 @@ namespace Hekki.Application.Methods
         string Id { get; }
         string Title { get; }
         string Description { get; }
-        List<RaceParticipant> AssignKartNummer(List<RaceParticipant> participants, List<int> kartNummers);
+        List<PilotDto> AssignKartNummer(List<PilotDto> participants, List<int> kartNummers);
     }
 
     public interface IKartNummerAssignmentCatalog

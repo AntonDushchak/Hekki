@@ -1,6 +1,7 @@
+using AutoMapper;
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs;
-using Hekki.Infrastructure.Mappers;
+using Hekki.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hekki.Infrastructure.Repositories
@@ -8,9 +9,13 @@ namespace Hekki.Infrastructure.Repositories
     public class HeatResultRepository : IHeatResultRepository
     {
         private readonly IDbContextFactory<HekkiDbContext> _dbFactory;
+        private readonly IMapper _mapper;
 
-        public HeatResultRepository(IDbContextFactory<HekkiDbContext> dbFactory)
-            => _dbFactory = dbFactory;
+        public HeatResultRepository(IDbContextFactory<HekkiDbContext> dbFactory, IMapper mapper)
+        {
+            _dbFactory = dbFactory;
+            _mapper = mapper;
+        }
 
         public async Task<IReadOnlyList<HeatResultDto>> GetByHeatIdAsync(int heatId, CancellationToken ct = default)
         {
@@ -20,7 +25,7 @@ namespace Hekki.Infrastructure.Repositories
                 .Where(x => x.HeatId == heatId)
                 .ToListAsync(ct);
 
-            return results.Select(r => HeatResultMapper.ToDto(r)).ToList();
+            return results.Select(r => _mapper.Map<HeatResultDto>(r)).ToList();
         }
 
         public async Task<HeatResultDto?> GetByHeatAndParticipantAsync(int heatId, int participantId, CancellationToken ct = default)
@@ -35,14 +40,15 @@ namespace Hekki.Infrastructure.Repositories
                 return null;
             }
 
-            return HeatResultMapper.ToDto(result);
+            return _mapper.Map<HeatResultDto>(result);
         }
 
         public async Task AddAsync(int heatId, HeatResultDto result, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = HeatResultMapper.ToEntity(result, heatId);
+            var entity = _mapper.Map<HeatResultEntity>(result);
+            entity.HeatId = heatId;
             db.HeatResults.Add(entity);
             await db.SaveChangesAsync(ct);
         }
@@ -57,7 +63,10 @@ namespace Hekki.Infrastructure.Repositories
             if (entity is null)
                 throw new InvalidOperationException($"Heat result not found for HeatId {heatId} and ParticipantId {result.ParticipantId}");
 
-            HeatResultMapper.UpdateEntity(entity, result);
+            entity.FinishPosition = result.FinishPosition;
+            entity.TotalTimeMs = result.TotalTimeMs;
+            entity.BestLapMs = result.BestLapMs;
+            entity.Laps = result.Laps;
             await db.SaveChangesAsync(ct);
         }
 

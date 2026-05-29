@@ -2,7 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
-using Hekki.Domain.Models;
+using Hekki.Application.DTOs;
+using Hekki.Application.Services;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -17,14 +18,14 @@ namespace Hekki.UI.ViewModels
 
         [ObservableProperty]
         private bool _isLoading;
-        public ObservableCollection<Regulation> Regulations { get; } = [];
+        public ObservableCollection<RegulationSummaryDto> Regulations { get; } = [];
         public IPaginationService PaginationService { get; }
-        public ObservableCollection<Regulation> PagedRegulations
+        public ObservableCollection<RegulationSummaryDto> PagedRegulations
         {
             get
             {
                 var start = Math.Max(0, PaginationService.StartItem - 1);
-                return new ObservableCollection<Regulation>(Regulations.Skip(start).Take(PaginationService.PageCapacity));
+                return new ObservableCollection<RegulationSummaryDto>(Regulations.Skip(start).Take(PaginationService.PageCapacity));
             }
         }
 
@@ -63,7 +64,7 @@ namespace Hekki.UI.ViewModels
                 IsLoading = true;
                 Regulations.Clear();
 
-                var regs = await _regulationService.GetLookupAsync();
+                var regs = await _regulationService.GetRegulationsAsync();
 
                 foreach (var reg in regs)
                 {
@@ -85,7 +86,7 @@ namespace Hekki.UI.ViewModels
         }
 
         [RelayCommand]
-        private void NavigateToRace(Regulation regulation)
+        private void NavigateToRace(RegulationSummaryDto regulation)
         {
             _navigationService.NavigateToRace(regulation.Id);
         }

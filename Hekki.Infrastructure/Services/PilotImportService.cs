@@ -1,4 +1,3 @@
-using Hekki.Infrastructure.DTOs;
 using Hekki.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
@@ -62,5 +61,12 @@ namespace Hekki.Infrastructure.Services
         {
             return await _context.Pilots.CountAsync();
         }
+    }
+
+    internal class PilotJsonDto
+    {
+        public string DriverName { get; set; }
+        public string ProfileUrl { get; set; }
+        public string PhotoUrl { get; set; }
     }
 }

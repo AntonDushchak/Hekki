@@ -2,7 +2,9 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
-using Hekki.UI.Mappers;
+using Hekki.Application.DTOs;
+using Hekki.Application.Methods;
+using Hekki.Application.Regulations;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -193,13 +195,13 @@ namespace Hekki.UI.ViewModels
 
             try
             {
-                var regulationId = await _regulationRepository.AddAsync(
-                    RegulationUiMapper.ToDomain(this, 0, 1, DateTime.UtcNow));
+                //var dto = MapToDto();
+                //var regulationId = await _regulationRepository.AddAsync(dto);
 
-                WeakReferenceMessenger.Default.Send(new AppSuccessMessage("Regulation saved successfully!"));
+                //WeakReferenceMessenger.Default.Send(new AppSuccessMessage("Regulation saved successfully!"));
 
-                // Navigate to RaceViewModel to create Race + Heats
-                _navigationService.NavigateToRace(regulationId);
+                //// Navigate to RaceViewModel to create Race + Heats
+                //_navigationService.NavigateToRace(regulationId);
             }
             catch (Exception ex)
             {

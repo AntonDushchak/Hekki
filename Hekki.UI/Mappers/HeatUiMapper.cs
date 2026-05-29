@@ -1,8 +1,5 @@
-﻿using Hekki.Application.Abstrations;
-using Hekki.Application.DTOs;
-using Hekki.Domain.Models;
+﻿using Hekki.Application.DTOs;
 using Hekki.UI.ViewModels;
-using System.Collections.ObjectModel;
 
 namespace Hekki.UI.Mappers
 {
@@ -11,97 +8,60 @@ namespace Hekki.UI.Mappers
         /// <summary>
         /// Map Heat domain model to HeatViewModel for UI display
         /// </summary>
-        public static HeatViewModel MapToHeatViewModel(
-            Heat heat, 
-            HeatConfigurationModel config,
-            IReadOnlyList<HeatEntry> entries,
-            IReadOnlyList<HeatParticipantResult> results,
-            IReadOnlyList<PilotDto> participants)
+        public static HeatViewModel MapToHeatViewModel(HeatDto heat)
         {
             var heatViewModel = new HeatViewModel
             {
                 Name = heat.Name,
-                HeatNumber = heat.ConfigurationIndex + 1
+                HeatNumber = heat.HeatNumber,
             };
 
-            var groups = MapToHeatGroups(config, entries, results, participants);
-            foreach (var group in groups)
+            foreach (var groupDto in heat.Groups)
             {
-                heatViewModel.Groups.Add(group);
+                var groupVm = MapToHeatGroupViewModel(groupDto);
+                heatViewModel.Groups.Add(groupVm);
             }
 
             return heatViewModel;
         }
 
         /// <summary>
-        /// Create groups of participants based on heat configuration
+        /// Map HeatGroupDto to HeatGroupViewModel
         /// </summary>
-        private static IEnumerable<HeatGroupViewModel> MapToHeatGroups(
-            HeatConfigurationModel config,
-            IReadOnlyList<HeatEntry> entries,
-            IReadOnlyList<HeatParticipantResult> results,
-            IReadOnlyList<PilotDto> participants)
+        private static HeatGroupViewModel MapToHeatGroupViewModel(HeatGroupDto groupDto)
         {
-            var numberOfGroups = config.NumberOfGroups > 0 ? config.NumberOfGroups : 1;
-            var groupCapacity = config.GroupCapacity > 0 ? config.GroupCapacity : 8;
-
-            for (int groupNum = 1; groupNum <= numberOfGroups; groupNum++)
+            var groupVm = new HeatGroupViewModel
             {
-                var group = new HeatGroupViewModel
-                {
-                    GroupNumber = groupNum,
-                    GroupCapacity = groupCapacity
-                };
+                GroupNumber = groupDto.GroupNumber,
+                GroupCapacity = groupDto.GroupCapacity,
+                GroupIndex = groupDto.GroupIndex
+            };
 
-                var groupEntries = entries
-                    .OrderBy(e => e.SeedOrder)
-                    .Skip((groupNum - 1) * groupCapacity)
-                    .Take(groupCapacity)
-                    .ToList();
-
-                foreach (var entry in groupEntries)
-                {
-                    var participant = participants.FirstOrDefault(p => p.ParticipantId == entry.ParticipantId);
-                    var result = results.FirstOrDefault(r => r.ParticipantId == entry.ParticipantId);
-
-                    if (participant != null)
-                    {
-                        var resultVm = new HeatResultViewModel
-                        {
-                            Position = result?.FinishPosition ?? 0,
-                            KartNumber = entry.KartNumber?.ToString() ?? "-",
-                            PilotName = participant.Name
-                        };
-
-                        // Add dynamic data if needed (laps, times, etc.)
-                        if (result != null)
-                        {
-                            resultVm.DynamicData.Add(result.Laps?.ToString() ?? "-");
-                            resultVm.DynamicData.Add(FormatTime(result.BestLapMs));
-                            resultVm.DynamicData.Add(FormatTime(result.TotalTimeMs));
-                        }
-
-                        group.Results.Add(resultVm);
-                    }
-                }
-
-                yield return group;
+            foreach (var entryDto in groupDto.Entries)
+            {
+                var entryVm = ToRow(entryDto, groupDto.Results.FirstOrDefault(r => r.ParticipantId == entryDto.ParticipantId));
+                groupVm.Rows.Add(entryVm);
             }
+
+            return groupVm;
         }
 
-        /// <summary>
-        /// Format time in milliseconds to readable format (MM:SS.mmm)
-        /// </summary>
-        private static string FormatTime(long? timeMs)
+        public static HeatRowViewModel ToRow(HeatEntryDto entry, HeatResultDto? result) => new()
         {
-            if (timeMs == null || timeMs == 0)
-                return "-";
-
-            var totalSeconds = timeMs.Value / 1000.0;
-            var minutes = (int)(totalSeconds / 60);
-            var seconds = totalSeconds % 60;
-
-            return $"{minutes:D2}:{seconds:00.000}";
-        }
+            Entry = new HeatEntryViewModel
+            {
+                ParticipantId = entry.ParticipantId,
+                PilotName = entry.PilotName,
+                KartNumber = entry.KartNumber,
+                GridPosition = entry.GridPosition
+            },
+            Result = result == null ? null : new HeatResultViewModel
+            {
+                ParticipantId = result.ParticipantId,
+                FinishPosition = result.FinishPosition,
+                TotalTimeMs = result.TotalTimeMs,
+                Score = result.Score
+            }
+        };
     }
 }

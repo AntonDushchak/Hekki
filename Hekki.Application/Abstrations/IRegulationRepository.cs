@@ -7,7 +7,7 @@ namespace Hekki.Application.Abstrations
         Task<IReadOnlyList<RegulationSummaryDto>> GetAllAsync(CancellationToken ct = default);
         Task<RegulationSummaryDto> GetByIdAsync(int id, CancellationToken ct = default);
         Task<RegulationEditDto> GetForEditAsync(int id, CancellationToken ct = default);
-        Task AddAsync(RegulationEditDto dto, CancellationToken ct = default);
+        Task<int> AddAsync(RegulationEditDto dto, CancellationToken ct = default);
         Task DeleteAsync(int id, CancellationToken ct = default);
         Task<bool> ExistsAsync(int id, CancellationToken ct = default);
     }

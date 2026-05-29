@@ -8,6 +8,7 @@
         public int PilotId { get; set; }
         public PilotEntity Pilot { get; set; } = null!;
         public string? Team { get; set; }
+        public string? League { get; set; }
         public bool IsActive { get; set; } = true;
         public List<HeatEntryEntity> HeatEntries { get; set; } = [];
         public List<HeatResultEntity> HeatResults { get; set; } = [];

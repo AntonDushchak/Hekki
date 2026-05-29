@@ -1,6 +1,7 @@
+using AutoMapper;
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs;
-using Hekki.Infrastructure.Mappers;
+using Hekki.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hekki.Infrastructure.Repositories
@@ -8,9 +9,13 @@ namespace Hekki.Infrastructure.Repositories
     public class HeatRepository : IHeatRepository
     {
         private readonly IDbContextFactory<HekkiDbContext> _dbFactory;
+        private readonly IMapper _mapper;
 
-        public HeatRepository(IDbContextFactory<HekkiDbContext> dbFactory)
-            => _dbFactory = dbFactory;
+        public HeatRepository(IDbContextFactory<HekkiDbContext> dbFactory, IMapper mapper)
+        {
+            _dbFactory = dbFactory;
+            _mapper = mapper;
+        }
 
         public async Task<IReadOnlyList<HeatDto>> GetAllAsync(CancellationToken ct = default)
         {
@@ -18,10 +23,12 @@ namespace Hekki.Infrastructure.Repositories
 
             var heatEntities = await db.Heats
                 .Include(x => x.HeatEntries)
+                    .ThenInclude(e => e.Participant)
+                        .ThenInclude(p => p.Pilot)
                 .Include(x => x.HeatParticipantResults)
                 .ToListAsync(ct);
 
-            return heatEntities.Select(e => HeatMapper.ToDto(e)).ToList();
+            return heatEntities.Select(e => _mapper.Map<HeatDto>(e)).ToList();
         }
 
         public async Task<HeatDto?> GetByIdAsync(int id, CancellationToken ct = default)
@@ -30,6 +37,8 @@ namespace Hekki.Infrastructure.Repositories
 
             var heatEntity = await db.Heats
                 .Include(x => x.HeatEntries)
+                    .ThenInclude(e => e.Participant)
+                        .ThenInclude(p => p.Pilot)
                 .Include(x => x.HeatParticipantResults)
                 .FirstOrDefaultAsync(x => x.Id == id, ct);
 
@@ -38,7 +47,7 @@ namespace Hekki.Infrastructure.Repositories
                 return null;
             }
 
-            return HeatMapper.ToDto(heatEntity);
+            return _mapper.Map<HeatDto>(heatEntity);
         }
 
         public async Task<IReadOnlyList<HeatDto>> GetByRaceIdAsync(int raceId, CancellationToken ct = default)
@@ -48,17 +57,19 @@ namespace Hekki.Infrastructure.Repositories
             var heatEntities = await db.Heats
                 .Where(x => x.RaceId == raceId)
                 .Include(x => x.HeatEntries)
+                    .ThenInclude(e => e.Participant)
+                        .ThenInclude(p => p.Pilot)
                 .Include(x => x.HeatParticipantResults)
                 .ToListAsync(ct);
 
-            return heatEntities.Select(e => HeatMapper.ToDto(e)).ToList();
+            return heatEntities.Select(e => _mapper.Map<HeatDto>(e)).ToList();
         }
 
         public async Task<int> AddAsync(HeatDto heat, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = HeatMapper.ToEntity(heat);
+            var entity = _mapper.Map<HeatEntity>(heat);
             db.Heats.Add(entity);
             await db.SaveChangesAsync(ct);
 
@@ -73,7 +84,9 @@ namespace Hekki.Infrastructure.Repositories
             if (entity is null)
                 throw new InvalidOperationException($"Heat with ID {heat.HeatId} not found");
 
-            HeatMapper.UpdateEntity(entity, heat);
+            entity.Name = heat.Name;
+            entity.HeatNumber = heat.HeatNumber;
+            entity.ConfigurationIndex = heat.ConfigurationIndex;
             await db.SaveChangesAsync(ct);
         }
 

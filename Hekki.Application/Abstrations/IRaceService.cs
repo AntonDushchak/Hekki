@@ -1,5 +1,4 @@
 using Hekki.Application.DTOs;
-using Hekki.Domain.Models;
 
 namespace Hekki.Application.Abstrations
 {
@@ -26,11 +25,6 @@ namespace Hekki.Application.Abstrations
         Task RemoveParticipantFromRaceAsync(int raceId, int participantId, CancellationToken ct = default);
 
         /// <summary>
-        /// Get race by ID
-        /// </summary>
-        Task<Race?> GetRaceByIdAsync(int raceId, CancellationToken ct = default);
-
-        /// <summary>
         /// Create new race with heats based on regulation
         /// </summary>
         Task<int> CreateRaceAsync(string name, string location, DateTime date, int regulationId, CancellationToken ct = default);
@@ -38,12 +32,12 @@ namespace Hekki.Application.Abstrations
         /// <summary>
         /// Get all heats for a race
         /// </summary>
-        Task<IReadOnlyList<Heat>> GetRaceHeatsAsync(int raceId, CancellationToken ct = default);
+        Task<IReadOnlyList<HeatDto>> GetRaceHeatsAsync(int raceId, CancellationToken ct = default);
 
         /// <summary>
         /// Get regulation for a race
         /// </summary>
-        Task<Regulation?> GetRaceRegulationAsync(int regulationId, CancellationToken ct = default);
+        Task<RegulationEditDto?> GetRaceRegulationAsync(int regulationId, CancellationToken ct = default);
 
         /// <summary>
         /// Get all participants for a race with pilot information
@@ -53,12 +47,12 @@ namespace Hekki.Application.Abstrations
         /// <summary>
         /// Get heat entries for a specific heat
         /// </summary>
-        Task<IReadOnlyList<HeatEntry>> GetHeatEntriesAsync(int heatId, CancellationToken ct = default);
+        Task<IReadOnlyList<HeatGroupDto>> GetHeatGroupsAsync(int heatId, CancellationToken ct = default);
 
         /// <summary>
         /// Get heat results for a specific heat
         /// </summary>
-        Task<IReadOnlyList<HeatParticipantResult>> GetHeatResultsAsync(int heatId, CancellationToken ct = default);
+        Task<IReadOnlyList<HeatResultDto>> GetHeatResultsAsync(int heatId, CancellationToken ct = default);
 
         /// <summary>
         /// Add participant to race

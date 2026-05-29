@@ -1,13 +1,13 @@
-﻿using Hekki.Domain.Models;
+﻿using Hekki.Application.DTOs;
 
 namespace Hekki.Application.Methods
 {
     public interface IGroupAssignmentMethod
     {
-        string Id { get; } 
+        string Id { get; }
         string Title { get; }
         string Description { get; }
-        List<List<RaceParticipant>> AssignGroups(List<RaceParticipant> participants, int groupSize, int groupCount);
+        List<List<PilotDto>> AssignGroups(List<PilotDto> participants, int groupSize, int groupCount);
     }
 
     public interface IGroupAssignmentCatalog

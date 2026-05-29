@@ -1,4 +1,4 @@
-﻿using Hekki.Domain.Models;
+﻿using Hekki.Application.DTOs;
 
 namespace Hekki.Application.Methods
 {
@@ -7,7 +7,7 @@ namespace Hekki.Application.Methods
         string Id { get; }
         string Title { get; }
         string Description { get; }
-        List<RaceParticipant> AssignScores(List<RaceParticipant> participants, List<int> scores);
+        List<PilotDto> AssignScores(List<PilotDto> participants, List<int> scores);
     }
 
     public interface IScoreAssignmentCatalog
