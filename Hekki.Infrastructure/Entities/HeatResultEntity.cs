@@ -1,6 +1,4 @@
-﻿using Hekki.Domain;
-
-namespace Hekki.Infrastructure.Entities
+﻿namespace Hekki.Infrastructure.Entities
 {
     public class HeatResultEntity
     {
@@ -13,5 +11,8 @@ namespace Hekki.Infrastructure.Entities
         public long? BestLapMs { get; set; }
         public int? Laps { get; set; }
         public ResultStatus Status { get; set; }
+    }
+    public enum ResultStatus
+    {
     }
 }

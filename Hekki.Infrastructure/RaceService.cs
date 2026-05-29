@@ -1,6 +1,6 @@
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs;
-using Hekki.Domain.Models;
+using System.Diagnostics;
 
 namespace Hekki.Infrastructure
 {
@@ -97,6 +97,39 @@ namespace Hekki.Infrastructure
             };
         }
 
+        public async Task<int> CreateRaceAsync(string name, string location, DateTime date, int regulationId, CancellationToken ct = default)
+        {
+            var regulation = await _regulationRepository.GetByIdAsync(regulationId, ct);
+            if (regulation == null)
+                throw new InvalidOperationException($"Regulation with ID {regulationId} not found");
+
+            var race = new Race
+            {
+                Name = name,
+                Location = location,
+                Date = date,
+                DefaultRegulationId = regulationId
+            };
+
+            var raceId = await _raceRepository.AddAsync(race, ct);
+
+            foreach (var config in regulation.Configurations)
+            {
+                var heat = new Heat
+                {
+                    RaceId = raceId,
+                    RegulationId = regulationId,
+                    Name = config.Name,
+                    ConfigurationIndex = regulation.Configurations.IndexOf(config),
+                    //Status = HeatStatus.NotStarted
+                };
+
+                await _heatRepository.AddAsync(heat, ct);
+            }
+
+            return raceId;
+        }
+
         public async Task<IReadOnlyList<PilotDto>> SearchPilotsAsync(int raceId, string searchText, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(searchText))
@@ -147,39 +180,7 @@ namespace Hekki.Infrastructure
             return await _raceRepository.GetByIdAsync(raceId, ct);
         }
 
-        public async Task<int> CreateRaceAsync(string name, string location, DateTime date, int regulationId, CancellationToken ct = default)
-        {
-            var regulation = await _regulationRepository.GetByIdAsync(regulationId, ct);
-            if (regulation == null)
-                throw new InvalidOperationException($"Regulation with ID {regulationId} not found");
-
-            var race = new Race
-            {
-                Name = name,
-                Location = location,
-                Date = date,
-                DefaultRegulationId = regulationId
-            };
-
-            var raceId = await _raceRepository.AddAsync(race, ct);
-
-            foreach (var config in regulation.Configurations)
-            {
-                var heat = new Heat
-                {
-                    RaceId = raceId,
-                    RegulationId = regulationId,
-                    Name = config.Name,
-                    ConfigurationIndex = regulation.Configurations.IndexOf(config),
-                    //Status = HeatStatus.NotStarted
-                };
-
-                await _heatRepository.AddAsync(heat, ct);
-            }
-
-            return raceId;
-        }
-
+        
         public async Task<IReadOnlyList<Heat>> GetRaceHeatsAsync(int raceId, CancellationToken ct = default)
         {
             return await _heatRepository.GetByRaceIdAsync(raceId, ct);

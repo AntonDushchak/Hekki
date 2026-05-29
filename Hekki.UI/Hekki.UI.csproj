@@ -33,12 +33,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Hekki.Infrastructure\Hekki.Infrastructure.csproj" />
+    <Folder Include="Controls\" />
+    <Folder Include="Messages\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controls\" />
-    <Folder Include="Messages\" />
+    <ProjectReference Include="..\Hekki.Application\Hekki.Application.csproj" />
+    <ProjectReference Include="..\Hekki.Domain\Hekki.Domain.csproj" />
   </ItemGroup>
 
 </Project>

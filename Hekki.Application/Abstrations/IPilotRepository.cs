@@ -1,13 +1,13 @@
-using Hekki.Domain.Models;
+using Hekki.Application.DTOs;
 
 namespace Hekki.Application.Abstrations
 {
     public interface IPilotRepository
     {
-        Task<IReadOnlyList<Pilot>> GetAllAsync(CancellationToken ct = default);
-        Task<Pilot?> GetByIdAsync(int id, CancellationToken ct = default);
-        Task<int> AddAsync(Pilot pilot, CancellationToken ct = default);
-        Task UpdateAsync(Pilot pilot, CancellationToken ct = default);
+        Task<IReadOnlyList<PilotDto>> GetAllAsync(CancellationToken ct = default);
+        Task<PilotDto?> GetByIdAsync(int id, CancellationToken ct = default);
+        Task<int> AddAsync(PilotDto pilot, CancellationToken ct = default);
+        Task UpdateAsync(PilotDto pilot, CancellationToken ct = default);
         Task DeleteAsync(int id, CancellationToken ct = default);
         Task<bool> ExistsAsync(int id, CancellationToken ct = default);
     }

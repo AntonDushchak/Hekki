@@ -1,60 +1,60 @@
 using Hekki.Application.Abstrations;
-using Hekki.Domain.Models;
+using Hekki.Infrastructure.Entities;
 using Hekki.Infrastructure.Mappers;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hekki.Infrastructure
+namespace Hekki.Infrastructure.Repositories
 {
-    public class RaceRepository : IRaceRepository
+    public class PilotRepository : IPilotRepository
     {
         private readonly IDbContextFactory<HekkiDbContext> _dbFactory;
 
-        public RaceRepository(IDbContextFactory<HekkiDbContext> dbFactory)
+        public PilotRepository(IDbContextFactory<HekkiDbContext> dbFactory)
             => _dbFactory = dbFactory;
 
-        public async Task<IReadOnlyList<Race>> GetAllAsync(CancellationToken ct = default)
+        public async Task<IReadOnlyList<PilotEntity>> GetAllAsync(CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entities = await db.Races
+            var entities = await db.Pilots
                 .AsNoTracking()
-                .OrderByDescending(r => r.Date)
+                .OrderBy(p => p.Name)
                 .ToListAsync(ct);
 
             return entities.Select(e => e.ToDomain()).ToList();
         }
 
-        public async Task<Race?> GetByIdAsync(int id, CancellationToken ct = default)
+        public async Task<PilotEntity?> GetByIdAsync(int id, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = await db.Races
+            var entity = await db.Pilots
                 .AsNoTracking()
-                .FirstOrDefaultAsync(r => r.Id == id, ct);
+                .FirstOrDefaultAsync(p => p.Id == id, ct);
 
             return entity?.ToDomain();
         }
 
-        public async Task<int> AddAsync(Race race, CancellationToken ct = default)
+        public async Task<int> AddAsync(PilotEntity pilot, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = race.ToEntity();
-            db.Races.Add(entity);
+            var entity = pilot.ToEntity();
+            db.Pilots.Add(entity);
             await db.SaveChangesAsync(ct);
 
             return entity.Id;
         }
 
-        public async Task UpdateAsync(Race race, CancellationToken ct = default)
+        public async Task UpdateAsync(PilotEntity pilot, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = await db.Races.FindAsync(new object[] { race.Id }, ct);
+            var entity = await db.Pilots.FindAsync(new object[] { pilot.Id }, ct);
             if (entity is null)
-                throw new InvalidOperationException($"Race with ID {race.Id} not found");
+                throw new InvalidOperationException($"Pilot with ID {pilot.Id} not found");
 
-            race.UpdateEntity(entity);
+            pilot.UpdateEntity(entity);
             await db.SaveChangesAsync(ct);
         }
 
@@ -62,11 +62,11 @@ namespace Hekki.Infrastructure
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = await db.Races.FindAsync(new object[] { id }, ct);
+            var entity = await db.Pilots.FindAsync(new object[] { id }, ct);
             if (entity is null)
                 return;
 
-            db.Races.Remove(entity);
+            db.Pilots.Remove(entity);
             await db.SaveChangesAsync(ct);
         }
 
@@ -74,7 +74,7 @@ namespace Hekki.Infrastructure
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            return await db.Races.AnyAsync(r => r.Id == id, ct);
+            return await db.Pilots.AnyAsync(p => p.Id == id, ct);
         }
     }
 }

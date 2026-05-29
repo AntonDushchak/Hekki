@@ -1,38 +1,31 @@
-using Hekki.Domain.Models;
+using Hekki.Application.DTOs;
 using Hekki.Infrastructure.Entities;
 
 namespace Hekki.Infrastructure.Mappers
 {
     public static class RaceParticipantMapper
     {
-        public static RaceParticipant ToDomain(this RaceParticipantEntity entity)
+        public static PilotDto ToDto(RaceParticipantEntity entity) => new()
         {
-            return new RaceParticipant
-            {
-                Id = entity.Id,
-                RaceId = entity.RaceId,
-                PilotId = entity.PilotId,
-                Team = entity.Team,
-                IsActive = entity.IsActive
-            };
-        }
+            ParticipantId = entity.Id,
+            PilotId = entity.PilotId,
+            Name = entity.Pilot.Name,
+            PhotoPath = entity.Pilot.PhotoPath,
+            Team = entity.Team
+        };
 
-        public static RaceParticipantEntity ToEntity(this RaceParticipant domain)
+        public static RaceParticipantEntity ToEntity(PilotDto dto, int raceId) => new()
         {
-            return new RaceParticipantEntity
-            {
-                Id = domain.Id,
-                RaceId = domain.RaceId,
-                PilotId = domain.PilotId,
-                Team = domain.Team,
-                IsActive = domain.IsActive
-            };
-        }
+            Id = dto.ParticipantId,
+            RaceId = raceId,
+            PilotId = dto.PilotId,
+            Team = dto.Team,
+            IsActive = true
+        };
 
-        public static void UpdateEntity(this RaceParticipant domain, RaceParticipantEntity entity)
+        public static void UpdateEntity(RaceParticipantEntity entity, PilotDto dto)
         {
-            entity.Team = domain.Team;
-            entity.IsActive = domain.IsActive;
+            entity.Team = dto.Team;
         }
     }
 }

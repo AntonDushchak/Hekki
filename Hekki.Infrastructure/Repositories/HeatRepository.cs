@@ -1,9 +1,9 @@
 using Hekki.Application.Abstrations;
-using Hekki.Domain.Models;
+using Hekki.Application.DTOs;
 using Hekki.Infrastructure.Mappers;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hekki.Infrastructure
+namespace Hekki.Infrastructure.Repositories
 {
     public class HeatRepository : IHeatRepository
     {
@@ -12,61 +12,68 @@ namespace Hekki.Infrastructure
         public HeatRepository(IDbContextFactory<HekkiDbContext> dbFactory)
             => _dbFactory = dbFactory;
 
-        public async Task<IReadOnlyList<Heat>> GetAllAsync(CancellationToken ct = default)
+        public async Task<IReadOnlyList<HeatDto>> GetAllAsync(CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entities = await db.Heats
-                .AsNoTracking()
+            var heatEntities = await db.Heats
+                .Include(x => x.HeatEntries)
+                .Include(x => x.HeatParticipantResults)
                 .ToListAsync(ct);
 
-            return entities.Select(e => e.ToHeatDomain()).ToList();
+            return heatEntities.Select(e => HeatMapper.ToDto(e)).ToList();
         }
 
-        public async Task<Heat?> GetByIdAsync(int id, CancellationToken ct = default)
+        public async Task<HeatDto?> GetByIdAsync(int id, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = await db.Heats
-                .AsNoTracking()
-                .FirstOrDefaultAsync(h => h.Id == id, ct);
+            var heatEntity = await db.Heats
+                .Include(x => x.HeatEntries)
+                .Include(x => x.HeatParticipantResults)
+                .FirstOrDefaultAsync(x => x.Id == id, ct);
 
-            return entity?.ToHeatDomain();
+            if (heatEntity == null)
+            {
+                return null;
+            }
+
+            return HeatMapper.ToDto(heatEntity);
         }
 
-        public async Task<IReadOnlyList<Heat>> GetByRaceIdAsync(int raceId, CancellationToken ct = default)
+        public async Task<IReadOnlyList<HeatDto>> GetByRaceIdAsync(int raceId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entities = await db.Heats
-                .AsNoTracking()
-                .Where(h => h.RaceId == raceId)
-                .OrderBy(h => h.ConfigurationIndex)
+            var heatEntities = await db.Heats
+                .Where(x => x.RaceId == raceId)
+                .Include(x => x.HeatEntries)
+                .Include(x => x.HeatParticipantResults)
                 .ToListAsync(ct);
 
-            return entities.Select(e => e.ToHeatDomain()).ToList();
+            return heatEntities.Select(e => HeatMapper.ToDto(e)).ToList();
         }
 
-        public async Task<int> AddAsync(Heat heat, CancellationToken ct = default)
+        public async Task<int> AddAsync(HeatDto heat, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = heat.ToHeatEntity();
+            var entity = HeatMapper.ToEntity(heat);
             db.Heats.Add(entity);
             await db.SaveChangesAsync(ct);
 
             return entity.Id;
         }
 
-        public async Task UpdateAsync(Heat heat, CancellationToken ct = default)
+        public async Task UpdateAsync(HeatDto heat, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = await db.Heats.FindAsync(new object[] { heat.Id }, ct);
+            var entity = await db.Heats.FindAsync(new object[] { heat.HeatId }, ct);
             if (entity is null)
-                throw new InvalidOperationException($"Heat with ID {heat.Id} not found");
+                throw new InvalidOperationException($"Heat with ID {heat.HeatId} not found");
 
-            heat.UpdateHeatEntity(entity);
+            HeatMapper.UpdateEntity(entity, heat);
             await db.SaveChangesAsync(ct);
         }
 

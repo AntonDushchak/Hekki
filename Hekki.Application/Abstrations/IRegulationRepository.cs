@@ -1,14 +1,13 @@
-﻿using Hekki.Domain.Models;
+﻿using Hekki.Application.DTOs;
 
 namespace Hekki.Application.Abstrations
 {
     public interface IRegulationRepository
     {
-        Task<IReadOnlyList<Regulation>> GetAllAsync(CancellationToken ct = default);
-        Task<IReadOnlyList<Regulation>> GetLookupAsync(CancellationToken ct = default);
-        Task<Regulation?> GetByIdAsync(int id, CancellationToken ct = default);
-        Task<int> AddAsync(Regulation regulation, CancellationToken ct = default);
-        Task UpdateAsync(Regulation regulation, CancellationToken ct = default);
+        Task<IReadOnlyList<RegulationSummaryDto>> GetAllAsync(CancellationToken ct = default);
+        Task<RegulationSummaryDto> GetByIdAsync(int id, CancellationToken ct = default);
+        Task<RegulationEditDto> GetForEditAsync(int id, CancellationToken ct = default);
+        Task AddAsync(RegulationEditDto dto, CancellationToken ct = default);
         Task DeleteAsync(int id, CancellationToken ct = default);
         Task<bool> ExistsAsync(int id, CancellationToken ct = default);
     }

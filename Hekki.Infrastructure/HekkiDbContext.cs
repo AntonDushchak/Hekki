@@ -146,12 +146,12 @@ namespace Hekki.Infrastructure
                 entity.Property(e => e.Status)
                     .IsRequired();
 
-                entity.HasOne(e => e.RaceEntity)
+                entity.HasOne(e => e.Race)
                     .WithMany(r => r.Heats)
                     .HasForeignKey(e => e.RaceId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(e => e.RegulationEntity)
+                entity.HasOne(e => e.Regulation)
                     .WithMany()
                     .HasForeignKey(e => e.RegulationId)
                     .OnDelete(DeleteBehavior.Restrict);
