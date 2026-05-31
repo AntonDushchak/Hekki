@@ -1,7 +1,10 @@
 ﻿using Hekki.Application.DTOs;
+using System.Text.Json.Serialization;
 
 namespace Hekki.Application.Methods
 {
+    [JsonDerivedType(typeof(RandomKartAssignment), "random_kart_assignment")]
+    [JsonDerivedType(typeof(RandomNoRepeatKartAssignment), "random_no_repeat_kart_assignment")]
     public interface IKartNummerAssignmentMethod
     {
         string Id { get; }

@@ -6,96 +6,48 @@ namespace Hekki.Application.Services
     public class RaceService : IRaceService
     {
         private readonly IRaceRepository _raceRepository;
-        private readonly IHeatRepository _heatRepository;
+        private readonly IRaceParticipantRepository _participantRepository;
+        private readonly IPilotRepository _pilotRepository;
         private readonly IRegulationRepository _regulationRepository;
-        private readonly IRaceParticipantRepository _raceParticipantRepository;
-        private readonly IHeatResultRepository _heatResultRepository;
-        private readonly IHeatEntryRepository _heatEntryRepository;
 
         public RaceService(
-            IRaceRepository raceRepository,
-            IHeatRepository heatRepository,
-            IRegulationRepository regulationRepository,
-            IRaceParticipantRepository raceParticipantRepository,
-            IHeatResultRepository heatResultRepository,
-            IHeatEntryRepository heatEntryRepository)
+            IRaceRepository raceRepository, 
+            IRaceParticipantRepository participantRepository, 
+            IPilotRepository pilotRepository,
+            IRegulationRepository regulationRepository)
         {
             _raceRepository = raceRepository;
-            _heatRepository = heatRepository;
+            _participantRepository = participantRepository;
+            _pilotRepository = pilotRepository;
             _regulationRepository = regulationRepository;
-            _raceParticipantRepository = raceParticipantRepository;
-            _heatResultRepository = heatResultRepository;
-            _heatEntryRepository = heatEntryRepository;
         }
 
-        public Task<int> AddParticipantAsync(int raceId, int pilotId, string team, CancellationToken ct = default)
+        public async Task<RaceDataDto> GetRaceDataAsync(int raceId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            return await _raceRepository.GetByIdAsync(raceId, ct);
         }
 
-        public Task<int> AddPilotToRaceAsync(int raceId, int pilotId, string? team = null, CancellationToken ct = default)
+        public async Task<int> CreateRaceAsync(string name, string location, DateTime date, int regulationId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var race = new RaceDataDto { RaceName = name, Location = location, Date = date, RegulationId = regulationId };
+            return await _raceRepository.AddAsync(race, ct);
         }
 
-        public Task<int> CreateRaceAsync(string name, string location, DateTime date, int regulationId, CancellationToken ct = default)
+        public async Task<int> AddParticipantAsync(int raceId, int pilotId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var pilot = await _pilotRepository.GetByIdAsync(pilotId, ct);
+            var participant = new RaceParticipantDto { PilotId = pilot.Id, Name = pilot.Name, Team = pilot.Team, IsActive = true };
+            return await _participantRepository.AddAsync(raceId, participant, ct);
         }
 
-        public Task<IReadOnlyList<HeatGroupDto>> GetHeatGroupsAsync(int heatId, CancellationToken ct = default)
+        public async Task RemoveParticipantAsync(int participantId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            await _participantRepository.DeleteAsync(participantId, ct);
         }
 
-        public Task<IReadOnlyList<HeatResultDto>> GetHeatResultsAsync(int heatId, CancellationToken ct = default)
+        public async Task<RegulationEditDto> GetRegulationEditAsync(int regulationId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<PilotDto?> GetRaceByIdAsync(int raceId, CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<RaceDataDto> GetRaceDataAsync(int raceId, CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IReadOnlyList<HeatDto>> GetRaceHeatsAsync(int raceId, CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IReadOnlyList<PilotDto>> GetRaceParticipantsAsync(int raceId, CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<RegulationEditDto?> GetRaceRegulationAsync(int regulationId, CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> IsParticipantInRaceAsync(int raceId, int pilotId, CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task RemoveParticipantAsync(int participantId, CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task RemoveParticipantFromRaceAsync(int raceId, int participantId, CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IReadOnlyList<PilotDto>> SearchPilotsAsync(int raceId, string searchText, CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
+            return await _regulationRepository.GetForEditAsync(regulationId, ct);
         }
     }
 }

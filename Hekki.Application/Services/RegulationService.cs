@@ -1,17 +1,26 @@
-﻿using Hekki.Application.DTOs;
+﻿using Hekki.Application.Abstrations;
+using Hekki.Application.DTOs;
 
 namespace Hekki.Application.Services
 {
     public class RegulationService : IRegulationService
     {
-        public async Task<RegulationEditDto> GetRegulationEditAsync(int id)
+        private readonly IRegulationRepository _regulationRepository;
+
+        public RegulationService(IRegulationRepository regulationRepository)
         {
-            throw new NotImplementedException();
+            _regulationRepository = regulationRepository;            
         }
 
-        public async Task<List<RegulationSummaryDto>> GetRegulationsAsync()
+        public async Task<RegulationEditDto> GetRegulationEditAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _regulationRepository.GetForEditAsync(id);
+        }
+
+        public async Task<IReadOnlyList<RegulationSummaryDto>> GetRegulationsAsync()
+        {
+            return await _regulationRepository.GetAllAsync();
+
         }
     }
 }

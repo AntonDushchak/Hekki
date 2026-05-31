@@ -1,7 +1,12 @@
 ﻿using Hekki.Application.DTOs;
+using System.Text.Json.Serialization;
 
 namespace Hekki.Application.Methods
 {
+    [JsonDerivedType(typeof(RandomShuffle), "random_shuffle")]
+    [JsonDerivedType(typeof(ScoreAscShuffle), "score_asc_shuffle")]
+    [JsonDerivedType(typeof(TimeDescShuffle), "time_desc_shuffle")]
+    [JsonDerivedType(typeof(NoShuffle), "no_shuffle")]
     public interface IParticipantShuffleMethod
     {
         string Id { get; }

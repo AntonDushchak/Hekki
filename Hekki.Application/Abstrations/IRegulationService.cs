@@ -4,7 +4,7 @@ namespace Hekki.Application.Services
 {
     public interface IRegulationService
     {
-        Task<List<RegulationSummaryDto>> GetRegulationsAsync();
+        Task<IReadOnlyList<RegulationSummaryDto>> GetRegulationsAsync();
         Task<RegulationEditDto> GetRegulationEditAsync(int id);
     }
 }

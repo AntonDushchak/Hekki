@@ -1,7 +1,9 @@
 ﻿using Hekki.Application.DTOs;
+using System.Text.Json.Serialization;
 
 namespace Hekki.Application.Methods
 {
+    [JsonDerivedType(typeof(DefaultScoreAssignment), "default")]
     public interface IScoreAssignmentMethod
     {
         string Id { get; }

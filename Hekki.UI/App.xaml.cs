@@ -43,8 +43,7 @@ namespace Hekki.UI
                     services.AddDbContextFactory<HekkiDbContext>(options =>
                         options.UseNpgsql(context.Configuration.GetConnectionString("HekkiDb")));
 
-                    // AutoMapper
-                    services.AddAutoMapper(typeof(Hekki.Infrastructure.Mapping.MappingProfile));
+                    services.AddAutoMapper(cfg => cfg.AddProfile<Hekki.Infrastructure.Mapping.MappingProfile>());
 
                     services.AddTransient<IRegulationRepository, RegulationRepository>();
 

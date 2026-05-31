@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs;
-using Hekki.Application.Methods;
 using Hekki.Application.Regulations;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
@@ -20,6 +19,7 @@ namespace Hekki.UI.ViewModels
         private readonly Dictionary<MethodSettingsType, MethodConfiguration> _methodConfigurations;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
         [Required(ErrorMessage = "Regulation name is required")]
         [MinLength(3, ErrorMessage = "Regulation name must be at least 3 characters")]
         [MaxLength(100, ErrorMessage = "Regulation name cannot exceed 100 characters")]
@@ -88,7 +88,7 @@ namespace Hekki.UI.ViewModels
                     () => SelectedHeat?.ScoreParameters,
                     AvailableScoreMethods
                 )
-            }; 
+            };
         }
 
         partial void OnSelectedShuffleMethodIdChanged(string? value)
@@ -195,13 +195,39 @@ namespace Hekki.UI.ViewModels
 
             try
             {
-                //var dto = MapToDto();
-                //var regulationId = await _regulationRepository.AddAsync(dto);
+                var heatConfigs = Heats.Select(h => new HeatConfig
+                {
+                    Name = h.Name,
+                    HeatNumber = h.HeatNumber,
+                    GroupCount = h.NumberOfGroups,
+                    ParticipantsPerGroup = h.GroupCapacity,
+                    ScoringMode = h.ScoringMode,
+                    Scoring = new ScoringConfig
+                    {
+                        Method = _methodCatalog.CreateScoreMethod(h.ScoreMethodId),
+                        UsePenalties = h.UsePenalty,
+                    },
+                    Assignment = new AssignmentConfig
+                    {
+                        KartMethod = _methodCatalog.CreateKartMethod(h.KartMethodId),
+                        GroupMethod = _methodCatalog.CreateGroupMethod(h.GroupMethodId),
+                        Shuffle = _methodCatalog.CreateShuffleMethod(h.ShuffleMethodId)
+                    }
+                }).ToList();
 
-                //WeakReferenceMessenger.Default.Send(new AppSuccessMessage("Regulation saved successfully!"));
+                var dto = new RegulationEditDto
+                {
+                    Name = RegulationName,
+                    Config = new RegulationConfig
+                    {
+                        HeatConfigs = heatConfigs
+                    }
+                };
+                var regulationId = await _regulationRepository.AddAsync(dto);
 
-                //// Navigate to RaceViewModel to create Race + Heats
-                //_navigationService.NavigateToRace(regulationId);
+                WeakReferenceMessenger.Default.Send(new AppSuccessMessage("Regulation saved successfully!"));
+
+                _navigationService.NavigateToRace(regulationId);
             }
             catch (Exception ex)
             {

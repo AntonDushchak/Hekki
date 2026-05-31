@@ -23,6 +23,7 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty] private string _location = string.Empty;
 
         [ObservableProperty] private DateTime _raceDate = DateTime.Today;
+        [ObservableProperty] private RaceDataDto _raceData;
 
         public bool IsNewRace => RaceId == null;
 
@@ -52,7 +53,7 @@ namespace Hekki.UI.ViewModels
 
         private async Task InitializeAsync()
         {
-            _regulation = await _raceService.GetRaceRegulationAsync(RegulationId);
+            _regulation = await _raceService.GetRegulationEditAsync(RegulationId);
 
             if (RaceId == null)
             {
@@ -76,6 +77,7 @@ namespace Hekki.UI.ViewModels
                 RegulationId);
 
             RaceId = newRaceId;
+
             await LoadRaceAsync();
         }
 
@@ -93,27 +95,26 @@ namespace Hekki.UI.ViewModels
             RaceDate = race.Date;
 
             // Load participants with pilot info first
-            var participants = await _raceService.GetRaceParticipantsAsync(RaceId.Value);
+            var participants = RaceData.Participants;
             Participants.Clear();
             foreach (var pilot in participants)
             {
                 Participants.Add(new RaceParticipantViewModel
                 {
-                    Id = pilot.Id,
+                    Id = pilot.ParticipantId,
                     RaceId = RaceId.Value,
-                    //PilotId = pilot.,
+                    PilotId = pilot.PilotId,
                     PilotName = pilot.Name,
                     Team = pilot.Team,
                     IsActive = true,
                     PilotPhotoPath = pilot.PhotoPath,
-                    PilotProfileUrl = pilot.ProfileUrl
                 });
             }
 
             // Load heats with groups and results
             if (_regulation != null)
             {
-                var heats = await _raceService.GetRaceHeatsAsync(RaceId.Value);
+                var heats = RaceData.Heats;
                 Heats.Clear();
                 foreach (var heat in heats)
                 {
@@ -206,11 +207,11 @@ namespace Hekki.UI.ViewModels
         {
             if (pilot == null || RaceId == null) return;
 
-            var exists = await _raceService.IsParticipantInRaceAsync(RaceId.Value, pilot.PilotId);
+            var exists = RaceData.Participants.Any(p => p.PilotId == pilot.PilotId);
             if (exists)
                 return;
 
-            var participantId = await _raceService.AddParticipantAsync(RaceId.Value, pilot.PilotId, string.Empty);
+            var participantId = await _raceService.AddParticipantAsync(RaceId.Value, pilot.PilotId);
 
             Participants.Add(new RaceParticipantViewModel
             {
@@ -234,6 +235,7 @@ namespace Hekki.UI.ViewModels
 
             await _raceService.RemoveParticipantAsync(participant.Id);
             Participants.Remove(participant);
+            RaceData.Participants.RemoveAll(p => p.PilotId == participant.PilotId);
         }
     }
 }

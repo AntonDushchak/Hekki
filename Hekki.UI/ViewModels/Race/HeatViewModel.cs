@@ -11,10 +11,10 @@ namespace Hekki.UI.ViewModels
 
         [ObservableProperty]
         private int _heatNumber = 0;
-        public HeatConfig Config { get; set; }
-        public bool ShowTime => Config.HeatStructure.ScoringMode is ScoringMode.TimeBased or ScoringMode.Hybrid;
-        public bool ShowScore => Config.HeatStructure.ScoringMode is ScoringMode.PointsBased or ScoringMode.Hybrid;
-        public bool ShowPenalty => Config.HeatStructure.ScoringMode is ScoringMode.PointsBased or ScoringMode.Hybrid;
+        [ObservableProperty] private HeatConfig _config = null!;
+        public bool ShowTime => Config.ScoringMode is ScoringMode.TimeBased or ScoringMode.Hybrid;
+        public bool ShowScore => Config.ScoringMode is ScoringMode.PointsBased or ScoringMode.Hybrid;
+        public bool ShowPenalty => Config.ScoringMode is ScoringMode.PointsBased or ScoringMode.Hybrid;
         public ObservableCollection<HeatGroupViewModel> Groups { get; } = [];
     }
 
@@ -31,10 +31,10 @@ namespace Hekki.UI.ViewModels
         public ObservableCollection<HeatRowViewModel> Rows { get; set; } = [];
     }
 
-    public class HeatRowViewModel
+    public partial class HeatRowViewModel : ObservableObject
     {
-        public HeatEntryViewModel Entry { get; set; } = null!;
-        public HeatResultViewModel? Result { get; set; }
+        [ObservableProperty] private HeatEntryViewModel _entry = null!;
+        [ObservableProperty] private HeatResultViewModel? _result;
     }
 
     public partial class HeatEntryViewModel : ObservableObject

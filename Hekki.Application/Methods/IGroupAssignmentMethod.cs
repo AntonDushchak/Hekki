@@ -1,7 +1,12 @@
 ﻿using Hekki.Application.DTOs;
+using System.Text.Json.Serialization;
 
 namespace Hekki.Application.Methods
 {
+    [JsonDerivedType(typeof(RandomGroupAssignment), "random_group_assignment")]
+    [JsonDerivedType(typeof(CardGroupAssignment), "card_group_assignment")]
+    [JsonDerivedType(typeof(ListGroupAssignment), "list_group_assignment")]
+    [JsonDerivedType(typeof(ReplacementGroupAssignment), "replacement_group_assignment")]
     public interface IGroupAssignmentMethod
     {
         string Id { get; }

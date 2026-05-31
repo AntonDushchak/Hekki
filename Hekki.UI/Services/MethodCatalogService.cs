@@ -45,6 +45,30 @@ namespace Hekki.UI.Services
                 ?? _scoreOptions.Value.FirstOrDefault(x => x.Id == id);
         }
 
+        public IParticipantShuffleMethod? CreateShuffleMethod(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return null;
+            return _shuffle.GetById(id);
+        }
+
+        public IGroupAssignmentMethod? CreateGroupMethod(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return null;
+            return _group.GetById(id);
+        }
+
+        public IKartNummerAssignmentMethod? CreateKartMethod(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return null;
+            return _kart.GetById(id);
+        }
+
+        public IScoreAssignmentMethod? CreateScoreMethod(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return null;
+            return _score.GetById(id);
+        }
+
         private static IReadOnlyList<MethodOption> Map<T>(IReadOnlyList<T> src)
         {
             var list = new List<MethodOption>(src.Count);
