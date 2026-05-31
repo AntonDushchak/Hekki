@@ -17,7 +17,7 @@ namespace Hekki.Application.Abstrations
         /// <summary>
         /// Add participant to race
         /// </summary>
-        Task<int> AddParticipantAsync(int raceId, int pilotId, CancellationToken ct = default);
+        Task<RaceParticipantDto> AddParticipantAsync(int raceId, int pilotId, CancellationToken ct = default);
 
         /// <summary>
         /// Remove participant from race

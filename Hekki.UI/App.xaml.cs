@@ -1,11 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
-using Hekki.Application.Abstrations;
-using Hekki.Application.Methods;
-using Hekki.Application.Services;
+using Hekki.Application;
 using Hekki.Infrastructure;
-using Hekki.Infrastructure.Repositories;
-using Hekki.UI.Services;
-using Hekki.UI.ViewModels;
 using Hekki.UI.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -39,70 +34,11 @@ namespace Hekki.UI
                         builder.AddDebug();
                     });
 
-
-                    services.AddDbContextFactory<HekkiDbContext>(options =>
-                        options.UseNpgsql(context.Configuration.GetConnectionString("HekkiDb")));
-
-                    services.AddAutoMapper(cfg => cfg.AddProfile<Hekki.Infrastructure.Mapping.MappingProfile>());
-
-                    services.AddTransient<IRegulationRepository, RegulationRepository>();
-
-
-                    AddServicesMethods(services);
-
-                    services.AddTransient<IRegulationService, RegulationService>();
-
-                    services.AddSingleton<INavigationService, NavigationService>();
-                    services.AddTransient<IPaginationService, PaginationService>();
-
-                    services.AddTransient<IViewModelFactory, ViewModelFactory>();
-
-                    services.AddTransient<IPilotRepository, PilotRepository>();
-                    services.AddTransient<IRaceParticipantRepository, RaceParticipantRepository>();
-                    services.AddTransient<IHeatRepository, HeatRepository>();
-                    services.AddTransient<IRaceRepository, RaceRepository>();
-                    services.AddTransient<IHeatResultRepository, HeatResultRepository>();
-                    services.AddTransient<IHeatEntryRepository, HeatEntryRepository>();
-
-
-                    services.AddTransient<IPilotService, PilotService>();
-                    services.AddTransient<IRaceService, RaceService>();
-
-
-                    services.AddSingleton<RegulationPickerViewModel>();
-                    services.AddTransient<SelectionViewModel>();
-                    services.AddTransient<CreateRegulationViewModel>();
-
-                    services.AddSingleton<MainViewModel>();
-                    services.AddSingleton<MainWindow>();
+                    services.AddInfrastructure(context.Configuration);
+                    services.AddApplication();
+                    services.AddPresentation();
                 })
                 .Build();
-        }
-
-        private void AddServicesMethods(IServiceCollection services)
-        {
-            services.AddSingleton<IParticipantShuffleMethod, NoShuffle>();
-            services.AddSingleton<IParticipantShuffleMethod, RandomShuffle>();
-            services.AddSingleton<IParticipantShuffleMethod, ScoreAscShuffle>();
-            services.AddSingleton<IParticipantShuffleMethod, TimeDescShuffle>();
-            services.AddSingleton<IParticipantShuffleCatalog, ParticipantShuffleCatalog>();
-
-            services.AddSingleton<IGroupAssignmentMethod, RandomGroupAssignment>();
-            services.AddSingleton<IGroupAssignmentMethod, CardGroupAssignment>();
-            services.AddSingleton<IGroupAssignmentMethod, ListGroupAssignment>();
-            services.AddSingleton<IGroupAssignmentMethod, ReplacementGroupAssignment>();
-            services.AddSingleton<IGroupAssignmentCatalog, GroupAssigmentCatalog>();
-
-            services.AddSingleton<IKartNummerAssignmentMethod, RandomKartAssignment>();
-            services.AddSingleton<IKartNummerAssignmentMethod, RandomNoRepeatKartAssignment>();
-            services.AddSingleton<IKartNummerAssignmentCatalog, KartNummerAssigmentCatalog>();
-
-            services.AddSingleton<IScoreAssignmentMethod, DefaultScoreAssignment>();
-            services.AddSingleton<IScoreAssignmentCatalog, ScoreAssignmentCatalog>();
-
-
-            services.AddSingleton<IMethodCatalogService, MethodCatalogService>();
-
         }
 
         protected override async void OnStartup(StartupEventArgs e)
@@ -126,12 +62,50 @@ namespace Hekki.UI
         {
             WeakReferenceMessenger.Default.Register<AppErrorMessage>(this, (r, m) =>
             {
-                Dispatcher.Invoke(() =>
+                if (Dispatcher.CheckAccess())
                 {
-                    var errorWin = new ErrorWindow(m.Message);
-                    errorWin.Owner = Current.MainWindow;
-                    errorWin.ShowDialog();
-                });
+                    ShowMessageWindow(m.Message, MessageType.Error);
+                }
+                else
+                {
+                    Dispatcher.Invoke(() => ShowMessageWindow(m.Message, MessageType.Error));
+                }
+            });
+
+            WeakReferenceMessenger.Default.Register<AppSuccessMessage>(this, (r, m) =>
+            {
+                if (Dispatcher.CheckAccess())
+                {
+                    ShowMessageWindow(m.Message, MessageType.Success);
+                }
+                else
+                {
+                    Dispatcher.Invoke(() => ShowMessageWindow(m.Message, MessageType.Success));
+                }
+            });
+
+            WeakReferenceMessenger.Default.Register<AppInfoMessage>(this, (r, m) =>
+            {
+                if (Dispatcher.CheckAccess())
+                {
+                    ShowMessageWindow(m.Message, MessageType.Info);
+                }
+                else
+                {
+                    Dispatcher.Invoke(() => ShowMessageWindow(m.Message, MessageType.Info));
+                }
+            });
+
+            WeakReferenceMessenger.Default.Register<AppWarningMessage>(this, (r, m) =>
+            {
+                if (Dispatcher.CheckAccess())
+                {
+                    ShowMessageWindow(m.Message, MessageType.Warning);
+                }
+                else
+                {
+                    Dispatcher.Invoke(() => ShowMessageWindow(m.Message, MessageType.Warning));
+                }
             });
 
             this.DispatcherUnhandledException += (s, e) =>
@@ -155,6 +129,18 @@ namespace Hekki.UI
                 WeakReferenceMessenger.Default.Send(new AppErrorMessage(e.Exception.Message));
                 e.SetObserved();
             };
+        }
+
+        private void ShowMessageWindow(string message, MessageType type)
+        {
+            var messageWindow = new ErrorWindow(message, type);
+
+            if (Current?.MainWindow?.IsLoaded == true)
+            {
+                messageWindow.Owner = Current.MainWindow;
+            }
+
+            messageWindow.ShowDialog();
         }
 
         protected override async void OnExit(ExitEventArgs e)

@@ -31,6 +31,8 @@ namespace Hekki.UI.ViewModels
 
         [ObservableProperty] private PilotViewModel? _selectedPilot;
         [ObservableProperty] private bool _isPopupOpen;
+        [ObservableProperty] private bool _showFirstSettings;
+
         private bool _isUpdatingFromSelection;
         private CancellationTokenSource? _searchCancellation;
 
@@ -57,28 +59,12 @@ namespace Hekki.UI.ViewModels
 
             if (RaceId == null)
             {
-                WeakReferenceMessenger.Default.Send(new AppErrorMessage($"Not implemented"));
+                ShowFirstSettings = true;
             }
             else
             {
                 await LoadRaceAsync();
             }
-        }
-
-        private async Task CreateRaceAsync()
-        {
-            if (!IsNewRace)
-                return;
-
-            var newRaceId = await _raceService.CreateRaceAsync(
-                RaceName,
-                Location,
-                RaceDate,
-                RegulationId);
-
-            RaceId = newRaceId;
-
-            await LoadRaceAsync();
         }
 
         private async Task LoadRaceAsync()
@@ -185,8 +171,6 @@ namespace Hekki.UI.ViewModels
                     {
                         PilotId = pilot.Id,
                         Name = pilot.Name,
-                        PhotoPath = pilot.PhotoPath,
-                        ProfileUrl = pilot.ProfileUrl
                     });
                 }
 
@@ -211,19 +195,9 @@ namespace Hekki.UI.ViewModels
             if (exists)
                 return;
 
-            var participantId = await _raceService.AddParticipantAsync(RaceId.Value, pilot.PilotId);
+            var participant = await _raceService.AddParticipantAsync(RaceId.Value, pilot.PilotId);
 
-            Participants.Add(new RaceParticipantViewModel
-            {
-                Id = participantId,
-                RaceId = RaceId.Value,
-                PilotId = pilot.PilotId,
-                PilotName = pilot.Name,
-                Team = string.Empty,
-                IsActive = true,
-                PilotPhotoPath = pilot.PhotoPath,
-                PilotProfileUrl = pilot.ProfileUrl
-            });
+            Participants.Add(PilotUiMapper.MapToParticipantViewModel(participant));
 
             SearchText = string.Empty;
         }
@@ -236,6 +210,23 @@ namespace Hekki.UI.ViewModels
             await _raceService.RemoveParticipantAsync(participant.Id);
             Participants.Remove(participant);
             RaceData.Participants.RemoveAll(p => p.PilotId == participant.PilotId);
+        }
+
+        [RelayCommand]
+        private async Task CreateRaceAsync()
+        {
+            if (!IsNewRace)
+                return;
+
+            var newRaceId = await _raceService.CreateRaceAsync(
+                RaceName,
+                Location,
+                RaceDate,
+                RegulationId);
+
+            RaceId = newRaceId;
+
+            await LoadRaceAsync();
         }
     }
 }

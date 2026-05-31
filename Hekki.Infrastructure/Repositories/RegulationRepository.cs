@@ -35,9 +35,14 @@ namespace Hekki.Infrastructure.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id, ct);
         }
 
-        public Task<RegulationEditDto> GetForEditAsync(int id, CancellationToken ct = default)
+        public async Task<RegulationEditDto> GetForEditAsync(int id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            await using var db = await _dbFactory.CreateDbContextAsync(ct);
+            var regulation = await db.Regulations
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id, ct);
+
+            return ToEditDto(regulation);
         }
 
         public async Task<int> AddAsync(RegulationEditDto regulationDto, CancellationToken ct = default)
@@ -48,6 +53,8 @@ namespace Hekki.Infrastructure.Repositories
             {
                 Name = regulationDto.Name,
                 Json = JsonSerializer.Serialize(regulationDto.Config),
+                CreationDate = DateTime.UtcNow,
+                Version = 1
             };
 
             db.Regulations.Add(entity);

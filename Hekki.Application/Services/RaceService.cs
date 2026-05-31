@@ -33,11 +33,12 @@ namespace Hekki.Application.Services
             return await _raceRepository.AddAsync(race, ct);
         }
 
-        public async Task<int> AddParticipantAsync(int raceId, int pilotId, CancellationToken ct = default)
+        public async Task<RaceParticipantDto> AddParticipantAsync(int raceId, int pilotId, CancellationToken ct = default)
         {
             var pilot = await _pilotRepository.GetByIdAsync(pilotId, ct);
             var participant = new RaceParticipantDto { PilotId = pilot.Id, Name = pilot.Name, Team = pilot.Team, IsActive = true };
-            return await _participantRepository.AddAsync(raceId, participant, ct);
+            await _participantRepository.AddAsync(raceId, participant, ct);
+            return participant;
         }
 
         public async Task RemoveParticipantAsync(int participantId, CancellationToken ct = default)

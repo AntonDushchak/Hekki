@@ -223,6 +223,8 @@ namespace Hekki.UI.ViewModels
                         HeatConfigs = heatConfigs
                     }
                 };
+
+                
                 var regulationId = await _regulationRepository.AddAsync(dto);
 
                 WeakReferenceMessenger.Default.Send(new AppSuccessMessage("Regulation saved successfully!"));
