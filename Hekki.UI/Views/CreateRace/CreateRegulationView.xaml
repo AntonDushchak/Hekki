@@ -145,13 +145,23 @@
                     </ListBox.ItemContainerStyle>
                 </ListBox>
 
-                <Button x:Name="AddHeatButton"
-                        Content="{DynamicResource m_AddHeat}" 
-                        FontSize="18" 
-                        MinWidth="55" MinHeight="30"
-                        Command="{Binding AddHeatCommand}"
-                        Grid.Row="2"
-                        Background="{DynamicResource Brush.SurfaceHigh}"/>
+                <StackPanel Grid.Row="2" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Left">
+                    <Button x:Name="AddHeatButton"
+                            Content="{DynamicResource m_AddHeat}" 
+                            FontSize="18" 
+                            MinWidth="55" MinHeight="30"
+                            Command="{Binding AddHeatCommand}"
+                            Background="{DynamicResource Brush.SurfaceHigh}"
+                            Margin="0,0,10,0"/>
+                    <Button x:Name="DeleteHeatButton"
+                            Content="{DynamicResource m_Delete}" 
+                            FontSize="18" 
+                            MinWidth="55" MinHeight="30"
+                            Command="{Binding DeleteHeatCommand}"
+                            Background="{DynamicResource Brush.SurfaceHigh}"/>
+                </StackPanel>
             </Grid> 
         </Border>
 
@@ -299,15 +309,21 @@
         </Border>
 
         <Grid Grid.Row="3" Grid.ColumnSpan="3" Margin="0,30,0,0">
-            <Button x:Name="SaveButton" 
-                    Command="{Binding SaveCommand}" 
-                    Content="{DynamicResource m_Save}" 
-                    FontSize="18" 
-                    MinWidth="55" MinHeight="30"
-                    HorizontalAlignment="Right"
-                    Margin="20"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="CancelButton" 
+                        Command="{Binding CancelCommand}" 
+                        Content="{DynamicResource m_Cancel}" 
+                        FontSize="18" 
+                        MinWidth="80" MinHeight="30"
+                        Margin="0,0,10,0"/>
+                <Button x:Name="SaveButton" 
+                        Command="{Binding SaveCommand}" 
+                        Content="{DynamicResource m_Save}" 
+                        FontSize="18" 
+                        MinWidth="80" MinHeight="30"/>
+            </StackPanel>
         </Grid>
-        
-        
+
+
     </Grid>
 </UserControl>

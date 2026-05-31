@@ -85,4 +85,11 @@
     <system:String x:Key="m_InitializationContext">Initialization of regulations list</system:String>
     <system:String x:Key="m_NavigationToCreationContext">Navigation to race creation</system:String>
     <system:String x:Key="m_NavigationToRaceContext">Navigation to race {0}</system:String>
+
+    <system:String x:Key="m_RaceSettings">Race Settings</system:String>
+    <system:String x:Key="m_RaceName">Race Name</system:String>
+    <system:String x:Key="m_RaceDate">Race Date</system:String>
+    <system:String x:Key="m_Location">Location</system:String>
+    <system:String x:Key="m_Cancel">Cancel</system:String>
+    <system:String x:Key="m_TotalTable">Total Table</system:String>
 </ResourceDictionary>

@@ -73,8 +73,10 @@ namespace Hekki.Infrastructure.Repositories
             if (entity is null)
                 throw new InvalidOperationException($"Race with ID {race.RaceId} not found");
 
+            var utcDate = race.Date.Kind == DateTimeKind.Utc ? race.Date : DateTime.SpecifyKind(race.Date, DateTimeKind.Utc);
+
             entity.Name = race.RaceName;
-            entity.Date = race.Date;
+            entity.Date = utcDate;
             entity.Location = race.Location;
             await db.SaveChangesAsync(ct);
         }

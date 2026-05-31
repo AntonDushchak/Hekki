@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs;
 using Hekki.UI.Mappers;
+using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels
@@ -12,6 +13,7 @@ namespace Hekki.UI.ViewModels
     {
         private readonly IRaceService _raceService;
         private readonly IPilotService _pilotService;
+        private readonly INavigationService _navigationService;
         private RegulationEditDto? _regulation;
 
         [ObservableProperty] private int _regulationId;
@@ -44,12 +46,14 @@ namespace Hekki.UI.ViewModels
             int regulationId,
             int? raceId,
             IRaceService raceService,
-            IPilotService pilotService)
+            IPilotService pilotService,
+            INavigationService navigationService)
         {
             RegulationId = regulationId;
             RaceId = raceId;
             _raceService = raceService;
             _pilotService = pilotService;
+            _navigationService = navigationService;
             _ = InitializeAsync();
         }
 
@@ -121,6 +125,55 @@ namespace Hekki.UI.ViewModels
             IsPopupOpen = false;
 
             _isUpdatingFromSelection = false;
+        }
+
+        partial void OnShowFirstSettingsChanged(bool value)
+        {
+            if (value)
+            {
+                OpenRaceSettings();
+            }
+        }
+
+        private void OpenRaceSettings()
+        {
+            var settingsViewModel = new RaceSettingsViewModel(
+                _navigationService,
+                RaceName,
+                RaceDate,
+                Location);
+
+            var settingsWindow = new Views.RaceSettingsWindow
+            {
+                DataContext = settingsViewModel
+            };
+
+            if (settingsWindow.ShowDialog() == true)
+            {
+                RaceName = settingsViewModel.RaceName;
+                RaceDate = settingsViewModel.RaceDate;
+                Location = settingsViewModel.SelectedLocation ?? string.Empty;
+
+                _ = CreateRaceAsync();
+            }
+
+            ShowFirstSettings = false;
+        }
+
+        private async Task CreateRaceAsync()
+        {
+            if (!IsNewRace)
+                return;
+
+            var newRaceId = await _raceService.CreateRaceAsync(
+                RaceName,
+                Location,
+                RaceDate,
+                RegulationId);
+
+            RaceId = newRaceId;
+
+            await LoadRaceAsync();
         }
 
         partial void OnSearchTextChanged(string value)
@@ -212,21 +265,6 @@ namespace Hekki.UI.ViewModels
             RaceData.Participants.RemoveAll(p => p.PilotId == participant.PilotId);
         }
 
-        [RelayCommand]
-        private async Task CreateRaceAsync()
-        {
-            if (!IsNewRace)
-                return;
-
-            var newRaceId = await _raceService.CreateRaceAsync(
-                RaceName,
-                Location,
-                RaceDate,
-                RegulationId);
-
-            RaceId = newRaceId;
-
-            await LoadRaceAsync();
-        }
+        
     }
 }

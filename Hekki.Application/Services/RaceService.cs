@@ -29,7 +29,8 @@ namespace Hekki.Application.Services
 
         public async Task<int> CreateRaceAsync(string name, string location, DateTime date, int regulationId, CancellationToken ct = default)
         {
-            var race = new RaceDataDto { RaceName = name, Location = location, Date = date, RegulationId = regulationId };
+            var utcDate = date.Kind == DateTimeKind.Utc ? date : DateTime.SpecifyKind(date, DateTimeKind.Utc);
+            var race = new RaceDataDto { RaceName = name, Location = location, Date = utcDate, RegulationId = regulationId };
             return await _raceRepository.AddAsync(race, ct);
         }
 

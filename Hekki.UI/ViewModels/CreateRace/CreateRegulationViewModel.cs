@@ -176,6 +176,38 @@ namespace Hekki.UI.ViewModels
             SelectedHeat = Heats.Last();
         }
 
+        [RelayCommand]
+        private void DeleteHeat()
+        {
+            if (SelectedHeat == null) return;
+
+            var heatToRemove = SelectedHeat;
+            var index = Heats.IndexOf(heatToRemove);
+
+            Heats.Remove(heatToRemove);
+
+            for (int i = 0; i < Heats.Count; i++)
+            {
+                Heats[i].Name = $"Heat {i + 1}";
+                Heats[i].HeatNumber = i + 1;
+            }
+
+            if (Heats.Any())
+            {
+                SelectedHeat = index < Heats.Count ? Heats[index] : Heats.Last();
+            }
+            else
+            {
+                SelectedHeat = null;
+            }
+        }
+
+        [RelayCommand]
+        private void Cancel()
+        {
+            _navigationService.NavigateToSelection();
+        }
+
         [RelayCommand(CanExecute = nameof(CanSave))]
         private async Task Save()
         {
