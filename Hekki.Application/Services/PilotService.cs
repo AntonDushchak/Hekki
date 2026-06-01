@@ -5,19 +5,26 @@ namespace Hekki.Application.Services
 {
     public class PilotService : IPilotService
     {
-        public Task<IReadOnlyList<PilotDto>> GetAllPilotsAsync(CancellationToken ct = default)
+        private readonly IPilotRepository _pilotRepository;
+
+        public PilotService(IPilotRepository pilotRepository)
         {
-            throw new NotImplementedException();
+            _pilotRepository = pilotRepository;
         }
 
-        public Task<PilotDto?> GetPilotByIdAsync(int pilotId, CancellationToken ct = default)
+        public async Task<IReadOnlyList<PilotDto>> GetAllPilotsAsync(CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            return await _pilotRepository.GetAllAsync(ct);
         }
 
-        public Task<IReadOnlyList<PilotDto>> SearchPilotsByNameAsync(string searchText, CancellationToken ct = default)
+        public async Task<PilotDto?> GetPilotByIdAsync(int pilotId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            return await _pilotRepository.GetByIdAsync(pilotId, ct);
+        }
+
+        public async Task<IReadOnlyList<PilotDto>> SearchPilotsByNameAsync(string searchText, CancellationToken ct = default)
+        {
+            return await _pilotRepository.SearchByNameAsync(searchText, ct);
         }
     }
 }

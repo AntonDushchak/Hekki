@@ -1,6 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs;
 using Hekki.UI.Mappers;
@@ -80,29 +79,33 @@ namespace Hekki.UI.ViewModels
             if (race == null)
                 return;
 
+            RaceData = race;
             RaceName = race.RaceName;
             Location = race.Location;
             RaceDate = race.Date;
 
             // Load participants with pilot info first
-            var participants = RaceData.Participants;
-            Participants.Clear();
-            foreach (var pilot in participants)
+            if (RaceData.Participants != null)
             {
-                Participants.Add(new RaceParticipantViewModel
+                var participants = RaceData.Participants;
+                Participants.Clear();
+                foreach (var pilot in participants)
                 {
-                    Id = pilot.ParticipantId,
-                    RaceId = RaceId.Value,
-                    PilotId = pilot.PilotId,
-                    PilotName = pilot.Name,
-                    Team = pilot.Team,
-                    IsActive = true,
-                    PilotPhotoPath = pilot.PhotoPath,
-                });
+                    Participants.Add(new RaceParticipantViewModel
+                    {
+                        Id = pilot.ParticipantId,
+                        RaceId = RaceId.Value,
+                        PilotId = pilot.PilotId,
+                        PilotName = pilot.Name,
+                        Team = pilot.Team,
+                        IsActive = true,
+                        PilotPhotoPath = pilot.PhotoPath,
+                    });
+                }
             }
 
             // Load heats with groups and results
-            if (_regulation != null)
+            if (RaceData.Heats != null)
             {
                 var heats = RaceData.Heats;
                 Heats.Clear();
@@ -264,7 +267,5 @@ namespace Hekki.UI.ViewModels
             Participants.Remove(participant);
             RaceData.Participants.RemoveAll(p => p.PilotId == participant.PilotId);
         }
-
-        
     }
 }

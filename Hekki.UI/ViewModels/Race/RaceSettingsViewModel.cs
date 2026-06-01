@@ -40,7 +40,7 @@ namespace Hekki.UI.ViewModels
             _raceDate = raceDate ?? DateTime.Today;
             _selectedLocation = selectedLocation;
 
-            AvailableLocations.Add("Location 1");
+            AvailableLocations.Add("Location 1"); //TODO: Load from service
             AvailableLocations.Add("Location 2");
             AvailableLocations.Add("Location 3");
         }

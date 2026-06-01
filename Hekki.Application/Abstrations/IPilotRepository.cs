@@ -10,5 +10,6 @@ namespace Hekki.Application.Abstrations
         Task UpdateAsync(PilotDto pilot, CancellationToken ct = default);
         Task DeleteAsync(int id, CancellationToken ct = default);
         Task<bool> ExistsAsync(int id, CancellationToken ct = default);
+        Task<IReadOnlyList<PilotDto>> SearchByNameAsync(string searchText, CancellationToken ct = default);
     }
 }

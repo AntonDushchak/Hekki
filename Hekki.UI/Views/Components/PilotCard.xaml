@@ -23,7 +23,7 @@
                     Width="30"
                     Background="#4A90E2"
                     CornerRadius="8,0,0,8">
-                <TextBlock Text="{Binding Category}"
+                <TextBlock Text="{Binding League}"
                            Foreground="White"
                            FontWeight="Bold"
                            FontSize="12"

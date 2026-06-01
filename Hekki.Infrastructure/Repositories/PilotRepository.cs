@@ -81,5 +81,16 @@ namespace Hekki.Infrastructure.Repositories
 
             return await db.Pilots.AnyAsync(p => p.Id == id, ct);
         }
+
+        public async Task<IReadOnlyList<PilotDto>> SearchByNameAsync(string searchText, CancellationToken ct = default)
+        {
+            await using var db = await _dbFactory.CreateDbContextAsync(ct);
+            var entities = await db.Pilots
+                .AsNoTracking()
+                .Where(p => p.Name.Contains(searchText))
+                .OrderBy(p => p.Name)
+                .ToListAsync(ct);
+            return entities.Select(e => _mapper.Map<PilotDto>(e)).ToList();
+        }
     }
 }
