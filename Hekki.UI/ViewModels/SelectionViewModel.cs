@@ -102,5 +102,22 @@ namespace Hekki.UI.ViewModels
         {
             PaginationService.Next();
         }
+
+        [RelayCommand]
+        private async Task DeleteRegulation(RegulationSummaryDto dto)
+        {
+            try
+            {
+                await _regulationService.DeleteRegulationAsync(dto.Id);
+
+                Regulations.Remove(dto);
+
+                PaginationService.SetTotalItems(Regulations.Count);
+            }
+            catch (Exception ex)
+            {
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage($"Failed to delete regulation: {ex.Message}"));
+            }
+        }
     }
 }

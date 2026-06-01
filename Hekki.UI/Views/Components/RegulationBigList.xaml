@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:components="clr-namespace:Hekki.UI.Views"
-             mc:Ignorable="d" >
+             mc:Ignorable="d" 
+             x:Name="Root" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -34,11 +35,19 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Command="{Binding DataContext.NavigateToRaceCommand, 
-                             RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                CommandParameter="{Binding}"
-                                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                        <Button Style="{StaticResource CardButtonStyle}"
+                                Command="{Binding DataContext.NavigateToRaceCommand, Source={x:Reference Root}}"
+                                CommandParameter="{Binding}">
                             <components:RegulationCard />
+                            <Button.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="{DynamicResource m_Delete}"
+                                              Command="{Binding DataContext.DeleteRegulationCommand,
+                                                                Source={x:Reference Root}}"
+                                              CommandParameter="{Binding PlacementTarget.DataContext,
+                                            RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                                </ContextMenu>
+                            </Button.ContextMenu>
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

@@ -6,5 +6,6 @@ namespace Hekki.Application.Services
     {
         Task<IReadOnlyList<RegulationSummaryDto>> GetRegulationsAsync();
         Task<RegulationEditDto> GetRegulationEditAsync(int id);
+        Task DeleteRegulationAsync(int id);
     }
 }

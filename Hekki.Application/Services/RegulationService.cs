@@ -12,6 +12,11 @@ namespace Hekki.Application.Services
             _regulationRepository = regulationRepository;            
         }
 
+        public async Task DeleteRegulationAsync(int id)
+        {
+            await _regulationRepository.DeleteAsync(id);
+        }
+
         public async Task<RegulationEditDto> GetRegulationEditAsync(int id)
         {
             return await _regulationRepository.GetForEditAsync(id);
@@ -20,7 +25,6 @@ namespace Hekki.Application.Services
         public async Task<IReadOnlyList<RegulationSummaryDto>> GetRegulationsAsync()
         {
             return await _regulationRepository.GetAllAsync();
-
         }
     }
 }
