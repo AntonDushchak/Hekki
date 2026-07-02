@@ -7,7 +7,7 @@ namespace Hekki.Application.Abstrations
         /// <summary>
         /// Get complete race data with participants and heats for UI
         /// </summary>
-        Task<RaceDataDto> GetRaceDataAsync(int raceId, CancellationToken ct = default);
+        Task<RaceDataDto?> GetRaceDataAsync(int raceId, CancellationToken ct = default);
 
         /// <summary>
         /// Create new race with heats based on regulation
@@ -24,6 +24,6 @@ namespace Hekki.Application.Abstrations
         /// </summary>
         Task RemoveParticipantAsync(int participantId, CancellationToken ct = default);
 
-        Task<RegulationEditDto> GetRegulationEditAsync(int regulationId, CancellationToken ct = default);
+        Task<RegulationEditDto?> GetRegulationEditAsync(int regulationId, CancellationToken ct = default);
     }
 }

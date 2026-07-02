@@ -146,9 +146,6 @@ namespace Hekki.Infrastructure
                 entity.Property(e => e.ConfigurationIndex)
                     .IsRequired();
 
-                entity.Property(e => e.Status)
-                    .IsRequired();
-
                 entity.HasOne(e => e.Race)
                     .WithMany(r => r.Heats)
                     .HasForeignKey(e => e.RaceId)
@@ -194,9 +191,6 @@ namespace Hekki.Infrastructure
                 entity.ToTable("heat_results");
 
                 entity.HasKey(e => new { e.HeatId, e.ParticipantId });
-
-                entity.Property(e => e.Status)
-                    .IsRequired();
 
                 entity.HasOne(e => e.Heat)
                     .WithMany(h => h.HeatParticipantResults)

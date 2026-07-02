@@ -11,14 +11,7 @@
         public int RegulationId { get; set; }
         public RegulationEntity Regulation { get; set; } = null!;
         public int ConfigurationIndex { get; set; }
-        public HeatStatus Status { get; set; }
         public List<HeatEntryEntity> HeatEntries { get; set; } = [];
         public List<HeatResultEntity> HeatParticipantResults { get; set; } = [];
-    }
-
-    public enum HeatStatus
-    {
-        Draft,
-        Locked
     }
 }

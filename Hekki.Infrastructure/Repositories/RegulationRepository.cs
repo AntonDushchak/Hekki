@@ -35,14 +35,14 @@ namespace Hekki.Infrastructure.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id, ct);
         }
 
-        public async Task<RegulationEditDto> GetForEditAsync(int id, CancellationToken ct = default)
+        public async Task<RegulationEditDto?> GetForEditAsync(int id, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
             var regulation = await db.Regulations
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id, ct);
 
-            return ToEditDto(regulation);
+            return regulation is null ? null : ToEditDto(regulation);
         }
 
         public async Task<int> AddAsync(RegulationEditDto regulationDto, CancellationToken ct = default)

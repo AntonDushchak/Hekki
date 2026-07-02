@@ -22,7 +22,7 @@ namespace Hekki.Application.Services
             _regulationRepository = regulationRepository;
         }
 
-        public async Task<RaceDataDto> GetRaceDataAsync(int raceId, CancellationToken ct = default)
+        public async Task<RaceDataDto?> GetRaceDataAsync(int raceId, CancellationToken ct = default)
         {
             return await _raceRepository.GetByIdAsync(raceId, ct);
         }
@@ -47,7 +47,7 @@ namespace Hekki.Application.Services
             await _participantRepository.DeleteAsync(participantId, ct);
         }
 
-        public async Task<RegulationEditDto> GetRegulationEditAsync(int regulationId, CancellationToken ct = default)
+        public async Task<RegulationEditDto?> GetRegulationEditAsync(int regulationId, CancellationToken ct = default)
         {
             return await _regulationRepository.GetForEditAsync(regulationId, ct);
         }

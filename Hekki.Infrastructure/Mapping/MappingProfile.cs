@@ -74,7 +74,6 @@ namespace Hekki.Infrastructure.Mapping
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.HeatId))
                 .ForMember(d => d.Race, opt => opt.Ignore())
                 .ForMember(d => d.Regulation, opt => opt.Ignore())
-                .ForMember(d => d.Status, opt => opt.Ignore())
                 .ForMember(d => d.HeatEntries, opt => opt.Ignore())
                 .ForMember(d => d.HeatParticipantResults, opt => opt.Ignore());
 
@@ -99,8 +98,7 @@ namespace Hekki.Infrastructure.Mapping
             CreateMap<HeatResultDto, HeatResultEntity>()
                 .ForMember(d => d.Heat, opt => opt.Ignore())
                 .ForMember(d => d.Participant, opt => opt.Ignore())
-                .ForMember(d => d.HeatId, opt => opt.Ignore())
-                .ForMember(d => d.Status, opt => opt.Ignore());
+                .ForMember(d => d.HeatId, opt => opt.Ignore());
 
             // RegulationEntity <-> RegulationSummaryDto
             CreateMap<RegulationEntity, RegulationSummaryDto>();
