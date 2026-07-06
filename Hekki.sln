@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.4.11626.88
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hekki.Domain", "Hekki.Domain\Hekki.Domain.csproj", "{4620D739-C4DD-4EC7-B1E3-FA276919EB68}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hekki.Application", "Hekki.Application\Hekki.Application.csproj", "{642C212A-3618-4487-9B20-2B6B2C9B1038}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hekki.Infrastructure", "Hekki.Infrastructure\Hekki.Infrastructure.csproj", "{5FFA925C-4F9E-43C4-AA69-A876101E4021}"
@@ -19,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4620D739-C4DD-4EC7-B1E3-FA276919EB68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4620D739-C4DD-4EC7-B1E3-FA276919EB68}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4620D739-C4DD-4EC7-B1E3-FA276919EB68}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4620D739-C4DD-4EC7-B1E3-FA276919EB68}.Release|Any CPU.Build.0 = Release|Any CPU
 		{642C212A-3618-4487-9B20-2B6B2C9B1038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{642C212A-3618-4487-9B20-2B6B2C9B1038}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{642C212A-3618-4487-9B20-2B6B2C9B1038}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -39,7 +39,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hekki.Application\Hekki.Application.csproj" />
-    <ProjectReference Include="..\Hekki.Domain\Hekki.Domain.csproj" />
     <ProjectReference Include="..\Hekki.Infrastructure\Hekki.Infrastructure.csproj" />
   </ItemGroup>
 

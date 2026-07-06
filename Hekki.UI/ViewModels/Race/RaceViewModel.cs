@@ -265,7 +265,7 @@ namespace Hekki.UI.ViewModels
 
             await _raceService.RemoveParticipantAsync(participant.Id);
             Participants.Remove(participant);
-            RaceData.Participants.RemoveAll(p => p.PilotId == participant.PilotId);
+            //RaceData.Participants.RemoveAll(p => p.PilotId == participant.PilotId);
         }
     }
 }

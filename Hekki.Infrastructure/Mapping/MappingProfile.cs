@@ -25,6 +25,17 @@ namespace Hekki.Infrastructure.Mapping
                 .ForMember(d => d.Participants, opt => opt.Ignore())
                 .ForMember(d => d.Heats, opt => opt.Ignore());
 
+            CreateMap<RaceEntity, RaceSummartDto>()
+                .ForMember(d => d.RaceId, opt => opt.MapFrom(s => s.Id))
+                .ForMember(d => d.RaceName, opt => opt.MapFrom(s => s.Name));
+
+            CreateMap<RaceSummartDto, RaceEntity>()
+                .ForMember(d => d.Id, opt => opt.MapFrom(s => s.RaceId))
+                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.RaceName))
+                .ForMember(d => d.Regulation, opt => opt.Ignore())
+                .ForMember(d => d.Participants, opt => opt.Ignore())
+                .ForMember(d => d.Heats, opt => opt.Ignore());
+
             // RaceParticipantEntity <-> RaceParticipantDto
             CreateMap<RaceParticipantEntity, RaceParticipantDto>()
                 .ForMember(d => d.ParticipantId, opt => opt.MapFrom(s => s.Id))
@@ -105,6 +116,17 @@ namespace Hekki.Infrastructure.Mapping
 
             CreateMap<RegulationSummaryDto, RegulationEntity>()
                 .ForMember(d => d.Json, opt => opt.Ignore());
+
+            // RegulationEntity <-> RegulationEditDto
+            CreateMap<RegulationEntity, RegulationEditDto>()
+                .ForMember(d => d.Config, opt => opt.MapFrom(s => 
+                    System.Text.Json.JsonSerializer.Deserialize<Hekki.Application.Regulations.RegulationConfig>(s.Json)));
+
+            CreateMap<RegulationEditDto, RegulationEntity>()
+                .ForMember(d => d.Json, opt => opt.MapFrom(s => 
+                    System.Text.Json.JsonSerializer.Serialize(s.Config)))
+                .ForMember(d => d.CreationDate, opt => opt.Ignore())
+                .ForMember(d => d.Version, opt => opt.Ignore());
         }
     }
 }

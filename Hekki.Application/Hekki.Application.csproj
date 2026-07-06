@@ -11,7 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Hekki.Domain\Hekki.Domain.csproj" />
+    <Folder Include="DTOs\Race\" />
+    <Folder Include="DTOs\Pilot\" />
+    <Folder Include="DTOs\Regulation\" />
   </ItemGroup>
 
 </Project>

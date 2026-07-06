@@ -17,12 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Hekki.Application\Hekki.Application.csproj" />
-    <ProjectReference Include="..\Hekki.Domain\Hekki.Domain.csproj" />
+    <Folder Include="DTOs\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
+    <ProjectReference Include="..\Hekki.Application\Hekki.Application.csproj" />
   </ItemGroup>
 
 </Project>

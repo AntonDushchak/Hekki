@@ -2,90 +2,99 @@ using Hekki.Application.Regulations;
 
 namespace Hekki.Application.DTOs
 {
-    public class RaceDataDto
+    public record RaceDataDto
     {
-        public int RaceId { get; set; }
-        public string RaceName { get; set; } = string.Empty;
-        public DateTime Date { get; set; }
-        public string Location { get; set; } = string.Empty;
-        public int RegulationId { get; set; }
-        public List<RaceParticipantDto> Participants { get; set; } = [];
-        public List<HeatDto> Heats { get; set; } = [];
+        public int RaceId { get; init; }
+        public string RaceName { get; init; } = string.Empty;
+        public DateTime Date { get; init; }
+        public string Location { get; init; } = string.Empty;
+        public int RegulationId { get; init; }
+        public IReadOnlyList<RaceParticipantDto> Participants { get; init; } = [];
+        public IReadOnlyList<HeatDto> Heats { get; init; } = [];
     }
 
-    public class PilotDto
+    public record RaceSummartDto
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string? PhotoPath { get; set; }
-        public string? ProfileUrl { get; set; }
-        public string? Team { get; set; }
-        public string? League { get; set; }
+        public int RaceId { get; init; }
+        public string RaceName { get; init; } = string.Empty;
+        public DateTime Date { get; init; }
+        public string Location { get; init; } = string.Empty;
+        public int RegulationId { get; init; }
     }
 
-    public class RaceParticipantDto
+    public record PilotDto
     {
-        public int ParticipantId { get; set; }
-        public int PilotId { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string? PhotoPath { get; set; }
-        public string? Team { get; set; }
-        public string? League { get; set; }
-        public bool IsActive { get; set; }
+        public int Id { get; init; }
+        public string Name { get; init; } = string.Empty;
+        public string? PhotoPath { get; init; }
+        public string? ProfileUrl { get; init; }
+        public string? Team { get; init; }
+        public string? League { get; init; }
     }
 
-    public class HeatDto
+    public record RaceParticipantDto
     {
-        public int HeatId { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public int HeatNumber { get; set; }
-        public int GroupCount { get; set; }
-        public int ConfigurationIndex { get; set; }
-        public List<HeatGroupDto> Groups { get; set; } = [];
+        public int ParticipantId { get; init; }
+        public int PilotId { get; init; }
+        public string Name { get; init; } = string.Empty;
+        public string? PhotoPath { get; init; }
+        public string? Team { get; init; }
+        public string? League { get; init; }
+        public bool IsActive { get; init; }
     }
 
-    public class HeatGroupDto
+    public record HeatDto
     {
-        public int HeatId { get; set; }
-        public int GroupIndex { get; set; }
-        public int GroupNumber { get; set; }
-        public int GroupCapacity { get; set; }
-        public List<HeatEntryDto> Entries { get; set; } = [];
-        public List<HeatResultDto> Results { get; set; } = [];
+        public int HeatId { get; init; }
+        public string Name { get; init; } = string.Empty;
+        public int HeatNumber { get; init; }
+        public int GroupCount { get; init; }
+        public int ConfigurationIndex { get; init; }
+        public IReadOnlyList<HeatGroupDto> Groups { get; init; } = [];
     }
 
-    public class HeatEntryDto
+    public record HeatGroupDto
     {
-        public int ParticipantId { get; set; }
-        public string PilotName { get; set; } = string.Empty;
-        public int KartNumber { get; set; }
-        public int GridPosition { get; set; }
+        public int HeatId { get; init; }
+        public int GroupIndex { get; init; }
+        public int GroupNumber { get; init; }
+        public int GroupCapacity { get; init; }
+        public IReadOnlyList<HeatEntryDto> Entries { get; init; } = [];
+        public IReadOnlyList<HeatResultDto> Results { get; init; } = [];
     }
 
-    public class HeatResultDto
+    public record HeatEntryDto
     {
-        public int ParticipantId { get; set; }
-        public int? FinishPosition { get; set; }
-        public long? TotalTimeMs { get; set; }
-        public long? BestLapMs { get; set; }
-        public int? Laps { get; set; }
-        public int? Score { get; set; }
-        public int? Penalty { get; set; }
+        public int ParticipantId { get; init; }
+        public string PilotName { get; init; } = string.Empty;
+        public int KartNumber { get; init; }
+        public int GridPosition { get; init; }
+    }
+
+    public record HeatResultDto
+    {
+        public int ParticipantId { get; init; }
+        public int? FinishPosition { get; init; }
+        public long? TotalTimeMs { get; init; }
+        public long? BestLapMs { get; init; }
+        public int? Laps { get; init; }
+        public int? Score { get; init; }
+        public int? Penalty { get; init; }
         public int TotalScore => (Score ?? 0) - (Penalty ?? 0);
     }
 
-    public class RegulationSummaryDto
+    public record RegulationSummaryDto
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public int Version { get; set; }
-        public DateTime CreationDate { get; set; }
+        public int Id { get; init; }
+        public string Name { get; init; } = string.Empty;
+        public int Version { get; init; }
+        public DateTime CreationDate { get; init; }
     }
 
-    public class RegulationEditDto
+    public record RegulationEditDto
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public RegulationConfig Config { get; set; } = new();
+        public int Id { get; init; }
+        public string Name { get; init; } = string.Empty;
+        public RegulationConfig Config { get; init; } = new();
     }
 }
