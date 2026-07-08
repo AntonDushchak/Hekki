@@ -21,7 +21,7 @@ namespace Hekki.UI.Mappers
             {
                 Id = raceParticipant.ParticipantId,
                 PilotId = raceParticipant.PilotId,
-                PilotName = raceParticipant.Name,
+                Name = raceParticipant.Name,
                 PilotPhotoPath = raceParticipant.PhotoPath,
                 Team = raceParticipant.Team,
                 League = raceParticipant.League,

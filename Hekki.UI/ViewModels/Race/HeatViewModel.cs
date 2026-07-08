@@ -58,4 +58,6 @@ namespace Hekki.UI.ViewModels
 
         public int TotalScore => (Score ?? 0) - (Penalty ?? 0);
     }
+
+    //public partial class Table
 }

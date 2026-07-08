@@ -8,11 +8,12 @@ using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels
 {
-    public partial class RaceViewModel : ObservableObject
+    public partial class RaceViewModel : ViewModelBase
     {
         private readonly IRaceService _raceService;
         private readonly IPilotService _pilotService;
         private readonly INavigationService _navigationService;
+        private readonly IDialogService _dialogService;
         private RegulationEditDto? _regulation;
 
         [ObservableProperty] private int _regulationId;
@@ -24,7 +25,6 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty] private string _location = string.Empty;
 
         [ObservableProperty] private DateTime _raceDate = DateTime.Today;
-        [ObservableProperty] private RaceDataDto _raceData;
 
         public bool IsNewRace => RaceId == null;
 
@@ -46,17 +46,19 @@ namespace Hekki.UI.ViewModels
             int? raceId,
             IRaceService raceService,
             IPilotService pilotService,
-            INavigationService navigationService)
+            INavigationService navigationService,
+            IDialogService dialogService)
         {
             RegulationId = regulationId;
             RaceId = raceId;
             _raceService = raceService;
             _pilotService = pilotService;
+            _dialogService = dialogService;
             _navigationService = navigationService;
             _ = InitializeAsync();
         }
 
-        private async Task InitializeAsync()
+        private Task InitializeAsync() => ExecuteSafeAsync(async () =>
         {
             _regulation = await _raceService.GetRegulationEditAsync(RegulationId);
 
@@ -68,54 +70,27 @@ namespace Hekki.UI.ViewModels
             {
                 await LoadRaceAsync();
             }
-        }
+        });
 
-        private async Task LoadRaceAsync()
+        private Task LoadRaceAsync() => ExecuteSafeAsync(async () =>
         {
             if (RaceId == null)
                 return;
 
-            var race = await _raceService.GetRaceDataAsync(RaceId.Value);
-            if (race == null)
+            var raceDto = await _raceService.GetRaceDataAsync(RaceId.Value);
+            if (raceDto == null)
                 return;
 
-            RaceData = race;
-            RaceName = race.RaceName;
-            Location = race.Location;
-            RaceDate = race.Date;
+            RaceUiMapper.ApplyTo(this, raceDto);
 
-            // Load participants with pilot info first
-            if (RaceData.Participants != null)
-            {
-                var participants = RaceData.Participants;
-                Participants.Clear();
-                foreach (var pilot in participants)
-                {
-                    Participants.Add(new RaceParticipantViewModel
-                    {
-                        Id = pilot.ParticipantId,
-                        RaceId = RaceId.Value,
-                        PilotId = pilot.PilotId,
-                        PilotName = pilot.Name,
-                        Team = pilot.Team,
-                        IsActive = true,
-                        PilotPhotoPath = pilot.PhotoPath,
-                    });
-                }
-            }
+            Participants.Clear();
+            foreach (var p in raceDto.Participants)
+                Participants.Add(PilotUiMapper.MapToParticipantViewModel(p));
 
-            // Load heats with groups and results
-            if (RaceData.Heats != null)
-            {
-                var heats = RaceData.Heats;
-                Heats.Clear();
-                foreach (var heat in heats)
-                {
-                    var heatVm = HeatUiMapper.MapToHeatViewModel(heat);
-                    Heats.Add(heatVm);
-                }
-            }
-        }
+            Heats.Clear();
+            foreach (var h in raceDto.Heats)
+                Heats.Add(HeatUiMapper.MapToHeatViewModel(h));
+        });
 
         partial void OnSelectedPilotChanged(PilotViewModel? value)
         {
@@ -146,12 +121,9 @@ namespace Hekki.UI.ViewModels
                 RaceDate,
                 Location);
 
-            var settingsWindow = new Views.RaceSettingsWindow
-            {
-                DataContext = settingsViewModel
-            };
+            var wasShown = _dialogService.ShowRaceSettings(settingsViewModel);
 
-            if (settingsWindow.ShowDialog() == true)
+            if (wasShown == true)
             {
                 RaceName = settingsViewModel.RaceName;
                 RaceDate = settingsViewModel.RaceDate;
@@ -163,7 +135,7 @@ namespace Hekki.UI.ViewModels
             ShowFirstSettings = false;
         }
 
-        private async Task CreateRaceAsync()
+        private Task CreateRaceAsync() => ExecuteSafeAsync(async () =>
         {
             if (!IsNewRace)
                 return;
@@ -177,7 +149,7 @@ namespace Hekki.UI.ViewModels
             RaceId = newRaceId;
 
             await LoadRaceAsync();
-        }
+        });
 
         partial void OnSearchTextChanged(string value)
         {
@@ -198,7 +170,7 @@ namespace Hekki.UI.ViewModels
             _ = FilterPilotsForSearchAsync(value);
         }
 
-        private async Task FilterPilotsForSearchAsync(string searchText)
+        private Task FilterPilotsForSearchAsync(string searchText) => ExecuteSafeAsync(async () =>
         {
             _searchCancellation?.Cancel();
             _searchCancellation = new CancellationTokenSource();
@@ -232,22 +204,19 @@ namespace Hekki.UI.ViewModels
 
                 IsPopupOpen = FilteredPilots.Count > 0;
             }
-            catch (Exception ex) when (ex is OperationCanceledException || ex is TaskCanceledException)
+            catch (OperationCanceledException)
             {
-                System.Diagnostics.Debug.WriteLine("Search canceled: user continues typing.");
+                
             }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error searching pilots: {ex.Message}");
-            }
-        }
+        });
 
         [RelayCommand]
-        private async Task AddParticipantAsync(PilotViewModel? pilot)
+        private Task AddParticipantAsync() => ExecuteSafeAsync(async () =>
         {
+            var pilot = SelectedPilot;
             if (pilot == null || RaceId == null) return;
 
-            var exists = RaceData.Participants.Any(p => p.PilotId == pilot.PilotId);
+            var exists = Participants.Any(p => p.PilotId == pilot.PilotId);
             if (exists)
                 return;
 
@@ -256,16 +225,15 @@ namespace Hekki.UI.ViewModels
             Participants.Add(PilotUiMapper.MapToParticipantViewModel(participant));
 
             SearchText = string.Empty;
-        }
+        });
 
         [RelayCommand]
-        private async Task RemoveParticipantAsync(RaceParticipantViewModel participant)
+        private Task RemoveParticipantAsync(RaceParticipantViewModel participant) => ExecuteSafeAsync(async () =>
         {
             if (participant == null) return;
 
             await _raceService.RemoveParticipantAsync(participant.Id);
             Participants.Remove(participant);
-            //RaceData.Participants.RemoveAll(p => p.PilotId == participant.PilotId);
-        }
+        });
     }
 }

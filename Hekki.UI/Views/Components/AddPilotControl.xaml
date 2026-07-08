@@ -62,7 +62,6 @@
         <Button Grid.Column="1"
                 Content="{DynamicResource m_Add}"
                 Command="{Binding AddParticipantCommand}"
-                CommandParameter="{Binding SelectedPilot}"
                 MinWidth="80"
                 MinHeight="40"
                 Margin="10,0,0,0"
