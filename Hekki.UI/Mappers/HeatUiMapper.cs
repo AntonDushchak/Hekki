@@ -5,33 +5,27 @@ namespace Hekki.UI.Mappers
 {
     public static class HeatUiMapper
     {
-        /// <summary>
-        /// Map Heat domain model to HeatViewModel for UI display
-        /// </summary>
         public static HeatViewModel MapToHeatViewModel(HeatDto heat)
         {
             var heatViewModel = new HeatViewModel
             {
                 Name = heat.Name,
                 HeatNumber = heat.HeatNumber,
-                ScoringMode = heat.ScoringMode
+                ScoringMode = heat.ScoringMode,
             };
 
             foreach (var groupDto in heat.Groups)
             {
-                var groupVm = MapToHeatGroupViewModel(groupDto);
+                var groupVm = MapToHeatGroupViewModel(groupDto, heatViewModel);
                 heatViewModel.Groups.Add(groupVm);
             }
 
             return heatViewModel;
         }
 
-        /// <summary>
-        /// Map HeatGroupDto to HeatGroupViewModel
-        /// </summary>
-        private static HeatGroupViewModel MapToHeatGroupViewModel(HeatGroupDto groupDto)
+        private static HeatGroupViewModel MapToHeatGroupViewModel(HeatGroupDto groupDto, HeatViewModel heatViewModel)
         {
-            var groupVm = new HeatGroupViewModel
+            var groupVm = new HeatGroupViewModel(heatViewModel)
             {
                 GroupNumber = groupDto.GroupNumber,
                 GroupCapacity = groupDto.GroupCapacity,

@@ -77,6 +77,17 @@ namespace Hekki.UI.ViewModels
             if (RaceId == null)
                 return;
 
+            await _raceService.AddParticipantAsync(RaceId.Value, 1);
+            await _raceService.AddParticipantAsync(RaceId.Value, 2);
+            await _raceService.AddParticipantAsync(RaceId.Value, 3);
+            await _raceService.AddParticipantAsync(RaceId.Value, 4);
+            await _raceService.AddParticipantAsync(RaceId.Value, 5);
+            await _raceService.AddParticipantAsync(RaceId.Value, 6);
+            await _raceService.AddParticipantAsync(RaceId.Value, 7);
+            await _raceService.AddParticipantAsync(RaceId.Value, 8);
+            await _raceService.AddParticipantAsync(RaceId.Value, 9);
+            await _raceService.AddParticipantAsync(RaceId.Value, 10);
+
             var raceDto = await _raceService.GetRaceDataAsync(RaceId.Value);
             if (raceDto == null)
                 return;
@@ -86,6 +97,9 @@ namespace Hekki.UI.ViewModels
             Participants.Clear();
             foreach (var p in raceDto.Participants)
                 Participants.Add(PilotUiMapper.MapToParticipantViewModel(p));
+
+            
+
 
             Heats.Clear();
             foreach (var h in raceDto.Heats)

@@ -38,6 +38,7 @@
     <system:String x:Key="m_Pilots">Pilots</system:String>
     <system:String x:Key="m_AddNewPilot">Add new pilot</system:String>
     <system:String x:Key="m_Add">Add</system:String>
+    
     <system:String x:Key="m_Group">Group</system:String>
     <system:String x:Key="m_Pos">Pos</system:String>
     <system:String x:Key="m_Kart">Kart</system:String>
@@ -46,6 +47,7 @@
     <system:String x:Key="m_Score">Score</system:String>
     <system:String x:Key="m_Points">Points</system:String>
     <system:String x:Key="m_Penalty">Penalty</system:String>
+    
     <system:String x:Key="m_Settings">Settings</system:String>
     <system:String x:Key="m_Language">Language</system:String>
     <system:String x:Key="m_CreatePilot">Create pilot</system:String>

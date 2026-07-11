@@ -90,7 +90,7 @@
                     <ItemsControl ItemsSource="{Binding Heats}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <components:HeatCard Margin="0,0,0,15"/>
+                                <components:HeatColumn Margin="0,0,0,15"/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
