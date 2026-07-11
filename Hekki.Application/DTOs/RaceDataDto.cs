@@ -9,11 +9,11 @@ namespace Hekki.Application.DTOs
         public DateTime Date { get; init; }
         public string Location { get; init; } = string.Empty;
         public int RegulationId { get; init; }
-        public IReadOnlyList<RaceParticipantDto> Participants { get; init; } = [];
-        public IReadOnlyList<HeatDto> Heats { get; init; } = [];
+        public IReadOnlyList<RaceParticipantDto> Participants { get; init; }
+        public IReadOnlyList<HeatDto> Heats { get; init; }
     }
 
-    public record RaceSummartDto
+    public record RaceSummaryDto
     {
         public int RaceId { get; init; }
         public string RaceName { get; init; } = string.Empty;
@@ -46,10 +46,13 @@ namespace Hekki.Application.DTOs
     public record HeatDto
     {
         public int HeatId { get; init; }
+        public int RaceId { get; init; }
         public string Name { get; init; } = string.Empty;
         public int HeatNumber { get; init; }
         public int GroupCount { get; init; }
         public int ConfigurationIndex { get; init; }
+        public int RegulationId { get; init; }
+        public ScoringMode ScoringMode { get; init; }
         public IReadOnlyList<HeatGroupDto> Groups { get; init; } = [];
     }
 

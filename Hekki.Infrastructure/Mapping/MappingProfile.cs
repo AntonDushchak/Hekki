@@ -8,10 +8,9 @@ namespace Hekki.Infrastructure.Mapping
     {
         public MappingProfile()
         {
-            // PilotEntity <-> PilotDto
             CreateMap<PilotEntity, PilotDto>().ReverseMap();
 
-            // RaceEntity <-> RaceDataDto
+            // ===== Race =====
             CreateMap<RaceEntity, RaceDataDto>()
                 .ForMember(d => d.RaceId, opt => opt.MapFrom(s => s.Id))
                 .ForMember(d => d.RaceName, opt => opt.MapFrom(s => s.Name))
@@ -25,22 +24,16 @@ namespace Hekki.Infrastructure.Mapping
                 .ForMember(d => d.Participants, opt => opt.Ignore())
                 .ForMember(d => d.Heats, opt => opt.Ignore());
 
-            CreateMap<RaceEntity, RaceSummartDto>()
+            CreateMap<RaceEntity, RaceSummaryDto>()
                 .ForMember(d => d.RaceId, opt => opt.MapFrom(s => s.Id))
                 .ForMember(d => d.RaceName, opt => opt.MapFrom(s => s.Name));
 
-            CreateMap<RaceSummartDto, RaceEntity>()
-                .ForMember(d => d.Id, opt => opt.MapFrom(s => s.RaceId))
-                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.RaceName))
-                .ForMember(d => d.Regulation, opt => opt.Ignore())
-                .ForMember(d => d.Participants, opt => opt.Ignore())
-                .ForMember(d => d.Heats, opt => opt.Ignore());
-
-            // RaceParticipantEntity <-> RaceParticipantDto
+            // ===== RaceParticipant =====
             CreateMap<RaceParticipantEntity, RaceParticipantDto>()
                 .ForMember(d => d.ParticipantId, opt => opt.MapFrom(s => s.Id))
                 .ForMember(d => d.Name, opt => opt.MapFrom(s => s.Pilot.Name))
-                .ForMember(d => d.PhotoPath, opt => opt.MapFrom(s => s.Pilot.PhotoPath));
+                .ForMember(d => d.PhotoPath, opt => opt.MapFrom(s => s.Pilot.PhotoPath))
+                .ForMember(d => d.League, opt => opt.MapFrom(s => s.League));
 
             CreateMap<RaceParticipantDto, RaceParticipantEntity>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.ParticipantId))
@@ -49,81 +42,64 @@ namespace Hekki.Infrastructure.Mapping
                 .ForMember(d => d.HeatEntries, opt => opt.Ignore())
                 .ForMember(d => d.HeatResults, opt => opt.Ignore());
 
-            // HeatEntity <-> HeatDto
+            // ===== Heat =====
             CreateMap<HeatEntity, HeatDto>()
                 .ForMember(d => d.HeatId, opt => opt.MapFrom(s => s.Id))
-                .ForMember(d => d.Groups, opt => opt.MapFrom(s => 
-                    s.HeatEntries
-                        .GroupBy(e => e.GroupNumber)
-                        .Select(g => new HeatGroupDto
-                        {
-                            HeatId = s.Id,
-                            GroupNumber = g.Key,
-                            GroupIndex = g.Key - 1,
-                            GroupCapacity = g.Count(),
-                            Entries = g.Select(e => new HeatEntryDto
-                            {
-                                ParticipantId = e.ParticipantId,
-                                PilotName = e.Participant.Pilot.Name,
-                                KartNumber = e.KartNumber ?? 0,
-                                GridPosition = e.GridPosition ?? 0
-                            }).ToList(),
-                            Results = s.HeatParticipantResults
-                                .Where(r => g.Any(e => e.ParticipantId == r.ParticipantId))
-                                .Select(r => new HeatResultDto
-                                {
-                                    ParticipantId = r.ParticipantId,
-                                    FinishPosition = r.FinishPosition,
-                                    TotalTimeMs = r.TotalTimeMs,
-                                    BestLapMs = r.BestLapMs,
-                                    Laps = r.Laps
-                                }).ToList()
-                        }).ToList()))
-                .ForMember(d => d.GroupCount, opt => opt.Ignore());
+                .ForMember(d => d.ScoringMode, opt => opt.MapFrom(s => (Application.Regulations.ScoringMode)s.ScoringMode))
+                .ForMember(d => d.Groups, opt => opt.MapFrom(s => s.HeatGroups))
+                .ForMember(d => d.GroupCount, opt => opt.MapFrom(s => s.HeatGroups.Count));
 
             CreateMap<HeatDto, HeatEntity>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.HeatId))
+                .ForMember(d => d.RaceId, opt => opt.Ignore())
+                .ForMember(d => d.ScoringMode, opt => opt.MapFrom(s => (int)s.ScoringMode))
                 .ForMember(d => d.Race, opt => opt.Ignore())
                 .ForMember(d => d.Regulation, opt => opt.Ignore())
-                .ForMember(d => d.HeatEntries, opt => opt.Ignore())
-                .ForMember(d => d.HeatParticipantResults, opt => opt.Ignore());
+                .ForMember(d => d.HeatGroups, opt => opt.Ignore());
 
-            // HeatEntryEntity <-> HeatEntryDto
+            // ===== HeatGroup =====
+            CreateMap<HeatGroupEntity, HeatGroupDto>()
+                .ForMember(d => d.Entries, opt => opt.MapFrom(s => s.Entries))
+                .ForMember(d => d.Results, opt => opt.MapFrom(s => s.Results));
+
+            CreateMap<HeatGroupDto, HeatGroupEntity>()
+                .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.HeatId, opt => opt.Ignore())
+                .ForMember(d => d.Heat, opt => opt.Ignore())
+                .ForMember(d => d.Entries, opt => opt.Ignore())
+                .ForMember(d => d.Results, opt => opt.Ignore());
+
+            // ===== HeatEntry =====
             CreateMap<HeatEntryEntity, HeatEntryDto>()
                 .ForMember(d => d.PilotName, opt => opt.MapFrom(s => s.Participant.Pilot.Name))
-                .ForMember(d => d.KartNumber, opt => opt.MapFrom(s => s.KartNumber ?? 0))
-                .ForMember(d => d.GridPosition, opt => opt.MapFrom(s => s.GridPosition ?? 0));
+                .ForMember(d => d.KartNumber, opt => opt.MapFrom(s => s.KartNumber))
+                .ForMember(d => d.GridPosition, opt => opt.MapFrom(s => s.GridPosition));
 
             CreateMap<HeatEntryDto, HeatEntryEntity>()
-                .ForMember(d => d.Heat, opt => opt.Ignore())
+                .ForMember(d => d.GroupId, opt => opt.Ignore())
+                .ForMember(d => d.Group, opt => opt.Ignore())
                 .ForMember(d => d.Participant, opt => opt.Ignore())
-                .ForMember(d => d.HeatId, opt => opt.Ignore())
-                .ForMember(d => d.GroupNumber, opt => opt.Ignore())
                 .ForMember(d => d.SeedOrder, opt => opt.Ignore());
 
-            // HeatResultEntity <-> HeatResultDto
-            CreateMap<HeatResultEntity, HeatResultDto>()
-                .ForMember(d => d.Score, opt => opt.Ignore())
-                .ForMember(d => d.Penalty, opt => opt.Ignore());
+            // ===== HeatResult =====
+            CreateMap<HeatResultEntity, HeatResultDto>();
 
             CreateMap<HeatResultDto, HeatResultEntity>()
-                .ForMember(d => d.Heat, opt => opt.Ignore())
-                .ForMember(d => d.Participant, opt => opt.Ignore())
-                .ForMember(d => d.HeatId, opt => opt.Ignore());
+                .ForMember(d => d.GroupId, opt => opt.Ignore())
+                .ForMember(d => d.Group, opt => opt.Ignore())
+                .ForMember(d => d.Participant, opt => opt.Ignore());
 
-            // RegulationEntity <-> RegulationSummaryDto
+            // ===== Regulation =====
             CreateMap<RegulationEntity, RegulationSummaryDto>();
-
             CreateMap<RegulationSummaryDto, RegulationEntity>()
                 .ForMember(d => d.Json, opt => opt.Ignore());
 
-            // RegulationEntity <-> RegulationEditDto
             CreateMap<RegulationEntity, RegulationEditDto>()
-                .ForMember(d => d.Config, opt => opt.MapFrom(s => 
-                    System.Text.Json.JsonSerializer.Deserialize<Hekki.Application.Regulations.RegulationConfig>(s.Json)));
+                .ForMember(d => d.Config, opt => opt.MapFrom(s =>
+                    System.Text.Json.JsonSerializer.Deserialize<Application.Regulations.RegulationConfig>(s.Json)));
 
             CreateMap<RegulationEditDto, RegulationEntity>()
-                .ForMember(d => d.Json, opt => opt.MapFrom(s => 
+                .ForMember(d => d.Json, opt => opt.MapFrom(s =>
                     System.Text.Json.JsonSerializer.Serialize(s.Config)))
                 .ForMember(d => d.CreationDate, opt => opt.Ignore())
                 .ForMember(d => d.Version, opt => opt.Ignore());

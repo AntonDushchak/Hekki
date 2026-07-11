@@ -172,7 +172,14 @@ namespace Hekki.UI.ViewModels
         private void AddHeat()
         {
             int nextNumber = Heats.Count + 1;
-            Heats.Add(new HeatConfigurationViewModel { Name = $"Heat {nextNumber}" });
+            var newHeat = new HeatConfigurationViewModel 
+            { 
+                Name = $"Heat {nextNumber}",
+                HeatNumber = nextNumber,
+                UsePoints = true,
+                UseTime = false
+            };
+            Heats.Add(newHeat);
             SelectedHeat = Heats.Last();
         }
 
@@ -222,6 +229,15 @@ namespace Hekki.UI.ViewModels
             if (!Heats.Any())
             {
                 WeakReferenceMessenger.Default.Send(new AppErrorMessage("At least one heat is required"));
+                return;
+            }
+
+            // Валидация: хотя бы один тип счёта должен быть выбран для каждого хита
+            var invalidHeats = Heats.Where(h => !h.IsValid()).ToList();
+            if (invalidHeats.Any())
+            {
+                var heatNames = string.Join(", ", invalidHeats.Select(h => h.Name));
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage($"Please select at least one scoring type (Points or Time) for: {heatNames}"));
                 return;
             }
 

@@ -25,9 +25,13 @@ namespace Hekki.Infrastructure.Repositories
                 .Include(x => x.Participants)
                     .ThenInclude(x => x.Pilot)
                 .Include(x => x.Heats)
-                    .ThenInclude(x => x.HeatEntries)
+                    .ThenInclude(x => x.HeatGroups)
+                        .ThenInclude(x => x.Entries)
+                            .ThenInclude(x => x.Participant)
+                                .ThenInclude(x => x.Pilot)
                 .Include(x => x.Heats)
-                    .ThenInclude(x => x.HeatParticipantResults)
+                    .ThenInclude(x => x.HeatGroups)
+                        .ThenInclude(x => x.Results)
                 .ToListAsync(ct);
 
             return raceEntities.Select(e => _mapper.Map<RaceDataDto>(e)).ToList();
@@ -41,9 +45,13 @@ namespace Hekki.Infrastructure.Repositories
                 .Include(x => x.Participants)
                     .ThenInclude(x => x.Pilot)
                 .Include(x => x.Heats)
-                    .ThenInclude(x => x.HeatEntries)
+                    .ThenInclude(x => x.HeatGroups)
+                        .ThenInclude(x => x.Entries)
+                            .ThenInclude(x => x.Participant)
+                                .ThenInclude(x => x.Pilot)
                 .Include(x => x.Heats)
-                    .ThenInclude(x => x.HeatParticipantResults)
+                    .ThenInclude(x => x.HeatGroups)
+                        .ThenInclude(x => x.Results)
                 .FirstOrDefaultAsync(x => x.Id == id, ct);
 
             if (raceEntity == null)
@@ -59,6 +67,7 @@ namespace Hekki.Infrastructure.Repositories
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
             var entity = _mapper.Map<RaceEntity>(race);
+
             db.Races.Add(entity);
             await db.SaveChangesAsync(ct);
 

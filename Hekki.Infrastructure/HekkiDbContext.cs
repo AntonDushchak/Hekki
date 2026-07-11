@@ -14,6 +14,7 @@ namespace Hekki.Infrastructure
         public DbSet<RaceParticipantEntity> RaceParticipants { get; set; }
         public DbSet<RegulationEntity> Regulations { get; set; }
         public DbSet<HeatEntity> Heats { get; set; }
+        public DbSet<HeatGroupEntity> HeatGroups { get; set; }
         public DbSet<HeatResultEntity> HeatResults { get; set; }
         public DbSet<PilotEntity> Pilots { get; set; }
         public DbSet<HeatEntryEntity> HeatEntries { get; set; }
@@ -164,22 +165,43 @@ namespace Hekki.Infrastructure
             {
                 entity.ToTable("heat_entries");
 
-                entity.Property(e => e.GroupNumber)
-                    .IsRequired();
-
-                entity.HasKey(e => new { e.HeatId, e.ParticipantId });
+                entity.HasKey(e => new { e.GroupId, e.ParticipantId });
 
                 entity.Property(e => e.SeedOrder)
                     .IsRequired();
 
-                entity.HasOne(e => e.Heat)
-                    .WithMany(h => h.HeatEntries)
-                    .HasForeignKey(e => e.HeatId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
                 entity.HasOne(e => e.Participant)
                     .WithMany(rp => rp.HeatEntries)
                     .HasForeignKey(e => e.ParticipantId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Group)
+                    .WithMany(g => g.Entries)
+                    .HasForeignKey(e => e.GroupId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // -------------------------
+            // HeatGroupEntity
+            // -------------------------
+            modelBuilder.Entity<HeatGroupEntity>(entity =>
+            {
+                entity.ToTable("heat_groups");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.GroupIndex)
+                    .IsRequired();
+
+                entity.Property(e => e.GroupNumber)
+                    .IsRequired();
+
+                entity.Property(e => e.GroupCapacity)
+                    .IsRequired();
+
+                entity.HasOne(e => e.Heat)
+                    .WithMany(h => h.HeatGroups)
+                    .HasForeignKey(e => e.HeatId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -190,16 +212,16 @@ namespace Hekki.Infrastructure
             {
                 entity.ToTable("heat_results");
 
-                entity.HasKey(e => new { e.HeatId, e.ParticipantId });
-
-                entity.HasOne(e => e.Heat)
-                    .WithMany(h => h.HeatParticipantResults)
-                    .HasForeignKey(e => e.HeatId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasKey(e => new { e.GroupId, e.ParticipantId });
 
                 entity.HasOne(e => e.Participant)
                     .WithMany(rp => rp.HeatResults)
                     .HasForeignKey(e => e.ParticipantId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Group)
+                    .WithMany()
+                    .HasForeignKey(e => e.GroupId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
         }

@@ -107,10 +107,15 @@ namespace Hekki.UI.ViewModels
 
         partial void OnShowFirstSettingsChanged(bool value)
         {
-            if (value)
-            {
-                OpenRaceSettings();
-            }
+            RaceName = "Test";
+            RaceDate = DateTime.UtcNow;
+            Location = "Location 1";
+            _ = CreateRaceAsync();
+
+            //if (value)
+            //{
+            //    OpenRaceSettings();
+            //}
         }
 
         private void OpenRaceSettings()
@@ -147,6 +152,8 @@ namespace Hekki.UI.ViewModels
                 RegulationId);
 
             RaceId = newRaceId;
+
+            var heats = await _raceService.GenerateHeatsWithGroupsAsync(RaceId.Value);
 
             await LoadRaceAsync();
         });

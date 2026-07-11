@@ -2,14 +2,12 @@
 {
     public class HeatEntryEntity
     {
-        public int GroupNumber { get; set; }
-        public int HeatId { get; set; }
-        public HeatEntity Heat { get; set; } = null!;
+        public int GroupId { get; set; }
+        public HeatGroupEntity Group { get; set; } = null!;
         public int ParticipantId { get; set; }
         public RaceParticipantEntity Participant { get; set; } = null!;
-
+        public int? KartNumber { get; set; }
         public int SeedOrder { get; set; }
         public int? GridPosition { get; set; }
-        public int? KartNumber { get; set; }
     }
 }

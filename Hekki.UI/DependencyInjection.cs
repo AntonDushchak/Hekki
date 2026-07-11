@@ -12,6 +12,7 @@ namespace Hekki.UI
             services.AddTransient<IPaginationService, PaginationService>();
             services.AddTransient<IViewModelFactory, ViewModelFactory>();
             services.AddSingleton<IMethodCatalogService, MethodCatalogService>();
+            services.AddSingleton<IDialogService, DialogService>();
 
             services.AddSingleton<RegulationPickerViewModel>();
             services.AddTransient<SelectionViewModel>();

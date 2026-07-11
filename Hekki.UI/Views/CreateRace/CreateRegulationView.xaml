@@ -194,6 +194,17 @@
 
                         <TextBlock Text="{DynamicResource m_GroupCapacity}" Margin="0,0,0,5"/>
                         <TextBox MinHeight="30" Text="{Binding SelectedHeat.GroupCapacity, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+
+                        <TextBlock Text="Scoring Type" Margin="0,0,0,5"/>
+                        <StackPanel Orientation="Vertical" Margin="0,0,0,15">
+                            <CheckBox Content="Points" 
+                                      IsChecked="{Binding SelectedHeat.UsePoints, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Margin="0,0,0,8"
+                                      FontSize="14"/>
+                            <CheckBox Content="Time" 
+                                      IsChecked="{Binding SelectedHeat.UseTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      FontSize="14"/>
+                        </StackPanel>
                     </StackPanel>
 
                     <StackPanel Grid.Column="2">

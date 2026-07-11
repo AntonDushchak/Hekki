@@ -14,6 +14,7 @@ namespace Hekki.UI.Mappers
             {
                 Name = heat.Name,
                 HeatNumber = heat.HeatNumber,
+                ScoringMode = heat.ScoringMode
             };
 
             foreach (var groupDto in heat.Groups)

@@ -3,6 +3,7 @@ using System;
 using Hekki.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Hekki.Infrastructure.Migrations
 {
     [DbContext(typeof(HekkiDbContext))]
-    partial class HekkiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260711003943_AddGroupIdToHeatResult")]
+    partial class AddGroupIdToHeatResult
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,6 +34,9 @@ namespace Hekki.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ConfigurationIndex")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("GroupCount")
                         .HasColumnType("integer");
 
                     b.Property<int>("HeatNumber")
@@ -65,7 +71,7 @@ namespace Hekki.Infrastructure.Migrations
 
             modelBuilder.Entity("Hekki.Infrastructure.Entities.HeatEntryEntity", b =>
                 {
-                    b.Property<int>("GroupId")
+                    b.Property<int>("HeatId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ParticipantId")
@@ -74,13 +80,18 @@ namespace Hekki.Infrastructure.Migrations
                     b.Property<int?>("GridPosition")
                         .HasColumnType("integer");
 
+                    b.Property<int>("GroupId")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("KartNumber")
                         .HasColumnType("integer");
 
                     b.Property<int>("SeedOrder")
                         .HasColumnType("integer");
 
-                    b.HasKey("GroupId", "ParticipantId");
+                    b.HasKey("HeatId", "ParticipantId");
+
+                    b.HasIndex("GroupId");
 
                     b.HasIndex("ParticipantId");
 
@@ -116,7 +127,7 @@ namespace Hekki.Infrastructure.Migrations
 
             modelBuilder.Entity("Hekki.Infrastructure.Entities.HeatResultEntity", b =>
                 {
-                    b.Property<int>("GroupId")
+                    b.Property<int>("HeatId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ParticipantId")
@@ -128,7 +139,7 @@ namespace Hekki.Infrastructure.Migrations
                     b.Property<int?>("FinishPosition")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("HeatGroupEntityId")
+                    b.Property<int>("GroupId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("Laps")
@@ -143,9 +154,9 @@ namespace Hekki.Infrastructure.Migrations
                     b.Property<long?>("TotalTimeMs")
                         .HasColumnType("bigint");
 
-                    b.HasKey("GroupId", "ParticipantId");
+                    b.HasKey("HeatId", "ParticipantId");
 
-                    b.HasIndex("HeatGroupEntityId");
+                    b.HasIndex("GroupId");
 
                     b.HasIndex("ParticipantId");
 
@@ -304,6 +315,12 @@ namespace Hekki.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Hekki.Infrastructure.Entities.HeatEntity", "Heat")
+                        .WithMany("HeatEntries")
+                        .HasForeignKey("HeatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Hekki.Infrastructure.Entities.RaceParticipantEntity", "Participant")
                         .WithMany("HeatEntries")
                         .HasForeignKey("ParticipantId")
@@ -311,6 +328,8 @@ namespace Hekki.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Group");
+
+                    b.Navigation("Heat");
 
                     b.Navigation("Participant");
                 });
@@ -334,9 +353,11 @@ namespace Hekki.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hekki.Infrastructure.Entities.HeatGroupEntity", null)
-                        .WithMany("Results")
-                        .HasForeignKey("HeatGroupEntityId");
+                    b.HasOne("Hekki.Infrastructure.Entities.HeatEntity", "Heat")
+                        .WithMany("HeatParticipantResults")
+                        .HasForeignKey("HeatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Hekki.Infrastructure.Entities.RaceParticipantEntity", "Participant")
                         .WithMany("HeatResults")
@@ -345,6 +366,8 @@ namespace Hekki.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Group");
+
+                    b.Navigation("Heat");
 
                     b.Navigation("Participant");
                 });
@@ -381,14 +404,16 @@ namespace Hekki.Infrastructure.Migrations
 
             modelBuilder.Entity("Hekki.Infrastructure.Entities.HeatEntity", b =>
                 {
+                    b.Navigation("HeatEntries");
+
                     b.Navigation("HeatGroups");
+
+                    b.Navigation("HeatParticipantResults");
                 });
 
             modelBuilder.Entity("Hekki.Infrastructure.Entities.HeatGroupEntity", b =>
                 {
                     b.Navigation("Entries");
-
-                    b.Navigation("Results");
                 });
 
             modelBuilder.Entity("Hekki.Infrastructure.Entities.RaceEntity", b =>

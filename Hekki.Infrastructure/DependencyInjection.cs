@@ -20,8 +20,6 @@ namespace Hekki.Infrastructure
             services.AddTransient<IRaceParticipantRepository, RaceParticipantRepository>();
             services.AddTransient<IHeatRepository, HeatRepository>();
             services.AddTransient<IRaceRepository, RaceRepository>();
-            services.AddTransient<IHeatResultRepository, HeatResultRepository>();
-            services.AddTransient<IHeatEntryRepository, HeatEntryRepository>();
 
             return services;
         }

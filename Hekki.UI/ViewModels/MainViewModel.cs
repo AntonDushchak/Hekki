@@ -1,14 +1,11 @@
-﻿using Hekki.Application.Services;
-using Hekki.UI.Services;
+﻿using Hekki.UI.Services;
 using System.ComponentModel;
-
 
 namespace Hekki.UI.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
         private readonly INavigationService _navigationService;
-        private readonly IRegulationService _regulationService;
 
         public TopPanelViewModel TopPanelVM { get; }
 
@@ -29,15 +26,16 @@ namespace Hekki.UI.ViewModels
         protected void OnPropertyChanged(string name)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        public MainViewModel(INavigationService navigationService, IRegulationService regulationService, RegulationPickerViewModel regulationPicker)
+        public MainViewModel(INavigationService navigationService, RegulationPickerViewModel regulationPicker)
         {
             TopPanelVM = new TopPanelViewModel(regulationPicker);
 
             _navigationService = navigationService;
-            _regulationService = regulationService;
 
             _navigationService.Navigated += OnNavigate;
-            _navigationService.NavigateToSelection();
+
+            _navigationService.NavigateToRace(14);
+            //_navigationService.NavigateToSelection();
         }
 
         private void OnNavigate(object vm)

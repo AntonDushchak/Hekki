@@ -12,6 +12,9 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty] private bool _usePenalty;
         [ObservableProperty] private ScoringMode _scoringMode;
 
+        [ObservableProperty] private bool _usePoints;
+        [ObservableProperty] private bool _useTime;
+
 
         [ObservableProperty] private string _shuffleMethodId = string.Empty;
         [ObservableProperty] private MethodParameters? _shuffleParameters;
@@ -25,5 +28,41 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty] private string _scoreMethodId = string.Empty;
         [ObservableProperty] private MethodParameters? _scoreParameters;
 
+        partial void OnUsePointsChanged(bool value)
+        {
+            UpdateScoringMode();
+        }
+
+        partial void OnUseTimeChanged(bool value)
+        {
+            UpdateScoringMode();
+        }
+
+        partial void OnScoringModeChanged(ScoringMode value)
+        {
+            UsePoints = value is ScoringMode.PointsBased or ScoringMode.Hybrid;
+            UseTime = value is ScoringMode.TimeBased or ScoringMode.Hybrid;
+        }
+
+        private void UpdateScoringMode()
+        {
+            if (UsePoints && UseTime)
+            {
+                ScoringMode = ScoringMode.Hybrid;
+            }
+            else if (UsePoints)
+            {
+                ScoringMode = ScoringMode.PointsBased;
+            }
+            else if (UseTime)
+            {
+                ScoringMode = ScoringMode.TimeBased;
+            }
+        }
+
+        public bool IsValid()
+        {
+            return UsePoints || UseTime;
+        }
     }
 }
