@@ -54,13 +54,7 @@
                     <ScrollViewer Grid.Row="1"
                                   VerticalScrollBarVisibility="Auto"
                                   HorizontalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding Participants}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <local:PilotCard Margin="0,0,0,10"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                        <components:TotalTable DataContext="{Binding}"/>
                     </ScrollViewer>
                 </Grid>
             </Border>

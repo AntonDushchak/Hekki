@@ -1,7 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.Abstrations;
-using Hekki.Application.DTOs;
 using Hekki.UI.Mappers;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
@@ -14,7 +13,6 @@ namespace Hekki.UI.ViewModels
         private readonly IPilotService _pilotService;
         private readonly INavigationService _navigationService;
         private readonly IDialogService _dialogService;
-        private RegulationEditDto? _regulation;
 
         [ObservableProperty] private int _regulationId;
 
@@ -40,6 +38,7 @@ namespace Hekki.UI.ViewModels
         public ObservableCollection<RaceParticipantViewModel> Participants { get; } = [];
         public ObservableCollection<PilotViewModel> FilteredPilots { get; } = [];
         public ObservableCollection<HeatViewModel> Heats { get; } = [];
+        public ObservableCollection<TotalTableRowViewModel> TotalTableRows { get; } = [];
 
         public RaceViewModel(
             int regulationId,
@@ -60,8 +59,6 @@ namespace Hekki.UI.ViewModels
 
         private Task InitializeAsync() => ExecuteSafeAsync(async () =>
         {
-            _regulation = await _raceService.GetRegulationEditAsync(RegulationId);
-
             if (RaceId == null)
             {
                 ShowFirstSettings = true;
@@ -74,7 +71,7 @@ namespace Hekki.UI.ViewModels
 
         private Task LoadRaceAsync() => ExecuteSafeAsync(async () =>
         {
-            if (RaceId == null)
+            if (IsNewRace)
                 return;
 
             await _raceService.AddParticipantAsync(RaceId.Value, 1);
@@ -98,26 +95,15 @@ namespace Hekki.UI.ViewModels
             foreach (var p in raceDto.Participants)
                 Participants.Add(PilotUiMapper.MapToParticipantViewModel(p));
 
-            
+
 
 
             Heats.Clear();
             foreach (var h in raceDto.Heats)
                 Heats.Add(HeatUiMapper.MapToHeatViewModel(h));
+
+            RebuildStandings();
         });
-
-        partial void OnSelectedPilotChanged(PilotViewModel? value)
-        {
-            if (value == null) return;
-
-            _isUpdatingFromSelection = true;
-
-            SearchText = value.Name;
-
-            IsPopupOpen = false;
-
-            _isUpdatingFromSelection = false;
-        }
 
         partial void OnShowFirstSettingsChanged(bool value)
         {
@@ -172,6 +158,43 @@ namespace Hekki.UI.ViewModels
             await LoadRaceAsync();
         });
 
+        private void RebuildStandings()
+        {
+            TotalTableRows.Clear();
+
+            foreach (var participant in Participants)
+            {
+                var row = new TotalTableRowViewModel(participant);
+                var karts = new List<int>();
+
+                foreach (var heat in Heats)
+                {
+                    var rowInHeat = heat.Groups.SelectMany(g => g.Rows)
+                        .FirstOrDefault(r => r.Entry.ParticipantId == participant.PilotId);
+
+                    row.HeatCells.Add(new HeatResultCellViewModel(heat, rowInHeat?.Result));
+
+                    if (rowInHeat?.Entry.KartNumber is int kart)
+                        karts.Add(kart);
+                }
+
+                row.KartNumbersDisplayText = string.Join(", ", karts);
+                TotalTableRows.Add(row);
+            }
+        }
+
+        partial void OnSelectedPilotChanged(PilotViewModel? value)
+        {
+            if (value == null) return;
+
+            _isUpdatingFromSelection = true;
+
+            SearchText = value.Name;
+
+            IsPopupOpen = false;
+
+            _isUpdatingFromSelection = false;
+        }
         partial void OnSearchTextChanged(string value)
         {
             if (_isUpdatingFromSelection) return;
@@ -227,7 +250,7 @@ namespace Hekki.UI.ViewModels
             }
             catch (OperationCanceledException)
             {
-                
+
             }
         });
 

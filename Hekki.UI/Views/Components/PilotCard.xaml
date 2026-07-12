@@ -23,7 +23,7 @@
                     Width="30"
                     Background="#4A90E2"
                     CornerRadius="8,0,0,8">
-                <TextBlock Text="{Binding League}"
+                <TextBlock Text="{Binding Participant.League}"
                            Foreground="White"
                            FontWeight="Bold"
                            FontSize="12"
@@ -54,7 +54,7 @@
                 </Border>
 
                 <!-- Kart numbers below name -->
-                <TextBlock Text="{Binding KartNumbersDisplay}"
+                <TextBlock Text="{Binding KartNumbersDisplayText}"
                            HorizontalAlignment="Center"
                            FontSize="11"
                            Foreground="{DynamicResource Brush.TextSecondary}"/>
@@ -62,7 +62,7 @@
 
             <!-- Name -->
             <TextBlock Grid.Column="2"
-                       Text="{Binding Name}"
+                       Text="{Binding Participant.Name}"
                        VerticalAlignment="Center"
                        FontSize="16"
                        FontWeight="SemiBold"
