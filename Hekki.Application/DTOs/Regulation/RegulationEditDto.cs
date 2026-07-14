@@ -1,11 +1,9 @@
-using Hekki.Application.DTOs.Regulation;
-
-namespace Hekki.Application.DTOs
+namespace Hekki.Application.DTOs.Regulation
 {
     public record RegulationEditDto
     {
         public int Id { get; init; }
         public string Name { get; init; } = string.Empty;
-        public RegulationConfig Config { get; init; } = new();
+        public required RegulationConfig Config { get; init; }
     }
 }

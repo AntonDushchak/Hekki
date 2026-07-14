@@ -4,8 +4,8 @@ namespace Hekki.Application.DTOs.Regulation
 {
     public class AssignmentConfig
     {
-        public IKartNummerAssignmentMethod KartMethod { get; set; }
-        public IGroupAssignmentMethod GroupMethod { get; set; }
-        public IParticipantShuffleMethod Shuffle { get; set; }
+        public required IKartNummerAssignmentMethod KartMethod { get; init; }
+        public required IGroupAssignmentMethod GroupMethod { get; init; }
+        public required IParticipantShuffleMethod Shuffle { get; init; }
     }
 }

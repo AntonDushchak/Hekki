@@ -1,4 +1,4 @@
-﻿using Hekki.Application.DTOs;
+﻿using Hekki.Application.DTOs.Regulation;
 
 namespace Hekki.Application.Services
 {

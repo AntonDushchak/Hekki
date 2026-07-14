@@ -14,7 +14,5 @@ namespace Hekki.Application.Abstrations
         Task<int> AddGroupAsync(int heatId, HeatGroupDto group, CancellationToken ct = default);
         Task AddHeatEntryAsync(int heatId, int groupId, HeatEntryDto entry, CancellationToken ct = default);
         Task AddHeatResultAsync(int heatId, int groupId, HeatResultDto result, CancellationToken ct = default);
-        Task<int> AddHeatWithGroupsAsync(int heatId, HeatDto group, CancellationToken ct = default);
-        Task AddGroupsAsync(int heatId, IReadOnlyList<HeatGroupDto> groups, CancellationToken ct = default);
     }
 }

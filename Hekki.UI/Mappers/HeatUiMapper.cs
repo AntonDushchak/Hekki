@@ -41,7 +41,7 @@ namespace Hekki.UI.Mappers
             return groupVm;
         }
 
-        public static HeatRowViewModel ToRow(HeatEntryDto entry, HeatResultDto? result) => new()
+        private static HeatRowViewModel ToRow(HeatEntryDto entry, HeatResultDto? result) => new()
         {
             Entry = new HeatEntryViewModel
             {

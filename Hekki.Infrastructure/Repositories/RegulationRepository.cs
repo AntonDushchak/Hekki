@@ -1,7 +1,7 @@
-using Hekki.Application.Abstrations;
-using Hekki.Application.DTOs;
-using Hekki.Infrastructure.Entities;
 using AutoMapper;
+using Hekki.Application.Abstrations;
+using Hekki.Application.DTOs.Regulation;
+using Hekki.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hekki.Infrastructure.Repositories
@@ -29,24 +29,24 @@ namespace Hekki.Infrastructure.Repositories
             return entities.Select(e => _mapper.Map<RegulationSummaryDto>(e)).ToList();
         }
 
-        public async Task<RegulationSummaryDto?> GetByIdAsync(int id, CancellationToken ct = default)
+        public async Task<RegulationSummaryDto?> GetByIdAsync(int regulationId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
             var entity = await db.Regulations
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id, ct);
+                .FirstOrDefaultAsync(x => x.Id == regulationId, ct);
 
             return entity is null ? null : _mapper.Map<RegulationSummaryDto>(entity);
         }
 
-        public async Task<RegulationEditDto?> GetForEditAsync(int id, CancellationToken ct = default)
+        public async Task<RegulationEditDto?> GetForEditAsync(int regulationId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
             var regulation = await db.Regulations
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id, ct);
+                .FirstOrDefaultAsync(x => x.Id == regulationId, ct);
 
             return regulation is null ? null : _mapper.Map<RegulationEditDto>(regulation);
         }
@@ -57,18 +57,18 @@ namespace Hekki.Infrastructure.Repositories
 
             var entity = _mapper.Map<RegulationEntity>(regulationDto);
             entity.CreationDate = DateTime.UtcNow;
-            entity.Version = 1;
+            entity.Version = 1; //TODO: Implement versioning logic if needed
 
             db.Regulations.Add(entity);
             await db.SaveChangesAsync(ct);
             return entity.Id;
         }
 
-        public async Task DeleteAsync(int id, CancellationToken ct = default)
+        public async Task DeleteAsync(int regulationId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = await db.Regulations.FindAsync(new object[] { id }, ct);
+            var entity = await db.Regulations.FindAsync(new object[] { regulationId }, ct);
             if (entity is null)
                 return;
 
@@ -76,11 +76,11 @@ namespace Hekki.Infrastructure.Repositories
             await db.SaveChangesAsync(ct);
         }
 
-        public async Task<bool> ExistsAsync(int id, CancellationToken ct = default)
+        public async Task<bool> ExistsAsync(int regulationId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            return await db.Regulations.AnyAsync(r => r.Id == id, ct);
+            return await db.Regulations.AnyAsync(r => r.Id == regulationId, ct);
         }
     }
 }

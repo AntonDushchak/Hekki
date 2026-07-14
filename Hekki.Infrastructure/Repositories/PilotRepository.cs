@@ -1,6 +1,6 @@
 using AutoMapper;
 using Hekki.Application.Abstrations;
-using Hekki.Application.DTOs;
+using Hekki.Application.DTOs.Pilot;
 using Hekki.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,13 +29,13 @@ namespace Hekki.Infrastructure.Repositories
             return entities.Select(e => _mapper.Map<PilotDto>(e)).ToList();
         }
 
-        public async Task<PilotDto?> GetByIdAsync(int id, CancellationToken ct = default)
+        public async Task<PilotDto?> GetByIdAsync(int pilotId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
             var entity = await db.Pilots
                 .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.Id == id, ct);
+                .FirstOrDefaultAsync(p => p.Id == pilotId, ct);
 
             return entity == null ? null : _mapper.Map<PilotDto>(entity);
         }
@@ -85,11 +85,13 @@ namespace Hekki.Infrastructure.Repositories
         public async Task<IReadOnlyList<PilotDto>> SearchByNameAsync(string searchText, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
+
             var entities = await db.Pilots
                 .AsNoTracking()
                 .Where(p => p.Name.Contains(searchText))
                 .OrderBy(p => p.Name)
                 .ToListAsync(ct);
+
             return entities.Select(e => _mapper.Map<PilotDto>(e)).ToList();
         }
     }

@@ -1,8 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Hekki.Application.Abstrations;
-using Hekki.Application.DTOs;
+using Hekki.Application.DTOs.Regulation;
 using Hekki.Application.Services;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
@@ -41,7 +40,7 @@ namespace Hekki.UI.ViewModels
             Regulations.CollectionChanged += Regulations_CollectionChanged;
             PaginationService.PropertyChanged += PaginationService_PropertyChanged;
         }
-        
+
         public async Task InitializeAsync()
         {
             await LoadRegulationsAsync();

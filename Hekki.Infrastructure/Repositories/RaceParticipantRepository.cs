@@ -17,24 +17,13 @@ namespace Hekki.Infrastructure.Repositories
             _mapper = mapper;
         }
 
-        public async Task<IReadOnlyList<RaceParticipantDto>> GetAllAsync(CancellationToken ct = default)
-        {
-            await using var db = await _dbFactory.CreateDbContextAsync(ct);
-
-            var participants = await db.RaceParticipants
-                .Include(x => x.Pilot)
-                .ToListAsync(ct);
-
-            return participants.Select(p => _mapper.Map<RaceParticipantDto>(p)).ToList();
-        }
-
-        public async Task<RaceParticipantDto?> GetByIdAsync(int id, CancellationToken ct = default)
+        public async Task<RaceParticipantDto?> GetByIdAsync(int participantId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
             var participant = await db.RaceParticipants
                 .Include(x => x.Pilot)
-                .FirstOrDefaultAsync(x => x.Id == id, ct);
+                .FirstOrDefaultAsync(x => x.Id == participantId, ct);
 
             if (participant == null)
             {
@@ -56,7 +45,7 @@ namespace Hekki.Infrastructure.Repositories
             return participants.Select(p => _mapper.Map<RaceParticipantDto>(p)).ToList();
         }
 
-        public async Task<int> AddAsync(int raceId, RaceParticipantDto participant, CancellationToken ct = default)
+        public async Task<int> AddAsync(RaceParticipantDto participant, int raceId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
@@ -83,11 +72,11 @@ namespace Hekki.Infrastructure.Repositories
             await db.SaveChangesAsync(ct);
         }
 
-        public async Task DeleteAsync(int id, CancellationToken ct = default)
+        public async Task DeleteAsync(int participantId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = await db.RaceParticipants.FindAsync(new object[] { id }, ct);
+            var entity = await db.RaceParticipants.FindAsync(new object[] { participantId }, ct);
             if (entity is null)
                 return;
 
@@ -95,11 +84,11 @@ namespace Hekki.Infrastructure.Repositories
             await db.SaveChangesAsync(ct);
         }
 
-        public async Task<bool> ExistsAsync(int id, CancellationToken ct = default)
+        public async Task<bool> ExistsAsync(int participantId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            return await db.RaceParticipants.AnyAsync(p => p.Id == id, ct);
+            return await db.RaceParticipants.AnyAsync(p => p.Id == participantId, ct);
         }
     }
 }

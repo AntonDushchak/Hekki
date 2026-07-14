@@ -6,7 +6,7 @@ namespace Hekki.Application.DTOs.Race
         public int GroupIndex { get; init; }
         public int GroupNumber { get; init; }
         public int GroupCapacity { get; init; }
-        public IReadOnlyList<HeatEntryDto> Entries { get; init; } = [];
-        public IReadOnlyList<HeatResultDto> Results { get; init; } = [];
+        public required IReadOnlyList<HeatEntryDto> Entries { get; init; }
+        public required IReadOnlyList<HeatResultDto> Results { get; init; }
     }
 }

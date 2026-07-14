@@ -1,4 +1,4 @@
-namespace Hekki.Application.DTOs
+namespace Hekki.Application.DTOs.Regulation
 {
     public record RegulationSummaryDto
     {

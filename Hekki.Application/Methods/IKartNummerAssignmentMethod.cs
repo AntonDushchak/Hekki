@@ -1,4 +1,4 @@
-﻿using Hekki.Application.DTOs;
+﻿using Hekki.Application.DTOs.Pilot;
 using System.Text.Json.Serialization;
 
 namespace Hekki.Application.Methods

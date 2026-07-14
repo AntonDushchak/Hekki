@@ -4,19 +4,13 @@ using System.Windows.Data;
 
 namespace Hekki.UI.Converters
 {
-    public class NullToVisibilityConverter : IValueConverter
+    public class StringToVisibilityConverter : IValueConverter
     {
+        public static StringToVisibilityConverter Instance { get; } = new();
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool isNull = value == null;
-            bool isInverse = parameter?.ToString() == "Inverse";
-
-            if (isInverse)
-            {
-                return isNull ? Visibility.Visible : Visibility.Collapsed;
-            }
-
-            return isNull ? Visibility.Collapsed : Visibility.Visible;
+            return string.IsNullOrWhiteSpace(value as string) ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -90,11 +90,11 @@ namespace Hekki.Infrastructure.Repositories
             await db.SaveChangesAsync(ct);
         }
 
-        public async Task DeleteAsync(int id, CancellationToken ct = default)
+        public async Task DeleteAsync(int raceId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            var entity = await db.Races.FindAsync(new object[] { id }, ct);
+            var entity = await db.Races.FindAsync(new object[] { raceId }, ct);
             if (entity is null)
                 return;
 
@@ -102,11 +102,11 @@ namespace Hekki.Infrastructure.Repositories
             await db.SaveChangesAsync(ct);
         }
 
-        public async Task<bool> ExistsAsync(int id, CancellationToken ct = default)
+        public async Task<bool> ExistsAsync(int raceId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
-            return await db.Races.AnyAsync(r => r.Id == id, ct);
+            return await db.Races.AnyAsync(r => r.Id == raceId, ct);
         }
     }
 }

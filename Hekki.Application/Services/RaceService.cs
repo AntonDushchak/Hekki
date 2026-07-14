@@ -1,6 +1,6 @@
 using Hekki.Application.Abstrations;
-using Hekki.Application.DTOs;
 using Hekki.Application.DTOs.Race;
+using Hekki.Application.DTOs.Regulation;
 using Hekki.Application.Exceptions;
 
 namespace Hekki.Application.Services
@@ -35,7 +35,7 @@ namespace Hekki.Application.Services
         public async Task<int> CreateRaceAsync(string name, string location, DateTime date, int regulationId, CancellationToken ct = default)
         {
             var utcDate = date.Kind == DateTimeKind.Utc ? date : DateTime.SpecifyKind(date, DateTimeKind.Utc);
-            var race = new RaceDataDto { RaceName = name, Location = location, Date = utcDate, RegulationId = regulationId };
+            var race = new RaceDataDto { RaceName = name, Location = location, Date = utcDate, RegulationId = regulationId, Heats = [], Participants = [] };
             var regulation = await _regulationRepository.GetByIdAsync(regulationId, ct);
             return await _raceRepository.AddAsync(race, ct);
         }
@@ -44,7 +44,7 @@ namespace Hekki.Application.Services
         {
             var pilot = await _pilotRepository.GetByIdAsync(pilotId, ct);
             var participant = new RaceParticipantDto { PilotId = pilot.Id, Name = pilot.Name, Team = pilot.Team, IsActive = true };
-            await _participantRepository.AddAsync(raceId, participant, ct);
+            await _participantRepository.AddAsync(participant, raceId, ct);
             return participant;
         }
 
@@ -93,6 +93,7 @@ namespace Hekki.Application.Services
                     ConfigurationIndex = configIndex,
                     ScoringMode = config.HeatConfigs[configIndex].ScoringMode,
                     RegulationId = regulation.Id,
+                    Groups = []
                 };
 
                 var heatId = await _heatRepository.AddAsync(raceId, heatDto, ct);
@@ -122,17 +123,14 @@ namespace Hekki.Application.Services
                     GroupIndex = i,
                     GroupNumber = i + 1,
                     GroupCapacity = config.ParticipantsPerGroup,
+                    Entries = [],
+                    Results = []
                 });
+
+                await _heatRepository.AddGroupAsync(heatId, groups[i], ct);
             }
 
-            await _heatRepository.AddGroupsAsync(heatId, groups, ct);
-
             return groups;
-        }
-
-        public async Task AddHeatAsync(int raceId, HeatDto heat, CancellationToken ct = default)
-        {
-            await _heatRepository.AddHeatWithGroupsAsync(raceId, heat, ct);
         }
     }
 }

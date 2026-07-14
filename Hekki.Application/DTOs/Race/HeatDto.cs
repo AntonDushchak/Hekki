@@ -12,6 +12,6 @@ namespace Hekki.Application.DTOs.Race
         public int ConfigurationIndex { get; init; }
         public int RegulationId { get; init; }
         public ScoringMode ScoringMode { get; init; }
-        public IReadOnlyList<HeatGroupDto> Groups { get; init; } = [];
+        public required IReadOnlyList<HeatGroupDto> Groups { get; init; }
     }
 }

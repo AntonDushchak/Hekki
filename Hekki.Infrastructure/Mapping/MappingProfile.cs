@@ -1,5 +1,6 @@
 using AutoMapper;
 using Hekki.Application.DTOs;
+using Hekki.Application.DTOs.Pilot;
 using Hekki.Application.DTOs.Race;
 using Hekki.Application.DTOs.Regulation;
 using Hekki.Infrastructure.Entities;

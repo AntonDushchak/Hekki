@@ -34,10 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controls\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Hekki.Application\Hekki.Application.csproj" />
     <ProjectReference Include="..\Hekki.Infrastructure\Hekki.Infrastructure.csproj" />
   </ItemGroup>

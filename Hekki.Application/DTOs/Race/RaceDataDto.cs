@@ -7,7 +7,7 @@ namespace Hekki.Application.DTOs.Race
         public DateTime Date { get; init; }
         public string Location { get; init; } = string.Empty;
         public int RegulationId { get; init; }
-        public IReadOnlyList<RaceParticipantDto> Participants { get; init; }
-        public IReadOnlyList<HeatDto> Heats { get; init; }
+        public required IReadOnlyList<RaceParticipantDto> Participants { get; init; }
+        public required IReadOnlyList<HeatDto> Heats { get; init; }
     }
 }

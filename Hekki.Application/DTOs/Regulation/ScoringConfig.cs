@@ -2,9 +2,9 @@
 
 namespace Hekki.Application.DTOs.Regulation
 {
-    public class ScoringConfig
+    public record ScoringConfig
     {
-        public IScoreAssignmentMethod Method { get; set; }
-        public bool UsePenalties { get; set; }
+        public required IScoreAssignmentMethod Method { get; init; }
+        public bool UsePenalties { get; init; }
     }
 }

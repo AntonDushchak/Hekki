@@ -1,4 +1,4 @@
-﻿using Hekki.Application.DTOs;
+﻿using Hekki.Application.DTOs.Pilot;
 using Hekki.Application.DTOs.Race;
 using Hekki.UI.ViewModels;
 
@@ -14,7 +14,6 @@ namespace Hekki.UI.Mappers
                 Name = pilot.Name,
             };
         }
-
 
         public static RaceParticipantViewModel MapToParticipantViewModel(RaceParticipantDto raceParticipant)
         {

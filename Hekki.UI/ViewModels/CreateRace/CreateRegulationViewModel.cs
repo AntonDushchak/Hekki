@@ -2,8 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
-using Hekki.Application.DTOs;
-using Hekki.Application.Regulations;
+using Hekki.Application.DTOs.Regulation;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -172,8 +171,8 @@ namespace Hekki.UI.ViewModels
         private void AddHeat()
         {
             int nextNumber = Heats.Count + 1;
-            var newHeat = new HeatConfigurationViewModel 
-            { 
+            var newHeat = new HeatConfigurationViewModel
+            {
                 Name = $"Heat {nextNumber}",
                 HeatNumber = nextNumber,
                 UsePoints = true,
@@ -272,7 +271,7 @@ namespace Hekki.UI.ViewModels
                     }
                 };
 
-                
+
                 var regulationId = await _regulationRepository.AddAsync(dto);
 
                 WeakReferenceMessenger.Default.Send(new AppSuccessMessage("Regulation saved successfully!"));

@@ -1,5 +1,5 @@
 using Hekki.Application.Abstrations;
-using Hekki.Application.DTOs;
+using Hekki.Application.DTOs.Pilot;
 
 namespace Hekki.Application.Services
 {
