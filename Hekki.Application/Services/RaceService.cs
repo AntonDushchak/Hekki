@@ -1,5 +1,6 @@
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs;
+using Hekki.Application.DTOs.Race;
 using Hekki.Application.Exceptions;
 
 namespace Hekki.Application.Services

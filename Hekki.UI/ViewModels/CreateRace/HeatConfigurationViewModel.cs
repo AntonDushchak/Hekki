@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Hekki.Application.Regulations;
+using Hekki.Application.DTOs.Regulation;
 
 namespace Hekki.UI.ViewModels
 {

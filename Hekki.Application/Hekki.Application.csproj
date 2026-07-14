@@ -10,10 +10,4 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.4" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\Race\" />
-    <Folder Include="DTOs\Pilot\" />
-    <Folder Include="DTOs\Regulation\" />
-  </ItemGroup>
-
 </Project>

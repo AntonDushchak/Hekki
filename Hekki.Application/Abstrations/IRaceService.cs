@@ -1,4 +1,5 @@
 using Hekki.Application.DTOs;
+using Hekki.Application.DTOs.Race;
 
 namespace Hekki.Application.Abstrations
 {

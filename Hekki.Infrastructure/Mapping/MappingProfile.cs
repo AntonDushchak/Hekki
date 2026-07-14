@@ -1,5 +1,7 @@
 using AutoMapper;
 using Hekki.Application.DTOs;
+using Hekki.Application.DTOs.Race;
+using Hekki.Application.DTOs.Regulation;
 using Hekki.Infrastructure.Entities;
 
 namespace Hekki.Infrastructure.Mapping
@@ -45,7 +47,7 @@ namespace Hekki.Infrastructure.Mapping
             // ===== Heat =====
             CreateMap<HeatEntity, HeatDto>()
                 .ForMember(d => d.HeatId, opt => opt.MapFrom(s => s.Id))
-                .ForMember(d => d.ScoringMode, opt => opt.MapFrom(s => (Application.Regulations.ScoringMode)s.ScoringMode))
+                .ForMember(d => d.ScoringMode, opt => opt.MapFrom(s => (ScoringMode)s.ScoringMode))
                 .ForMember(d => d.Groups, opt => opt.MapFrom(s => s.HeatGroups))
                 .ForMember(d => d.GroupCount, opt => opt.MapFrom(s => s.HeatGroups.Count));
 
@@ -96,7 +98,7 @@ namespace Hekki.Infrastructure.Mapping
 
             CreateMap<RegulationEntity, RegulationEditDto>()
                 .ForMember(d => d.Config, opt => opt.MapFrom(s =>
-                    System.Text.Json.JsonSerializer.Deserialize<Application.Regulations.RegulationConfig>(s.Json)));
+                    System.Text.Json.JsonSerializer.Deserialize<RegulationConfig>(s.Json)));
 
             CreateMap<RegulationEditDto, RegulationEntity>()
                 .ForMember(d => d.Json, opt => opt.MapFrom(s =>

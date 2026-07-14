@@ -1,4 +1,5 @@
 ﻿using Hekki.Application.DTOs;
+using Hekki.Application.DTOs.Race;
 using Hekki.UI.ViewModels;
 
 namespace Hekki.UI.Mappers
