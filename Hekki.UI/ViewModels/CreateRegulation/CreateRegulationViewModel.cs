@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Hekki.UI.ViewModels
 {
-    public partial class CreateRegulationViewModel : ObservableValidator
+    public partial class CreateRegulationViewModel : ViewModelBase
     {
         private readonly INavigationService _navigationService;
         private readonly IMethodCatalogService _methodCatalog;
@@ -216,7 +216,7 @@ namespace Hekki.UI.ViewModels
         }
 
         [RelayCommand(CanExecute = nameof(CanSave))]
-        private async Task Save()
+        private Task Save() => ExecuteSafeAsync(async () =>
         {
             ValidateAllProperties();
             if (HasErrors)
@@ -232,58 +232,51 @@ namespace Hekki.UI.ViewModels
                 return;
             }
 
-            // Валидация: хотя бы один тип счёта должен быть выбран для каждого хита
             var invalidHeats = Heats.Where(h => !h.IsValid()).ToList();
-            if (invalidHeats.Any())
+            if (invalidHeats.Count > 0)
             {
                 var heatNames = string.Join(", ", invalidHeats.Select(h => h.Name));
                 WeakReferenceMessenger.Default.Send(new AppErrorMessage($"Please select at least one scoring type (Points or Time) for: {heatNames}"));
                 return;
             }
 
-            try
+            var heatConfigs = Heats.Select(h => new HeatConfig
             {
-                var heatConfigs = Heats.Select(h => new HeatConfig
+                Name = h.Name,
+                HeatNumber = h.HeatNumber,
+                GroupCount = h.NumberOfGroups,
+                ParticipantsPerGroup = h.GroupCapacity,
+                ScoringMode = h.ScoringMode,
+                Scoring = new ScoringConfig
                 {
-                    Name = h.Name,
-                    HeatNumber = h.HeatNumber,
-                    GroupCount = h.NumberOfGroups,
-                    ParticipantsPerGroup = h.GroupCapacity,
-                    ScoringMode = h.ScoringMode,
-                    Scoring = new ScoringConfig
-                    {
-                        Method = _methodCatalog.CreateScoreMethod(h.ScoreMethodId),
-                        UsePenalties = h.UsePenalty,
-                    },
-                    Assignment = new AssignmentConfig
-                    {
-                        KartMethod = _methodCatalog.CreateKartMethod(h.KartMethodId),
-                        GroupMethod = _methodCatalog.CreateGroupMethod(h.GroupMethodId),
-                        Shuffle = _methodCatalog.CreateShuffleMethod(h.ShuffleMethodId)
-                    }
-                }).ToList();
-
-                var dto = new RegulationEditDto
+                    Method = _methodCatalog.CreateScoreMethod(h.ScoreMethodId),
+                    UsePenalties = h.UsePenalty,
+                },
+                Assignment = new AssignmentConfig
                 {
-                    Name = RegulationName,
-                    Config = new RegulationConfig
-                    {
-                        HeatConfigs = heatConfigs
-                    }
-                };
+                    KartMethod = _methodCatalog.CreateKartMethod(h.KartMethodId),
+                    GroupMethod = _methodCatalog.CreateGroupMethod(h.GroupMethodId),
+                    Shuffle = _methodCatalog.CreateShuffleMethod(h.ShuffleMethodId)
+                }
+            }).ToList();
 
-
-                var regulationId = await _regulationRepository.AddAsync(dto);
-
-                WeakReferenceMessenger.Default.Send(new AppSuccessMessage("Regulation saved successfully!"));
-
-                _navigationService.NavigateToRace(regulationId);
-            }
-            catch (Exception ex)
+            var dto = new RegulationEditDto
             {
-                WeakReferenceMessenger.Default.Send(new AppErrorMessage($"Failed to save: {ex.Message}"));
-            }
-        }
+                Name = RegulationName,
+                Config = new RegulationConfig
+                {
+                    HeatConfigs = heatConfigs
+                }
+            };
+
+
+            var regulationId = await _regulationRepository.AddAsync(dto);
+
+            WeakReferenceMessenger.Default.Send(new AppSuccessMessage("Regulation saved successfully!"));
+
+            _navigationService.NavigateToRace(regulationId);
+
+        });
 
         [RelayCommand]
         private void ShowSettings(MethodSettingsType type)

@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace Hekki.UI.ViewModels
 {
-    public abstract partial class ViewModelBase : ObservableObject
+    public abstract partial class ViewModelBase : ObservableValidator
     {
         protected async Task ExecuteSafeAsync(Func<Task> action, [CallerMemberName] string? source = null)
         {

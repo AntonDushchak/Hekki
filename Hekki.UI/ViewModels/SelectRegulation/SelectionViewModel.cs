@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.DTOs.Regulation;
 using Hekki.Application.Services;
-using Hekki.UI.Enums;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -11,7 +9,7 @@ using System.ComponentModel;
 
 namespace Hekki.UI.ViewModels
 {
-    public partial class SelectionViewModel : ObservableObject
+    public partial class SelectionViewModel : ViewModelBase
     {
         private readonly IRegulationService _regulationService;
         private readonly INavigationService _navigationService;
@@ -42,10 +40,10 @@ namespace Hekki.UI.ViewModels
             PaginationService.PropertyChanged += PaginationService_PropertyChanged;
         }
 
-        public async Task InitializeAsync()
+        public Task InitializeAsync() => ExecuteSafeAsync(async () =>
         {
             await LoadRegulationsAsync();
-        }
+        });
 
         private void Regulations_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
@@ -57,7 +55,7 @@ namespace Hekki.UI.ViewModels
             OnPropertyChanged(nameof(PagedRegulations));
         }
 
-        private async Task LoadRegulationsAsync()
+        private Task LoadRegulationsAsync() => ExecuteSafeAsync(async () =>
         {
             try
             {
@@ -77,7 +75,7 @@ namespace Hekki.UI.ViewModels
             {
                 IsLoading = false;
             }
-        }
+        });
 
         [RelayCommand]
         private void NavigateToCreation()
@@ -104,20 +102,13 @@ namespace Hekki.UI.ViewModels
         }
 
         [RelayCommand]
-        private async Task DeleteRegulation(RegulationSummaryDto dto)
+        private Task DeleteRegulation(RegulationSummaryDto dto) => ExecuteSafeAsync(async () =>
         {
-            try
-            {
-                await _regulationService.DeleteRegulationAsync(dto.Id);
+            await _regulationService.DeleteRegulationAsync(dto.Id);
 
-                Regulations.Remove(dto);
+            Regulations.Remove(dto);
 
-                PaginationService.SetTotalItems(Regulations.Count);
-            }
-            catch (Exception ex)
-            {
-                WeakReferenceMessenger.Default.Send(new AppErrorMessage($"Failed to delete regulation: {ex.Message}"));
-            }
-        }
+            PaginationService.SetTotalItems(Regulations.Count);
+        });
     }
 }
