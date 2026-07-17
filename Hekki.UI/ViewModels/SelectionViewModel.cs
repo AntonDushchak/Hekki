@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.DTOs.Regulation;
 using Hekki.Application.Services;
+using Hekki.UI.Enums;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;

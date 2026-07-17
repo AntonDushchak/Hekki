@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="Hekki.UI.Views.Race.Controls.TotalTableRow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Hekki.UI.Views.Race.Controls"
+             xmlns:converters="clr-namespace:Hekki.UI.Converters"
+             xmlns:vm="clr-namespace:Hekki.UI.ViewModels"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="15">
+        <StackPanel Orientation="Horizontal">
+            <local:PilotCard DataContext="{Binding}"/>
+
+            <ItemsControl ItemsSource="{Binding HeatCells}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:HeatResultCellViewModel}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Width="100">
+                            <TextBlock Text="{Binding Result.TotalTimeMs}"
+                                       Visibility="{Binding Heat.ShowTime, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBlock Text="{Binding Result.Score}"
+                                       Visibility="{Binding Heat.ShowScore, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -2,6 +2,7 @@
 using Hekki.Application;
 using Hekki.Infrastructure;
 using Hekki.UI.Views;
+using Hekki.UI.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

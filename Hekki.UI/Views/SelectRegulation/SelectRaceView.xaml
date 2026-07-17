@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="Hekki.UI.Views.SelectRegulation.SelectRaceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:views="clr-namespace:Hekki.UI.Views.SelectRegulation"
+             mc:Ignorable="d"
+             d:DesignHeight="720" d:DesignWidth="1240"
+             Loaded="SelectRaceView_Loaded">
+    <Grid HorizontalAlignment="Stretch" 
+          MaxWidth="1200" 
+          Margin="40,0">
+        
+        <views:RegulationBigList />
+    </Grid>
+</UserControl>

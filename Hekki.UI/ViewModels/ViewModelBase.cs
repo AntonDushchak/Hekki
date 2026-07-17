@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Hekki.UI.Enums;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Runtime.CompilerServices;
 

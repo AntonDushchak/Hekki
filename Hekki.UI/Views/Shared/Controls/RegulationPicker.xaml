@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="Hekki.UI.Views.Shared.Controls.RegulationPicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Hekki.UI.Views.Shared.Controls"
+             mc:Ignorable="d">
+    <Grid>
+        <ComboBox x:Name="RegulationComboBox" 
+                  ItemsSource="{Binding Items}" 
+                  DisplayMemberPath="Title"
+                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                  Margin="10" 
+                  MinWidth="150">
+        </ComboBox>
+    </Grid>
+</UserControl>

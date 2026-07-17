@@ -14,7 +14,7 @@ namespace Hekki.PilotImporter
 
             var optionsBuilder = new DbContextOptionsBuilder<HekkiDbContext>();
 
-            var connectionString = "Host=localhost;Port=5432;Database=hekki;Username=postgres;Password=gmina531";
+            var connectionString = "";
             optionsBuilder.UseNpgsql(connectionString);
 
             using var context = new HekkiDbContext(optionsBuilder.Options);

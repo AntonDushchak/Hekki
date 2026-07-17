@@ -1,7 +1,7 @@
 using Hekki.UI.ViewModels;
 using System.Windows;
 
-namespace Hekki.UI.Views
+namespace Hekki.UI.Views.Race
 {
     public partial class RaceSettingsWindow : Window
     {

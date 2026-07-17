@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="Hekki.UI.Views.Race.Controls.TotalTable"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Hekki.UI.Views.Race.Controls"
+             xmlns:converters="clr-namespace:Hekki.UI.Converters"
+             mc:Ignorable="d"
+             xmlns:vm="clr-namespace:Hekki.UI.ViewModels"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Border Background="White" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="12">
+        <StackPanel>
+            <!-- Заголовок -->
+            <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="15">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Ліга" FontWeight="Bold" Width="60"/>
+                    <TextBlock Text="Ім'я" FontWeight="Bold" Width="180"/>
+
+                    <ItemsControl ItemsSource="{Binding Heats}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:HeatViewModel}">
+                                <StackPanel Width="100">
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" TextAlignment="Center"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="Час" FontSize="11"
+                                                   Visibility="{Binding ShowTime, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                        <TextBlock Text="Бали" FontSize="11" Margin="6,0,0,0"
+                                                   Visibility="{Binding ShowScore, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TextBlock Text="Сума балів" FontWeight="Bold" Width="100" TextAlignment="Right"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Строки -->
+            <ItemsControl ItemsSource="{Binding TotalTableRows}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:TotalTableRowViewModel}">
+                        <local:TotalTableRow/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Border>
+</UserControl>

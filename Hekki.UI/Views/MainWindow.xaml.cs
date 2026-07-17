@@ -1,7 +1,7 @@
 ﻿using Hekki.UI.ViewModels;
 using System.Windows;
 
-namespace Hekki.UI
+namespace Hekki.UI.Views
 {
     public partial class MainWindow : Window
     {
