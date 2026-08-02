@@ -1,42 +1,28 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
-    
-    <system:String x:Key="m_Selection">Selection</system:String>
+
     <system:String x:Key="m_Regulations">Regulations</system:String>
-    <system:String x:Key="m_Showing">Showing</system:String>
-    <system:String x:Key="m_Of">of</system:String>
     <system:String x:Key="m_New">New</system:String>
     <system:String x:Key="m_Prev">Prev</system:String>
     <system:String x:Key="m_Next">Next</system:String>
-    <system:String x:Key="m_Version">version</system:String>
-    <system:String x:Key="m_Create">Create</system:String>
     <system:String x:Key="m_RegulationName">Regulation name</system:String>
-    <system:String x:Key="m_SameScores">Same Scores</system:String>
     <system:String x:Key="m_Heats">Heats</system:String>
     <system:String x:Key="m_Name">Name</system:String>
     <system:String x:Key="m_AddHeat">Add Heat</system:String>
-    <system:String x:Key="m_Heat1">Heat 1</system:String>
     <system:String x:Key="m_HeatDetails">Heat Details</system:String>
-    <system:String x:Key="m_HeatName">Heat name</system:String>
     <system:String x:Key="m_ShuffleSystem">Shuffle system</system:String>
     <system:String x:Key="m_GroupAssignment">Group assignment</system:String>
-    <system:String x:Key="m_PilotsCount">Pilots count</system:String>
     <system:String x:Key="m_GroupsCount">Groups count</system:String>
     <system:String x:Key="m_GroupCapacity">Group capacity</system:String>
     <system:String x:Key="m_KartAssignment">Kart assignment</system:String>
     <system:String x:Key="m_ScoringSystem">Scoring system</system:String>
     <system:String x:Key="m_AdditionalSettings">Additional Settings</system:String>
     <system:String x:Key="m_NoSetttingSelected">No setting selected</system:String>
-    <system:String x:Key="m_NoAdditionalSettings">has no additional settings</system:String>
     <system:String x:Key="m_ToUp">To up</system:String>
     <system:String x:Key="m_ToDown">To down</system:String>
     <system:String x:Key="m_Save">Save</system:String>
     <system:String x:Key="m_Delete">Delete</system:String>
-    <system:String x:Key="m_Edit">Edit</system:String>
-    <system:String x:Key="m_Undo">Undo</system:String>
-    <system:String x:Key="m_Pilots">Pilots</system:String>
-    <system:String x:Key="m_AddNewPilot">Add new pilot</system:String>
     <system:String x:Key="m_Add">Add</system:String>
     
     <system:String x:Key="m_Group">Group</system:String>
@@ -45,12 +31,8 @@
     <system:String x:Key="m_Pilot">Pilot</system:String>
     <system:String x:Key="m_Time">Time</system:String>
     <system:String x:Key="m_Score">Score</system:String>
-    <system:String x:Key="m_Points">Points</system:String>
     <system:String x:Key="m_Penalty">Penalty</system:String>
-    
-    <system:String x:Key="m_Settings">Settings</system:String>
-    <system:String x:Key="m_Language">Language</system:String>
-    <system:String x:Key="m_CreatePilot">Create pilot</system:String>
+
     <system:String x:Key="m_EditPilot">Edit pilot</system:String>
     <system:String x:Key="m_Link">Link</system:String>
     <system:String x:Key="m_SwsId">SWS ID</system:String>
@@ -58,6 +40,7 @@
     <system:String x:Key="m_League">League</system:String>
     <system:String x:Key="m_ShowProfilePic">Show profile pic?</system:String>
     <system:String x:Key="m_DisplayPilotsProfilePic">Display pilot's profile picture</system:String>
+    
     <system:String x:Key="m_Error">Error</system:String>
     <system:String x:Key="m_Exit">Exit</system:String>
     <system:String x:Key="m_ReloadApp">Reload app</system:String>
@@ -68,30 +51,16 @@
     <system:String x:Key="m_Details">Details</system:String>
     <system:String x:Key="m_Close">Close</system:String>
 
-
-
-    <system:String x:Key="m_Warning">Warning</system:String>
-    <system:String x:Key="m_Information">Information</system:String>
-    <system:String x:Key="m_CriticalError">Critical Error</system:String>
-    <system:String x:Key="m_UnexpectedError">Unexpected Error</system:String>
-    <system:String x:Key="m_BusinessLogicError">Operation Error</system:String>
-    <system:String x:Key="m_ValidationError">Incorrect Data</system:String>
-    <system:String x:Key="m_TimeoutError">Timeout</system:String>
-    <system:String x:Key="m_AccessDeniedError">Access Denied</system:String>
-    <system:String x:Key="m_Confirmation">Confirmation</system:String>
-    <system:String x:Key="m_UnexpectedErrorMessage">An unexpected error occurred: {0}</system:String>
-    <system:String x:Key="m_BusinessLogicErrorMessage">Business logic error: {0}</system:String>
-    <system:String x:Key="m_ValidationErrorMessage">Validation error: {0}</system:String>
-    <system:String x:Key="m_TimeoutErrorMessage">The operation took too long. Please try again later.</system:String>
-    <system:String x:Key="m_AccessDeniedErrorMessage">You do not have sufficient rights to perform this operation.</system:String>
-    <system:String x:Key="m_InitializationContext">Initialization of regulations list</system:String>
-    <system:String x:Key="m_NavigationToCreationContext">Navigation to race creation</system:String>
-    <system:String x:Key="m_NavigationToRaceContext">Navigation to race {0}</system:String>
-
     <system:String x:Key="m_RaceSettings">Race Settings</system:String>
     <system:String x:Key="m_RaceName">Race Name</system:String>
     <system:String x:Key="m_RaceDate">Race Date</system:String>
     <system:String x:Key="m_Location">Location</system:String>
     <system:String x:Key="m_Cancel">Cancel</system:String>
     <system:String x:Key="m_TotalTable">Total Table</system:String>
+
+    <system:String x:Key="m_AssignGroupsAndNumbers">Assign Groups and Numbers</system:String>
+    <system:String x:Key="m_DeleteHeat">Delete Heat</system:String>
+    <system:String x:Key="m_EditHeat">Edit Heat</system:String>
+
+
 </ResourceDictionary>

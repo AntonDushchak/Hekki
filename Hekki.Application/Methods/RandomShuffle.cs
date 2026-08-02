@@ -1,4 +1,5 @@
 ﻿using Hekki.Application.DTOs.Pilot;
+using Hekki.Application.DTOs.Race;
 
 namespace Hekki.Application.Methods
 {
@@ -9,9 +10,9 @@ namespace Hekki.Application.Methods
         public string Description => "Randomly shuffles the pilots.";
 
 
-        public List<PilotDto> Shuffle(List<PilotDto> participants)
+        public List<RaceParticipantDto> Shuffle(List<RaceParticipantDto> participants)
         {
-            throw new NotImplementedException();
+            return participants;
         }
     }
 
@@ -21,7 +22,7 @@ namespace Hekki.Application.Methods
         public string Title => "Score Ascending Shuffle";
         public string Description => "Shuffles the pilots based on their scores in ascending order.";
 
-        public List<PilotDto> Shuffle(List<PilotDto> participants)
+        public List<RaceParticipantDto> Shuffle(List<RaceParticipantDto> participants)
         {
             throw new NotImplementedException();
         }
@@ -33,7 +34,7 @@ namespace Hekki.Application.Methods
         public string Title => "Time Descending Shuffle";
         public string Description => "Shuffles the pilots based on their times in descending order.";
 
-        public List<PilotDto> Shuffle(List<PilotDto> participants)
+        public List<RaceParticipantDto> Shuffle(List<RaceParticipantDto> participants)
         {
             throw new NotImplementedException();
         }
@@ -45,7 +46,7 @@ namespace Hekki.Application.Methods
         public string Title => "No Shuffle";
         public string Description => "Does not shuffle the pilots.";
 
-        public List<PilotDto> Shuffle(List<PilotDto> participants)
+        public List<RaceParticipantDto> Shuffle(List<RaceParticipantDto> participants)
         {
             return participants;
         }

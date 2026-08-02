@@ -1,12 +1,22 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Hekki.UI.Enums;
 using CommunityToolkit.Mvvm.Messaging;
+using Hekki.UI.Messages.App;
 using System.Runtime.CompilerServices;
 
 namespace Hekki.UI.ViewModels
 {
-    public abstract partial class ViewModelBase : ObservableValidator
+    public abstract partial class ViewModelBase : ObservableValidator, IDisposable
     {
+        protected ViewModelBase()
+        {
+            WeakReferenceMessenger.Default.RegisterAll(this);
+        }
+
+        public void Dispose()
+        {
+            WeakReferenceMessenger.Default.UnregisterAll(this);
+        }
+
         protected async Task ExecuteSafeAsync(Func<Task> action, [CallerMemberName] string? source = null)
         {
             try
@@ -17,6 +27,12 @@ namespace Hekki.UI.ViewModels
             {
                 WeakReferenceMessenger.Default.Send(new AppErrorMessage(ex.Message));
             }
+        }
+
+        protected void Publish<TMessage>(TMessage message)
+            where TMessage : class
+        {
+            WeakReferenceMessenger.Default.Send(message);
         }
     }
 }

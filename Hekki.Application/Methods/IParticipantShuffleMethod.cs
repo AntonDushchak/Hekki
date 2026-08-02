@@ -1,4 +1,5 @@
 ﻿using Hekki.Application.DTOs.Pilot;
+using Hekki.Application.DTOs.Race;
 using System.Text.Json.Serialization;
 
 namespace Hekki.Application.Methods
@@ -12,7 +13,7 @@ namespace Hekki.Application.Methods
         string Id { get; }
         string Title { get; }
         string Description { get; }
-        List<PilotDto> Shuffle(List<PilotDto> participants);
+        List<RaceParticipantDto> Shuffle(List<RaceParticipantDto> participants);
     }
 
     public interface IParticipantShuffleCatalog

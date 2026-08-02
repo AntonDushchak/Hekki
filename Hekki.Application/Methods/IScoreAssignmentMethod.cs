@@ -1,4 +1,5 @@
 ﻿using Hekki.Application.DTOs.Pilot;
+using Hekki.Application.DTOs.Race;
 using System.Text.Json.Serialization;
 
 namespace Hekki.Application.Methods
@@ -9,7 +10,7 @@ namespace Hekki.Application.Methods
         string Id { get; }
         string Title { get; }
         string Description { get; }
-        List<PilotDto> AssignScores(List<PilotDto> participants, List<int> scores);
+        List<RaceParticipantDto> AssignScores(List<RaceParticipantDto> participants, List<int> scores);
     }
 
     public interface IScoreAssignmentCatalog

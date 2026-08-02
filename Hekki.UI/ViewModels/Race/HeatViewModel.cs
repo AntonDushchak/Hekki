@@ -6,6 +6,13 @@ namespace Hekki.UI.ViewModels
 {
     public partial class HeatViewModel : ObservableObject
     {
+        public readonly int HeatId;
+
+        public HeatViewModel(int heatId)
+        {
+            HeatId = heatId;
+        }
+
         [ObservableProperty]
         private string _name = string.Empty;
 
@@ -23,10 +30,12 @@ namespace Hekki.UI.ViewModels
 
     public partial class HeatGroupViewModel : ObservableObject
     {
+        public readonly int GroupId;
         public HeatViewModel Heat { get; }
 
-        public HeatGroupViewModel(HeatViewModel heat)
+        public HeatGroupViewModel(int groupId, HeatViewModel heat)
         {
+            GroupId = groupId;
             Heat = heat;
         }
 
@@ -35,8 +44,6 @@ namespace Hekki.UI.ViewModels
 
         [ObservableProperty]
         private int _groupCapacity = 8;
-        [ObservableProperty]
-        private int _groupIndex = 0;
 
         public ObservableCollection<HeatRowViewModel> Rows { get; set; } = [];
     }

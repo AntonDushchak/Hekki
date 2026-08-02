@@ -1,6 +1,7 @@
 using AutoMapper;
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs.Race;
+using Hekki.Application.Exceptions;
 using Hekki.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -100,9 +101,31 @@ namespace Hekki.Infrastructure.Repositories
             await db.SaveChangesAsync(ct);
         }
 
-        
+        public async Task UpdateEntryAsync(int groupId, int participantId, HeatEntryDto entry, CancellationToken ct = default)
+        {
+            await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
+            var entity = await db.HeatEntries
+                .FirstOrDefaultAsync(e => e.GroupId == groupId && e.ParticipantId == participantId, ct);
 
+            if (entity == null)
+                throw new EntityNotFoundWithException("HeatEntry", "Group", groupId);
+
+            entity.KartNumber = entry.KartNumber;
+            entity.GridPosition = entry.GridPosition;
+            entity.ParticipantId = entry.ParticipantId;
+            entity.GroupId = entry.GroupId;
+
+            await db.SaveChangesAsync(ct);
+        }
+
+        public async Task UpdateEntriesAsync(int groupId, IReadOnlyList<HeatEntryDto> entries, CancellationToken ct = default)
+        {
+            foreach (var entry in entries)
+            {
+                await UpdateEntryAsync(groupId, entry.ParticipantId, entry, ct);
+            }
+        }
 
         public async Task UpdateAsync(HeatDto heat, CancellationToken ct = default)
         {
@@ -135,6 +158,36 @@ namespace Hekki.Infrastructure.Repositories
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
             return await db.Heats.AnyAsync(h => h.Id == heatId, ct);
+        }
+
+        public async Task UpdateResultAsync(int groupId, int participantId, HeatResultDto result, CancellationToken ct = default)
+        {
+            await using var db = await _dbFactory.CreateDbContextAsync(ct);
+
+            var entity = await db.HeatResults
+                .FirstOrDefaultAsync(e => e.GroupId == groupId && e.ParticipantId == participantId, ct);
+
+            if (entity == null)
+                throw new EntityNotFoundWithException("HeatResult", "Group", groupId);
+
+            entity.FinishPosition = result.FinishPosition;
+            entity.BestLapMs = result.BestLapMs;
+            entity.Laps = result.Laps;
+            entity.Score = result.Score;
+            entity.TotalTimeMs = result.TotalTimeMs;
+            entity.Penalty = result.Penalty;
+            entity.ParticipantId = participantId;
+            entity.GroupId = groupId;
+
+            await db.SaveChangesAsync(ct);
+        }
+
+        public async Task UpdateResultsAsync(int groupId, IReadOnlyList<HeatResultDto> results, CancellationToken ct = default)
+        {
+            foreach (var result in results)
+            {
+                await UpdateResultAsync(groupId, result.ParticipantId, result, ct);
+            }
         }
     }
 }

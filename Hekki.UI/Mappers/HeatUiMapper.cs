@@ -7,7 +7,7 @@ namespace Hekki.UI.Mappers
     {
         public static HeatViewModel MapToHeatViewModel(HeatDto heat)
         {
-            var heatViewModel = new HeatViewModel
+            var heatViewModel = new HeatViewModel(heat.HeatId)
             {
                 Name = heat.Name,
                 HeatNumber = heat.HeatNumber,
@@ -25,11 +25,10 @@ namespace Hekki.UI.Mappers
 
         private static HeatGroupViewModel MapToHeatGroupViewModel(HeatGroupDto groupDto, HeatViewModel heatViewModel)
         {
-            var groupVm = new HeatGroupViewModel(heatViewModel)
+            var groupVm = new HeatGroupViewModel(groupDto.Id, heatViewModel)
             {
                 GroupNumber = groupDto.GroupNumber,
                 GroupCapacity = groupDto.GroupCapacity,
-                GroupIndex = groupDto.GroupIndex
             };
 
             foreach (var entryDto in groupDto.Entries)

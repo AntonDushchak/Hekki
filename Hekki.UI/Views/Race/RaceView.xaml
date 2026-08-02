@@ -8,8 +8,14 @@
              xmlns:vm="clr-namespace:Hekki.UI.ViewModels"
              mc:Ignorable="d"
              d:DesignHeight="720" d:DesignWidth="1240">
-    <Grid HorizontalAlignment="Stretch"
-          Margin="40,0">
+
+    <!-- Wrapper Grid for layering -->
+    <Grid>
+        <!-- Main scrollable content -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      Panel.ZIndex="0">
+            <Grid HorizontalAlignment="Stretch"
+                  Margin="40,0">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -31,9 +37,14 @@
                     Padding="15"
                     Margin="0,0,0,20">
                 <components:AddPilotControl DataContext="{Binding}"/>
-            </Border>
 
-            <!-- Total Table Container -->
+                
+            </Border>
+                    <Button Content="Add Test"
+        Command="{Binding AddTestDataCommand}"
+        HorizontalAlignment="Right"
+        Margin="0,10,0,0"/>
+                    <!-- Total Table Container -->
             <Border Grid.Row="1"
                     x:Name="TotalTable"
                     Background="{DynamicResource Brush.SurfaceLow}"
@@ -91,5 +102,13 @@
                 </ScrollViewer>
             </Grid>
         </Border>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Bottom Heats Panel - overlays content, fixed at bottom of view -->
+        <components:BottomHeatsPanel DataContext="{Binding}"
+                                     Panel.ZIndex="1"
+                                     VerticalAlignment="Bottom"
+                                     HorizontalAlignment="Stretch"/>
     </Grid>
 </UserControl>

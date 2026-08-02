@@ -120,7 +120,6 @@ namespace Hekki.Application.Services
                 groups.Add(new HeatGroupDto
                 {
                     HeatId = heatId,
-                    GroupIndex = i,
                     GroupNumber = i + 1,
                     GroupCapacity = config.ParticipantsPerGroup,
                     Entries = [],
@@ -131,6 +130,124 @@ namespace Hekki.Application.Services
             }
 
             return groups;
+        }
+
+        public async Task<IReadOnlyList<GroupAssignmentResultDto>> AssignGroupsAndNumbersAsync(int raceId, int heatNumber, CancellationToken ct = default)
+        {
+            var race = await GetRaceDataAsync(raceId);
+            var reg = await _regulationRepository.GetForEditAsync(race.RegulationId);
+            var heats = await _heatRepository.GetByRaceIdAsync(raceId);
+            var heat = heats.FirstOrDefault(h => h.HeatNumber == heatNumber);
+            var configurationIndex = heat.ConfigurationIndex;
+            var config = reg.Config.HeatConfigs[configurationIndex];
+            var assignConfig = config.Assignment;
+            var entries = heats.SelectMany(h => h.Groups.SelectMany(g => g.Entries)).ToList();
+            var groups = heat.Groups;
+
+            var assignedGroups = await AssignGroupsAsync(race.Participants.ToList(), assignConfig, config, groups.ToList());
+            var participantsWithGroupAndKart = new List<List<ParticipantAssignmentDto>>();
+            foreach (var group in assignedGroups)
+            {
+                participantsWithGroupAndKart.Add(AssignKartNumbersAsync(group.ToList(), assignConfig, config, entries));
+            }
+
+            if (participantsWithGroupAndKart.Count != groups.Count)
+            {
+                throw new InvalidOperationException("The number of assigned groups does not match the number of heat groups.");
+            }
+            var assignedEntries = new List<List<HeatEntryDto>>();
+            foreach (var group in participantsWithGroupAndKart)
+            {
+                var assigmedEntry = await GenerateEntriesAsync(heat.HeatId, group.First().GroupId, group, ct);
+                assignedEntries.Add(assigmedEntry.ToList());
+            }
+
+            var result = new List<GroupAssignmentResultDto>();
+            for (int i = 0; i < groups.Count; i++)
+            {
+                result.Add(new GroupAssignmentResultDto
+                {
+                    Group = groups[i],
+                    UpdatedEntries = assignedEntries[i]
+                });
+            }
+
+            return result;
+        }
+
+        public async Task<IReadOnlyList<HeatEntryDto>> GenerateEntriesAsync(int heatId, int groupId, List<ParticipantAssignmentDto> participants, CancellationToken ct = default)
+        {
+            var heat = await _heatRepository.GetByIdAsync(heatId, ct)
+                ?? throw new HeatNotFoundException(heatId);
+
+            var group = heat.Groups.FirstOrDefault(g => g.Id == groupId);
+            if (group == null)
+            {
+                throw new InvalidOperationException($"Group with ID {groupId} not found in heat {heatId}.");
+            }
+
+            if (group.GroupCapacity < participants.Count)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var assignedEntries = new List<HeatEntryDto>();
+            for (int i = 0; i < participants.Count; i++)
+            {
+                var assignedEntry = new HeatEntryDto
+                {
+                    GroupId = group.Id,
+                    ParticipantId = participants[i].ParticipantId,
+                    KartNumber = participants[i].KartNumber,
+                    GridPosition = participants[i].GridPosition,
+                };
+
+                await _heatRepository.AddHeatEntryAsync(heatId, groupId, assignedEntry, ct);
+
+                assignedEntries.Add(assignedEntry);
+            }
+
+            return assignedEntries;
+        }
+
+
+        private async Task<IReadOnlyList<IReadOnlyList<ParticipantAssignmentDto>>> AssignGroupsAsync(List<RaceParticipantDto> participants, AssignmentConfig assignConfig, HeatConfig conf, List<HeatGroupDto> groups)
+        {
+            var shuffled = assignConfig.Shuffle.Shuffle(participants);
+            var result = assignConfig.GroupMethod.AssignGroups(shuffled, conf.ParticipantsPerGroup, conf.GroupCount);
+            for (int i = 0; i < result.Count; i++)
+            {
+                for (int j = 0; j < result[i].Count; j++)
+                {
+                    result[i][j] = result[i][j] with { GroupId = groups[i].Id, HeatId = groups[i].HeatId };
+                }
+            }
+            return result;
+        }
+
+        private List<ParticipantAssignmentDto> AssignKartNumbersAsync(List<ParticipantAssignmentDto> participants, AssignmentConfig assignConfig, HeatConfig conf, List<HeatEntryDto> entries)
+        {
+            var avaibleKarts = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            var dict = BuildKartNumbersWithPilots(participants, entries);
+            var result = assignConfig.KartMethod.AssignKartNummer(dict, avaibleKarts);
+            return result;
+        }
+
+        private Dictionary<ParticipantAssignmentDto, List<int>> BuildKartNumbersWithPilots(List<ParticipantAssignmentDto> participants, List<HeatEntryDto> entries)
+        {
+            var result = new Dictionary<ParticipantAssignmentDto, List<int>>();
+            foreach (var participant in participants)
+            {
+                var entriesSelected = entries.Where(e => e.ParticipantId == participant.ParticipantId);
+                if (entriesSelected == null || !entriesSelected.Any())
+                {
+                    result[participant] = new List<int>();
+                    continue;
+                }
+                result[participant] = entriesSelected.Select(e => e.KartNumber).ToList();
+            }
+
+            return result;
         }
     }
 }

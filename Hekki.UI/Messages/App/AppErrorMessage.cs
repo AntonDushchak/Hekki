@@ -1,4 +1,4 @@
-﻿namespace Hekki.UI.Enums
+﻿namespace Hekki.UI.Messages.App
 {
     public record AppErrorMessage(string Message); 
     public record AppSuccessMessage(string Message);

@@ -9,7 +9,7 @@
         Title="Hekki" Height="800" Width="1000"
         MinHeight="450"
         MinWidth="800">
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -19,9 +19,7 @@
         <views:TopPanel Grid.Row="0"
                         DataContext="{Binding TopPanelVM}" />
 
-        <ScrollViewer Grid.Row="1"
-                      VerticalScrollBarVisibility="Auto">
-            <ContentControl Content="{Binding CurrentPageVM}" />
-        </ScrollViewer>
+        <ContentControl Grid.Row="1"
+                        Content="{Binding CurrentPageVM}" />
     </Grid>
 </Window>

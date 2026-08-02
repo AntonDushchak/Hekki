@@ -15,7 +15,6 @@
 
     <Border Background="White" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="12">
         <StackPanel>
-            <!-- Заголовок -->
             <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="15">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Ліга" FontWeight="Bold" Width="60"/>
@@ -46,7 +45,6 @@
                 </StackPanel>
             </Border>
 
-            <!-- Строки -->
             <ItemsControl ItemsSource="{Binding TotalTableRows}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:TotalTableRowViewModel}">
