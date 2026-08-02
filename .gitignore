@@ -371,3 +371,6 @@ FodyWeavers.xsd
 /.github/create commit message instructions.prompt.md
 
 squirrelPublish/
+/.github/promts/architect.md
+/.github/promts/implementer.md
+/.github/promts/reviewer.md
