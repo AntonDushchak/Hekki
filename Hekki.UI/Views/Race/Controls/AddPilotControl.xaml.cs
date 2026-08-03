@@ -1,4 +1,4 @@
-using Hekki.UI.ViewModels;
+using Hekki.UI.ViewModels.Race;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,7 +8,7 @@ namespace Hekki.UI.Views.Race.Controls
 {
     public partial class AddPilotControl : UserControl
     {
-        private RaceViewModel? Vm => DataContext as RaceViewModel;
+        private ParticipantsSectionViewModel? Vm => DataContext as ParticipantsSectionViewModel;
         public AddPilotControl()
         {
             InitializeComponent();

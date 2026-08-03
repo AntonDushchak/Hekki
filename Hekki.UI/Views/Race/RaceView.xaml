@@ -36,7 +36,7 @@
                     CornerRadius="4"
                     Padding="15"
                     Margin="0,0,0,20">
-                <components:AddPilotControl DataContext="{Binding}"/>
+                        <components:AddPilotControl DataContext="{Binding Participants}"/>
 
                 
             </Border>
@@ -65,7 +65,7 @@
                     <ScrollViewer Grid.Row="1"
                                   VerticalScrollBarVisibility="Auto"
                                   HorizontalScrollBarVisibility="Auto">
-                        <components:TotalTable DataContext="{Binding}"/>
+                        <components:TotalTable DataContext="{Binding TotalTable}"/>
                     </ScrollViewer>
                 </Grid>
             </Border>
@@ -92,7 +92,7 @@
                 <ScrollViewer Grid.Row="1"
                               VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Auto">
-                    <ItemsControl ItemsSource="{Binding Heats}">
+                    <ItemsControl ItemsSource="{Binding HeatsTable.Heats}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <components:HeatColumn Margin="0,0,0,15"/>

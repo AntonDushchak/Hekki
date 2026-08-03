@@ -86,7 +86,7 @@
                             HorizontalScrollBarVisibility="Auto"
                             VerticalScrollBarVisibility="Disabled"
                             Padding="20,10,20,20">
-                    <ItemsControl ItemsSource="{Binding Heats}">
+                    <ItemsControl ItemsSource="{Binding HeatsTable.Heats}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal" 
