@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs.Race;
 using Hekki.UI.Messages.Race;
@@ -6,7 +7,8 @@ using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels.Race
 {
-    public partial class HeatsTableViewModel : ViewModelBase
+    public partial class HeatsTableViewModel : ViewModelBase,
+        IRecipient<HeatGeneratedMessage>
     {
         private readonly IRaceService _raceService;
         private int? _raceId;
@@ -49,7 +51,17 @@ namespace Hekki.UI.ViewModels.Race
                 var groupVm = heatVm.Groups.FirstOrDefault(g => g.GroupId == groupDto.Id);
                 if (groupVm == null) continue;
 
-                // TODO: обновить groupVm из groupDto
+                foreach (var entryDto in groupResult.UpdatedEntries)
+                {
+                    var entryVm = groupVm.Rows
+                        .Select(r => r.Entry)
+                        .FirstOrDefault(e => e.ParticipantId == entryDto.ParticipantId);
+                    if (entryVm == null)
+                    {
+                        throw new NotImplementedException(); //TODO
+                    }
+                    Mappers.HeatUiMapper.ApplyEntryAssignmentTo(entryDto, entryVm);
+                }
             }
 
             await Task.CompletedTask;
@@ -66,5 +78,10 @@ namespace Hekki.UI.ViewModels.Race
         {
             await Task.CompletedTask; // TODO
         });
+
+        public void Receive(HeatGeneratedMessage message)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

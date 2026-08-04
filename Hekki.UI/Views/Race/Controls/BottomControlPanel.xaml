@@ -1,4 +1,4 @@
-<UserControl x:Class="Hekki.UI.Views.Race.Controls.BottomHeatsPanel"
+<UserControl x:Class="Hekki.UI.Views.Race.Controls.BottomControlPanel"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -139,7 +139,7 @@
                                     <Button.ContextMenu>
                                         <ContextMenu>
                                             <MenuItem Header="{DynamicResource m_EditHeat}"
-                                                    Command="{Binding PlacementTarget.Tag.EditHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                    Command="{Binding PlacementTarget.Tag.HeatsTable.EditHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                     CommandParameter="{Binding}">
                                                 <MenuItem.Icon>
                                                     <TextBlock Text="✏️" FontSize="14"/>
@@ -147,7 +147,7 @@
                                             </MenuItem>
 
                                             <MenuItem Header="{DynamicResource m_AssignGroupsAndNumbers}"
-                                                    Command="{Binding PlacementTarget.Tag.AssignGroupsAndNumbersCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                    Command="{Binding PlacementTarget.Tag.HeatsTable.AssignGroupsAndNumbersCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                     CommandParameter="{Binding}">
                                                 <MenuItem.Icon>
                                                     <TextBlock Text="" FontSize="14"/>
@@ -157,7 +157,7 @@
                                             <Separator/>
 
                                             <MenuItem Header="{DynamicResource m_DeleteHeat}"
-                                                    Command="{Binding PlacementTarget.Tag.DeleteHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                    Command="{Binding PlacementTarget.Tag.HeatsTable.DeleteHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                     CommandParameter="{Binding}">
                                                 <MenuItem.Icon>
                                                     <TextBlock Text="🗑️" FontSize="14"/>

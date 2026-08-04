@@ -66,8 +66,7 @@
                        VerticalAlignment="Center"
                        FontSize="16"
                        FontWeight="SemiBold"
-                       Margin="15,0,20,0"
-                       MinWidth="150"/>
+                       Margin="15,0,20,0"/>
         </Grid>
     </Border>
 </UserControl>

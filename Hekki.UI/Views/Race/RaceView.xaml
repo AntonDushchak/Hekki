@@ -106,7 +106,7 @@
         </ScrollViewer>
 
         <!-- Bottom Heats Panel - overlays content, fixed at bottom of view -->
-        <components:BottomHeatsPanel DataContext="{Binding}"
+        <components:BottomControlPanel DataContext="{Binding}"
                                      Panel.ZIndex="1"
                                      VerticalAlignment="Bottom"
                                      HorizontalAlignment="Stretch"/>

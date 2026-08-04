@@ -5,6 +5,12 @@ namespace Hekki.UI.Mappers
 {
     public static class HeatUiMapper
     {
+        public static void ApplyEntryAssignmentTo(HeatEntryDto entry, HeatEntryViewModel heatEntryView)
+        {
+            heatEntryView.KartNumber = entry.KartNumber;
+            heatEntryView.GridPosition = entry.GridPosition;
+        }
+
         public static HeatViewModel MapToHeatViewModel(HeatDto heat)
         {
             var heatViewModel = new HeatViewModel(heat.HeatId)

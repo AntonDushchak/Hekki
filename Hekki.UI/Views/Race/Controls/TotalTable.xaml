@@ -10,41 +10,64 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:ResourceKeyToStringConverter x:Key="ResourceKeyToStringConverter"/>
     </UserControl.Resources>
 
     <Border Background="White" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="12">
-        <StackPanel>
-            <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="15">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Ліга" FontWeight="Bold" Width="60"/>
-                    <TextBlock Text="Ім'я" FontWeight="Bold" Width="180"/>
+        <StackPanel Grid.IsSharedSizeScope="True">
 
-                    <ItemsControl ItemsSource="{Binding Heats}">
+            <!-- Header row -->
+            <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="15">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+
+                    <!-- Static pilot columns header -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="col_side" Width="Auto"/>
+                            <ColumnDefinition SharedSizeGroup="col_photo" Width="Auto"/>
+                            <ColumnDefinition SharedSizeGroup="col_name" Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{DynamicResource m_League}" FontWeight="Bold"
+                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Grid.Column="1" Text="{DynamicResource m_Pilot}" FontWeight="Bold"
+                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Grid.Column="2" Text="{DynamicResource m_Name}" FontWeight="Bold"
+                                   VerticalAlignment="Center" Margin="0,0,16,0"/>
+                    </Grid>
+
+                    <!-- Dynamic result column headers -->
+                    <ItemsControl ItemsSource="{Binding Columns}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal"/>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type vm:HeatViewModel}">
-                                <StackPanel Width="100">
-                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" TextAlignment="Center"/>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <TextBlock Text="Час" FontSize="11"
-                                                   Visibility="{Binding ShowTime, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                                        <TextBlock Text="Бали" FontSize="11" Margin="6,0,0,0"
-                                                   Visibility="{Binding ShowScore, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                                    </StackPanel>
-                                </StackPanel>
+                            <DataTemplate DataType="{x:Type vm:ColumnViewModel}">
+                                <TextBlock Text="{Binding HeaderResourceKey, Converter={StaticResource ResourceKeyToStringConverter}}"
+                                           FontWeight="Bold" TextAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Width" Value="{DynamicResource TotalTable.HeatColumnWidth}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Type}" Value="{x:Static vm:ColumnType.TotalTime}">
+                                                    <Setter Property="Width" Value="{DynamicResource TotalTable.TotalColumnWidth}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="{x:Static vm:ColumnType.TotalScore}">
+                                                    <Setter Property="Width" Value="{DynamicResource TotalTable.TotalColumnWidth}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <TextBlock Text="Сума балів" FontWeight="Bold" Width="100" TextAlignment="Right"/>
                 </StackPanel>
             </Border>
 
+            <!-- Data rows -->
             <ItemsControl ItemsSource="{Binding TotalTableRows}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:TotalTableRowViewModel}">
@@ -52,6 +75,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+
         </StackPanel>
     </Border>
 </UserControl>

@@ -61,6 +61,11 @@
     <system:String x:Key="m_AssignGroupsAndNumbers">Assign Groups and Numbers</system:String>
     <system:String x:Key="m_DeleteHeat">Delete Heat</system:String>
     <system:String x:Key="m_EditHeat">Edit Heat</system:String>
+    <system:String x:Key="m_TotalScore">Total Score</system:String>
+    <system:String x:Key="m_TotalTime">Total Time</system:String>
+
+    <system:Double x:Key="TotalTable.HeatColumnWidth">100</system:Double>
+    <system:Double x:Key="TotalTable.TotalColumnWidth">120</system:Double>
 
 
 </ResourceDictionary>

@@ -6,7 +6,7 @@ using Hekki.UI.ViewModels;
 
 namespace Hekki.UI.Views.Race.Controls
 {
-    public partial class BottomHeatsPanel : UserControl
+    public partial class BottomControlPanel : UserControl
     {
         private Storyboard? _showStoryboard;
         private Storyboard? _hideStoryboard;
@@ -15,7 +15,7 @@ namespace Hekki.UI.Views.Race.Controls
             DependencyProperty.Register(
                 nameof(IsExpanded),
                 typeof(bool),
-                typeof(BottomHeatsPanel),
+                typeof(BottomControlPanel),
                 new PropertyMetadata(false, OnIsExpandedChanged));
 
         public bool IsExpanded
@@ -24,7 +24,7 @@ namespace Hekki.UI.Views.Race.Controls
             set => SetValue(IsExpandedProperty, value);
         }
 
-        public BottomHeatsPanel()
+        public BottomControlPanel()
         {
             InitializeComponent();
             Loaded += OnLoaded;
@@ -43,7 +43,7 @@ namespace Hekki.UI.Views.Race.Controls
 
         private static void OnIsExpandedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is BottomHeatsPanel panel)
+            if (d is BottomControlPanel panel)
             {
                 bool isExpanded = (bool)e.NewValue;
 
