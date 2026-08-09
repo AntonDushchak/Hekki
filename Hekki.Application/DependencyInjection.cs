@@ -32,7 +32,6 @@ namespace Hekki.Application
             services.AddSingleton<IScoreAssignmentMethod, DefaultScoreAssignment>();
             services.AddSingleton<IScoreAssignmentCatalog, ScoreAssignmentCatalog>();
 
-
             return services;
         }
     }

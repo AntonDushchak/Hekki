@@ -1,4 +1,4 @@
-﻿namespace Hekki.UI.Messages.Race
+﻿namespace Hekki.Application.Messages.Race
 {
     public record ParticipantRemovedMessage(int RaceId, int ParticipantId);
 

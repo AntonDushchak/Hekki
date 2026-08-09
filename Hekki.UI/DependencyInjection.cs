@@ -1,3 +1,4 @@
+using Hekki.Application.Abstrations;
 using Hekki.UI.Services;
 using Hekki.UI.ViewModels;
 using Hekki.UI.Views;
@@ -14,6 +15,7 @@ namespace Hekki.UI
             services.AddTransient<IViewModelFactory, ViewModelFactory>();
             services.AddSingleton<IMethodCatalogService, MethodCatalogService>();
             services.AddSingleton<IDialogService, DialogService>();
+            services.AddSingleton<IEventPublisher, MessengerEventPublisher>();
 
             services.AddSingleton<RegulationPickerViewModel>();
             services.AddTransient<SelectionViewModel>();

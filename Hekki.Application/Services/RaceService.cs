@@ -2,6 +2,7 @@ using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs.Race;
 using Hekki.Application.DTOs.Regulation;
 using Hekki.Application.Exceptions;
+using Hekki.Application.Messages.Race;
 
 namespace Hekki.Application.Services
 {
@@ -12,18 +13,21 @@ namespace Hekki.Application.Services
         private readonly IPilotRepository _pilotRepository;
         private readonly IRegulationRepository _regulationRepository;
         private readonly IHeatRepository _heatRepository;
+        private readonly IEventPublisher _eventPublisher;
 
         public RaceService(
             IRaceRepository raceRepository,
             IRaceParticipantRepository participantRepository,
             IPilotRepository pilotRepository,
             IRegulationRepository regulationRepository,
-            IHeatRepository heatRepository)
+            IHeatRepository heatRepository,
+            IEventPublisher eventPublisher)
         {
             _raceRepository = raceRepository;
             _participantRepository = participantRepository;
             _pilotRepository = pilotRepository;
             _regulationRepository = regulationRepository;
+            _eventPublisher = eventPublisher;
             _heatRepository = heatRepository;
         }
 
@@ -45,6 +49,7 @@ namespace Hekki.Application.Services
             var pilot = await _pilotRepository.GetByIdAsync(pilotId, ct);
             var participant = new RaceParticipantDto { PilotId = pilot.Id, Name = pilot.Name, Team = pilot.Team, IsActive = true };
             await _participantRepository.AddAsync(participant, raceId, ct);
+            _eventPublisher.Publish(new ParticipantAddedMessage(raceId, participant));
             return participant;
         }
 
@@ -171,6 +176,8 @@ namespace Hekki.Application.Services
                     UpdatedEntries = assignedEntries[i]
                 });
             }
+
+            _eventPublisher.Publish(new GroupsAssignedMessage(raceId, heat.HeatId));
 
             return result;
         }

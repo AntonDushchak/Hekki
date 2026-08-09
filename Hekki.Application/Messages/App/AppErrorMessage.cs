@@ -1,4 +1,4 @@
-﻿namespace Hekki.UI.Messages.App
+﻿namespace Hekki.Application.Messages.App
 {
     public record AppErrorMessage(string Message); 
     public record AppSuccessMessage(string Message);

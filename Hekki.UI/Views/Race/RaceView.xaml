@@ -9,106 +9,92 @@
              mc:Ignorable="d"
              d:DesignHeight="720" d:DesignWidth="1240">
 
-    <!-- Wrapper Grid for layering -->
     <Grid>
-        <!-- Main scrollable content -->
-        <ScrollViewer VerticalScrollBarVisibility="Auto"
-                      Panel.ZIndex="0">
-            <Grid HorizontalAlignment="Stretch"
-                  Margin="40,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="20"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <!-- Main content row -->
+        <Grid Grid.Row="0" Margin="40,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <!-- Left Container: Add Pilot + Total Table -->
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <!-- Add Pilot Control -->
-            <Border Grid.Row="0"
-                    Background="{DynamicResource Brush.SurfaceLow}"
-                    CornerRadius="4"
-                    Padding="15"
-                    Margin="0,0,0,20">
-                        <components:AddPilotControl DataContext="{Binding Participants}"/>
-
-                
-            </Border>
-                    <Button Content="Add Test"
-        Command="{Binding AddTestDataCommand}"
-        HorizontalAlignment="Right"
-        Margin="0,10,0,0"/>
-                    <!-- Total Table Container -->
-            <Border Grid.Row="1"
-                    x:Name="TotalTable"
-                    Background="{DynamicResource Brush.SurfaceLow}"
-                    CornerRadius="8"
-                    Padding="20">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Text="{DynamicResource m_TotalTable}"
-                               FontSize="20"
-                               FontWeight="SemiBold"
-                               Margin="0,0,0,15"
-                               Grid.Row="0"/>
-
-                    <ScrollViewer Grid.Row="1"
-                                  VerticalScrollBarVisibility="Auto"
-                                  HorizontalScrollBarVisibility="Auto">
-                        <components:TotalTable DataContext="{Binding TotalTable}"/>
-                    </ScrollViewer>
-                </Grid>
-            </Border>
-        </Grid>
-
-        <!-- Right Container: Heats Table -->
-        <Border Grid.Column="2"
-                x:Name="HeatsTable"
-                Background="{DynamicResource Brush.SurfaceLow}"
-                CornerRadius="8"
-                Padding="20">
-            <Grid>
+            <!-- Left Container: Add Pilot + Total Table -->
+            <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="{DynamicResource m_Heats}"
-                           FontSize="20"
-                           FontWeight="SemiBold"
-                           Margin="0,0,0,15"
-                           Grid.Row="0"/>
+                <!-- Add Pilot Control -->
+                <Border Grid.Row="0"
+                        Background="{DynamicResource Brush.SurfaceLow}"
+                        CornerRadius="4"
+                        Padding="15"
+                        Margin="0,0,0,20">
+                    <components:AddPilotControl DataContext="{Binding Participants}"/>
+                </Border>
+                <Button Content="Add Test"
+                        Command="{Binding AddTestDataCommand}"
+                        HorizontalAlignment="Right"
+                        Margin="0,10,0,0"/>
 
-                <ScrollViewer Grid.Row="1"
-                              VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Auto">
-                    <ItemsControl ItemsSource="{Binding HeatsTable.Heats}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <components:HeatColumn Margin="0,0,0,15"/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                <!-- Total Table Container -->
+                <Border Grid.Row="1"
+                        x:Name="TotalTableContainer"
+                        Background="{DynamicResource Brush.SurfaceLow}"
+                        CornerRadius="8">
+                    <DockPanel Margin="20">
+                        <TextBlock DockPanel.Dock="Top"
+                                   Text="{DynamicResource m_TotalTable}"
+                                   FontSize="20"
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,0,15"/>
+                        <components:TotalTable DataContext="{Binding TotalTable}"/>
+                    </DockPanel>
+                </Border>
             </Grid>
-        </Border>
-            </Grid>
-        </ScrollViewer>
 
-        <!-- Bottom Heats Panel - overlays content, fixed at bottom of view -->
-        <components:BottomControlPanel DataContext="{Binding}"
-                                     Panel.ZIndex="1"
-                                     VerticalAlignment="Bottom"
-                                     HorizontalAlignment="Stretch"/>
+            <!-- GridSplitter -->
+            <GridSplitter Grid.Column="1"
+                          Width="5"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          Background="Transparent"
+                          ResizeBehavior="PreviousAndNext"/>
+
+            <!-- Right Container: Heats Table -->
+            <Border Grid.Column="2"
+                    x:Name="HeatsTable"
+                    Background="{DynamicResource Brush.SurfaceLow}"
+                    CornerRadius="8">
+                <DockPanel Margin="20">
+                    <TextBlock DockPanel.Dock="Top"
+                               Text="{DynamicResource m_Heats}"
+                               FontSize="20"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,15"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding HeatsTable.Heats}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <components:HeatColumn Margin="0,0,0,15"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </DockPanel>
+            </Border>
+        </Grid>
+
+        <!-- Bottom Heats Panel -->
+        <components:BottomControlPanel Grid.Row="1"
+                                       DataContext="{Binding}"
+                                       HorizontalAlignment="Stretch"/>
     </Grid>
 </UserControl>

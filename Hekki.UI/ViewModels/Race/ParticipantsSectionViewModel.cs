@@ -2,7 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.Abstrations;
 using Hekki.UI.Mappers;
-using Hekki.UI.Messages.Race;
+using Hekki.Application.Messages.Race;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels.Race

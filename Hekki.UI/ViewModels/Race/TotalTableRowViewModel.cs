@@ -6,7 +6,6 @@ namespace Hekki.UI.ViewModels
     {
         public RaceParticipantViewModel Participant { get; }
         public List<CellViewModel> Cells { get; } = [];
-        [ObservableProperty] private string _kartNumbersDisplayText = string.Empty;
 
         public TotalTableRowViewModel(RaceParticipantViewModel participant)
         {

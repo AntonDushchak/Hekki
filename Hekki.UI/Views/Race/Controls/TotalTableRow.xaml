@@ -8,54 +8,28 @@
              xmlns:vm="clr-namespace:Hekki.UI.ViewModels"
              mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type vm:TextCellValue}">
+            <TextBlock Text="{Binding Text}"
+                   TextAlignment="Center"
+                   VerticalAlignment="Center"/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:ParticipantCellValue}">
+            <StackPanel>
+                <TextBlock Text="{Binding Name}"
+                       TextAlignment="Center"/>
+                <TextBlock Text="{Binding KartNumbers}"
+                       FontSize="11"
+                       TextAlignment="Center"/>
+            </StackPanel>
+        </DataTemplate>
+
+
+    </UserControl.Resources>
+
     <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="15">
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-
-            <!-- Static pilot columns — SharedSizeGroup matches TotalTable header -->
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition SharedSizeGroup="col_side" Width="Auto"/>
-                    <ColumnDefinition SharedSizeGroup="col_photo" Width="Auto"/>
-                    <ColumnDefinition SharedSizeGroup="col_name" Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <!-- League / Team vertical bar -->
-                <Border Grid.Column="0"
-                        Width="30" MinHeight="60"
-                        Background="#4A90E2"
-                        CornerRadius="8,0,0,8"
-                        Margin="0,0,8,0">
-                    <TextBlock Text="{Binding Participant.League}"
-                               Foreground="White" FontWeight="Bold" FontSize="12"
-                               VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock.LayoutTransform>
-                            <RotateTransform Angle="-90"/>
-                        </TextBlock.LayoutTransform>
-                    </TextBlock>
-                </Border>
-
-                <!-- Photo + kart numbers -->
-                <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center" Margin="0,0,8,0">
-                    <Border Width="50" Height="50"
-                            Background="{DynamicResource Brush.SurfaceMid}"
-                            CornerRadius="4" Margin="0,0,0,4">
-                        <TextBlock Text="👤" FontSize="24"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   Foreground="{DynamicResource Brush.TextHint}"/>
-                    </Border>
-                    <TextBlock Text="{Binding KartNumbersDisplayText}"
-                               HorizontalAlignment="Center" FontSize="11"
-                               Foreground="{DynamicResource Brush.TextSecondary}"/>
-                </StackPanel>
-
-                <!-- Name -->
-                <TextBlock Grid.Column="2"
-                           Text="{Binding Participant.Name}"
-                           VerticalAlignment="Center"
-                           FontSize="16" FontWeight="SemiBold"
-                           Margin="0,0,16,0"/>
-            </Grid>
-
             <!-- Dynamic result cells -->
             <ItemsControl ItemsSource="{Binding Cells}">
                 <ItemsControl.ItemsPanel>
@@ -65,25 +39,34 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:CellViewModel}">
-                        <TextBlock Text="{Binding Value}" TextAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Width" Value="{DynamicResource TotalTable.HeatColumnWidth}"/>
+                        <ContentControl Content="{Binding Value}"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center"
+                                        Width="{Binding Column.ColumnWidth}"
+                                        MinWidth="50">
+                            <ContentControl.Style>
+                                <Style TargetType="ContentControl">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Column.Type}" Value="{x:Static vm:ColumnType.TotalTime}">
-                                            <Setter Property="Width" Value="{DynamicResource TotalTable.TotalColumnWidth}"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Column.Type}" Value="{x:Static vm:ColumnType.TotalScore}">
-                                            <Setter Property="Width" Value="{DynamicResource TotalTable.TotalColumnWidth}"/>
+                                        <DataTrigger Binding="{Binding IsEditable}" Value="True">
+                                            <Setter Property="ContentTemplate">
+                                                <Setter.Value>
+                                                    <DataTemplate>
+                                                        <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+                                                                 BorderThickness="0"
+                                                                 Background="Transparent"
+                                                                 TextAlignment="Center"
+                                                                 VerticalAlignment="Center"/>
+                                                    </DataTemplate>
+                                                </Setter.Value>
+                                            </Setter>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
+                            </ContentControl.Style>
+                        </ContentControl>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-
         </StackPanel>
     </Border>
 </UserControl>

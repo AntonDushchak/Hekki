@@ -11,71 +11,42 @@
 
     <UserControl.Resources>
         <converters:ResourceKeyToStringConverter x:Key="ResourceKeyToStringConverter"/>
+        <converters:ColumnHeaderConverter x:Key="ColumnHeaderConverter"/>
     </UserControl.Resources>
 
     <Border Background="White" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="12">
-        <StackPanel Grid.IsSharedSizeScope="True">
+        <!-- Outer: horizontal scroll moves header + rows together -->
+        <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Disabled">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-            <!-- Header row -->
-            <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="15">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <!-- Header row — populated by code-behind with Thumbs for resize -->
+                <Border Grid.Row="0"
+                        BorderBrush="{DynamicResource Brush.Border}"
+                        BorderThickness="0,0,0,1"
+                        Padding="15">
+                    <StackPanel x:Name="PART_HeaderPanel"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center"/>
+                </Border>
 
-                    <!-- Static pilot columns header -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition SharedSizeGroup="col_side" Width="Auto"/>
-                            <ColumnDefinition SharedSizeGroup="col_photo" Width="Auto"/>
-                            <ColumnDefinition SharedSizeGroup="col_name" Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{DynamicResource m_League}" FontWeight="Bold"
-                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
-                        <TextBlock Grid.Column="1" Text="{DynamicResource m_Pilot}" FontWeight="Bold"
-                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
-                        <TextBlock Grid.Column="2" Text="{DynamicResource m_Name}" FontWeight="Bold"
-                                   VerticalAlignment="Center" Margin="0,0,16,0"/>
-                    </Grid>
-
-                    <!-- Dynamic result column headers -->
-                    <ItemsControl ItemsSource="{Binding Columns}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
+                <!-- Data rows: vertical scroll only -->
+                <ScrollViewer Grid.Row="1"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding TotalTableRows}">
                         <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type vm:ColumnViewModel}">
-                                <TextBlock Text="{Binding HeaderResourceKey, Converter={StaticResource ResourceKeyToStringConverter}}"
-                                           FontWeight="Bold" TextAlignment="Center">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="Width" Value="{DynamicResource TotalTable.HeatColumnWidth}"/>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Type}" Value="{x:Static vm:ColumnType.TotalTime}">
-                                                    <Setter Property="Width" Value="{DynamicResource TotalTable.TotalColumnWidth}"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Type}" Value="{x:Static vm:ColumnType.TotalScore}">
-                                                    <Setter Property="Width" Value="{DynamicResource TotalTable.TotalColumnWidth}"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
+                            <DataTemplate DataType="{x:Type vm:TotalTableRowViewModel}">
+                                <local:TotalTableRow/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-
-                </StackPanel>
-            </Border>
-
-            <!-- Data rows -->
-            <ItemsControl ItemsSource="{Binding TotalTableRows}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:TotalTableRowViewModel}">
-                        <local:TotalTableRow/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-
-        </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </ScrollViewer>
     </Border>
 </UserControl>

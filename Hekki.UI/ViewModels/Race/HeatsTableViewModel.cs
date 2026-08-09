@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs.Race;
-using Hekki.UI.Messages.Race;
+using Hekki.Application.Messages.Race;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels.Race
@@ -34,8 +34,7 @@ namespace Hekki.UI.ViewModels.Race
         {
             if (heat == null || _raceId == null) return;
             var results = await _raceService.AssignGroupsAndNumbersAsync(_raceId.Value, heat.HeatNumber);
-            await UpdateGroupsAsync(results.ToList());
-            Publish(new GroupsAssignedMessage(_raceId.Value, heat.HeatId));
+            await UpdateGroupsAsync(results.ToList()); //TODO
         });
 
         private Task UpdateGroupsAsync(List<GroupAssignmentResultDto> results) => ExecuteSafeAsync(async () =>

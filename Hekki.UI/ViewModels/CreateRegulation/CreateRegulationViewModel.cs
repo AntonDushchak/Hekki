@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs.Regulation;
-using Hekki.UI.Messages.App;
+using Hekki.Application.Messages.App;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;

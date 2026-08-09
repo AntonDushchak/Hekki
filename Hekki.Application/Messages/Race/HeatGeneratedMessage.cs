@@ -1,4 +1,4 @@
-﻿namespace Hekki.UI.Messages.Race
+﻿namespace Hekki.Application.Messages.Race
 {
     public record HeatGeneratedMessage(int RaceId, int HeatId);
 

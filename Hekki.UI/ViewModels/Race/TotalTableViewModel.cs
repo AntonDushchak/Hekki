@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.Messaging;
+using Hekki.Application.Messages.Race;
 using Hekki.UI.Mappers;
-using Hekki.UI.Messages.Race;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels.Race
@@ -8,8 +8,7 @@ namespace Hekki.UI.ViewModels.Race
     public partial class TotalTableViewModel : ViewModelBase,
         IRecipient<ParticipantAddedMessage>,
         IRecipient<ParticipantRemovedMessage>,
-        IRecipient<GroupsAssignedMessage>,
-        IRecipient<HeatGeneratedMessage>
+        IRecipient<GroupsAssignedMessage>
     {
         private int? _raceId;
         private readonly List<RaceParticipantViewModel> _participants = [];
@@ -55,7 +54,39 @@ namespace Hekki.UI.ViewModels.Race
         public void Receive(GroupsAssignedMessage message)
         {
             if (message.RaceId != _raceId) return;
-            RebuildStandings();
+            RebuildStandingsKart();
+        }
+
+        private void RebuildStandingsHeat(int heatId)
+        {
+            //TotalTableRows[0].Cells[0]..Clear();
+            //foreach (var participant in _participants)
+            //    TotalTableRows.Add(BuildRow(participant));
+        }
+        private void RebuildStandingsKart()
+        {
+            var column = Columns
+                .OfType<ParticipantColumn>()
+                .FirstOrDefault();
+
+            if (column is null)
+                return;
+
+            UpdateColumn(column);
+        }
+
+        private void UpdateColumn(ColumnViewModel column)
+        {
+            var columnIndex = Columns.IndexOf(column);
+
+            if (columnIndex < 0)
+                return;
+
+            foreach (var row in TotalTableRows)
+            {
+                var context = new ParticipantRaceContext(row.Participant, Heats);
+                column.UpdateCell(row.Cells[columnIndex], context);
+            }
         }
 
         private void RebuildStandings()
@@ -69,90 +100,39 @@ namespace Hekki.UI.ViewModels.Race
         {
             Columns.Clear();
 
-            for (int i = 0; i < Heats.Count; i++)
-            {
-                var heat = Heats[i];
-                if (heat.ShowTime)
-                    Columns.Add(new ColumnViewModel
-                    {
-                        Type = ColumnType.HeatTime,
-                        HeaderResourceKey = "m_Time",
-                        Heat = heat
-                    });
+            Columns.Add(new LeagueColumn());
+            //Columns.Add(new TeamColumn());
+            //Columns.Add(new PhotoColumn());
+            Columns.Add(new ParticipantColumn());
 
+            foreach (var heat in Heats)
+            {
                 if (heat.ShowScore)
-                    Columns.Add(new ColumnViewModel
-                    {
-                        Type = ColumnType.HeatScore,
-                        HeaderResourceKey = "m_Score",
-                        Heat = heat
-                    });
+                    Columns.Add(new HeatScoreColumn(heat));
+
+                if (heat.ShowTime)
+                    Columns.Add(new HeatTimeColumn(heat));            
             }
 
-            var anyTime = Heats.Any(h => h.ShowTime);
-            var anyScore = Heats.Any(h => h.ShowScore);
+            if (Heats.Any(h => h.ShowTime))
+                Columns.Add(new TotalTimeColumn());
 
-            if (anyTime)
-                Columns.Add(new ColumnViewModel { Type = ColumnType.TotalTime, HeaderResourceKey = "m_TotalTime" });
-            if (anyScore)
-                Columns.Add(new ColumnViewModel { Type = ColumnType.TotalScore, HeaderResourceKey = "m_TotalScore" });
+            if (Heats.Any(h => h.ShowScore))
+                Columns.Add(new TotalScoreColumn());
         }
 
         private TotalTableRowViewModel BuildRow(RaceParticipantViewModel participant)
         {
             var row = new TotalTableRowViewModel(participant);
-            var karts = new List<int>();
+
+            var context = new ParticipantRaceContext(participant, Heats);
 
             foreach (var column in Columns)
             {
-                if (column.Heat != null)
-                {
-                    var heat = column.Heat;
-                    var rowInHeat = heat.Groups.SelectMany(g => g.Rows)
-                        .FirstOrDefault(r => r.Entry.ParticipantId == participant.PilotId);
-
-                    var result = rowInHeat?.Result;
-                    if (rowInHeat?.Entry.KartNumber is int kart)
-                        karts.Add(kart);
-
-                    row.Cells.Add(new CellViewModel(column, result));
-                }
-                else
-                {
-                    long? totalTime = null;
-                    int? totalScore = null;
-
-                    foreach (var h in Heats)
-                    {
-                        var r = h.Groups.SelectMany(g => g.Rows)
-                            .FirstOrDefault(rw => rw.Entry.ParticipantId == participant.PilotId)?.Result;
-                        if (r == null) continue;
-                        if (r.TotalTimeMs.HasValue)
-                            totalTime = (totalTime ?? 0) + r.TotalTimeMs.Value;
-                        totalScore = (totalScore ?? 0) + r.TotalScore;
-                    }
-
-                    HeatResultViewModel? aggregated = null;
-                    if (column.Type == ColumnType.TotalTime)
-                    {
-                        aggregated = new HeatResultViewModel { TotalTimeMs = totalTime };
-                    }
-                    else if (column.Type == ColumnType.TotalScore)
-                    {
-                        aggregated = new HeatResultViewModel { Score = totalScore };
-                    }
-
-                    row.Cells.Add(new CellViewModel(column, aggregated));
-                }
+                row.Cells.Add(column.CreateCell(context));
             }
 
-            row.KartNumbersDisplayText = string.Join(", ", karts);
             return row;
-        }
-
-        public void Receive(HeatGeneratedMessage message)
-        {
-            throw new NotImplementedException();
         }
     }
 }

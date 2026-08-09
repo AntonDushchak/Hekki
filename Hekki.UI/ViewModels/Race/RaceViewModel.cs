@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.Abstrations;
 using Hekki.UI.Mappers;
+using Hekki.Application.Messages.Race;
 using Hekki.UI.Services;
 using Hekki.UI.ViewModels.Race;
 
@@ -118,7 +119,6 @@ namespace Hekki.UI.ViewModels
             if (RaceId == null) return;
             for (int i = 1; i <= 10; i++)
                 await _raceService.AddParticipantAsync(RaceId.Value, i);
-            await LoadRaceAsync();
         });
 
         private void OpenRaceSettings()

@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Windows;
 using System.Windows.Threading;
-using Hekki.UI.Messages.App;
+using Hekki.Application.Messages.App;
 
 namespace Hekki.UI
 {
