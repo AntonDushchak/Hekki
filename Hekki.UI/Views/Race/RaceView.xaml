@@ -81,9 +81,20 @@
                     <ScrollViewer VerticalScrollBarVisibility="Auto"
                                   HorizontalScrollBarVisibility="Auto">
                         <ItemsControl ItemsSource="{Binding HeatsTable.Heats}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <components:HeatColumn Margin="0,0,0,15"/>
+                                    <components:AutoFitViewbox MinScale="0.7"
+                                                               AvailableHeight="{Binding RelativeSource={RelativeSource AncestorType={x:Type ScrollViewer}}, Path=ViewportHeight}"
+                                                               HorizontalAlignment="Left"
+                                                               VerticalAlignment="Top"
+                                                               Margin="0,0,15,0">
+                                        <components:HeatColumn/>
+                                    </components:AutoFitViewbox>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
