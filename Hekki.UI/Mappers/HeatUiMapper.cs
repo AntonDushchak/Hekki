@@ -29,6 +29,17 @@ namespace Hekki.UI.Mappers
             return heatViewModel;
         }
 
+        public static HeatEntryViewModel CreateEntry(HeatEntryDto dto)
+        {
+            return new HeatEntryViewModel
+            {
+                ParticipantId = dto.ParticipantId,
+                PilotName = dto.PilotName,
+                KartNumber = dto.KartNumber,
+                GridPosition = dto.GridPosition
+            };
+        }
+
         private static HeatGroupViewModel MapToHeatGroupViewModel(HeatGroupDto groupDto, HeatViewModel heatViewModel)
         {
             var groupVm = new HeatGroupViewModel(groupDto.Id, heatViewModel)

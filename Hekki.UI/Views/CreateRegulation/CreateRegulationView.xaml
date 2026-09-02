@@ -172,82 +172,84 @@
                 Grid.Column="0" Grid.Row="2"
                 Visibility="{Binding SelectedHeat, Converter={StaticResource NullToVisibilityConverter}}"
                 Background="{DynamicResource Brush.SurfaceLow}">
-            <StackPanel>
-                <Grid Margin="0,0,0,20">
-                    <TextBlock Text="{DynamicResource m_HeatDetails}" FontSize="18" FontWeight="SemiBold"/>
-                    <TextBlock Text="{Binding SelectedHeat.Name}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                </Grid>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
+                    <Grid Margin="0,0,0,20">
+                        <TextBlock Text="{DynamicResource m_HeatDetails}" FontSize="18" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding SelectedHeat.Name}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="40" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="{DynamicResource m_Name}" Margin="0,0,0,5"/>
-                        <TextBox MinHeight="30" Text="{Binding SelectedHeat.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{DynamicResource m_Name}" Margin="0,0,0,5"/>
+                            <TextBox MinHeight="30" Text="{Binding SelectedHeat.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                        <TextBlock Text="{DynamicResource m_GroupsCount}" Margin="0,0,0,5"/>
-                        <TextBox MinHeight="30" Text="{Binding SelectedHeat.NumberOfGroups, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                            <TextBlock Text="{DynamicResource m_GroupsCount}" Margin="0,0,0,5"/>
+                            <TextBox MinHeight="30" Text="{Binding SelectedHeat.NumberOfGroups, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                        <TextBlock Text="{DynamicResource m_GroupCapacity}" Margin="0,0,0,5"/>
-                        <TextBox MinHeight="30" Text="{Binding SelectedHeat.GroupCapacity, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                            <TextBlock Text="{DynamicResource m_GroupCapacity}" Margin="0,0,0,5"/>
+                            <TextBox MinHeight="30" Text="{Binding SelectedHeat.GroupCapacity, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                        <TextBlock Text="Scoring Type" Margin="0,0,0,5"/>
-                        <StackPanel Orientation="Vertical" Margin="0,0,0,15">
-                            <CheckBox Content="Points" 
-                                      IsChecked="{Binding SelectedHeat.UsePoints, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      Margin="0,0,0,8"
-                                      FontSize="14"/>
-                            <CheckBox Content="Time" 
-                                      IsChecked="{Binding SelectedHeat.UseTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      FontSize="14"/>
+                            <TextBlock Text="Scoring Type" Margin="0,0,0,5"/>
+                            <StackPanel Orientation="Vertical" Margin="0,0,0,15">
+                                <CheckBox Content="Points" 
+                                          IsChecked="{Binding SelectedHeat.UsePoints, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          Margin="0,0,0,8"
+                                          FontSize="14"/>
+                                <CheckBox Content="Time" 
+                                          IsChecked="{Binding SelectedHeat.UseTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          FontSize="14"/>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
 
-                    <StackPanel Grid.Column="2">
+                        <StackPanel Grid.Column="2">
 
-                        <controls:MethodSelectorControl 
-                                Label="{DynamicResource m_ShuffleSystem}"
-                                SelectedMethodId="{Binding SelectedShuffleMethodId, Mode=TwoWay}"
-                                AvailableMethods="{Binding AvailableShuffleMethods}"
-                                ShowSettingsCommand="{Binding ShowSettingsCommand}"
-                                SettingsType="{x:Static vm:MethodSettingsType.Shuffle}"
-                                HasSettings="{Binding HasShuffleSettings}"
-                                IsActive="{Binding IsShuffleActive}"/>
+                            <controls:MethodSelectorControl 
+                                    Label="{DynamicResource m_ShuffleSystem}"
+                                    SelectedMethodId="{Binding SelectedShuffleMethodId, Mode=TwoWay}"
+                                    AvailableMethods="{Binding AvailableShuffleMethods}"
+                                    ShowSettingsCommand="{Binding ShowSettingsCommand}"
+                                    SettingsType="{x:Static vm:MethodSettingsType.Shuffle}"
+                                    HasSettings="{Binding HasShuffleSettings}"
+                                    IsActive="{Binding IsShuffleActive}"/>
 
-                        <controls:MethodSelectorControl 
-                                Label="{DynamicResource m_GroupAssignment}"
-                                SelectedMethodId="{Binding SelectedGroupMethodId, Mode=TwoWay}"
-                                AvailableMethods="{Binding AvailableGroupMethods}"
-                                ShowSettingsCommand="{Binding ShowSettingsCommand}"
-                                SettingsType="{x:Static vm:MethodSettingsType.Group}"
-                                HasSettings="{Binding HasGroupSettings}"
-                                IsActive="{Binding IsGroupActive}"/>
+                            <controls:MethodSelectorControl 
+                                    Label="{DynamicResource m_GroupAssignment}"
+                                    SelectedMethodId="{Binding SelectedGroupMethodId, Mode=TwoWay}"
+                                    AvailableMethods="{Binding AvailableGroupMethods}"
+                                    ShowSettingsCommand="{Binding ShowSettingsCommand}"
+                                    SettingsType="{x:Static vm:MethodSettingsType.Group}"
+                                    HasSettings="{Binding HasGroupSettings}"
+                                    IsActive="{Binding IsGroupActive}"/>
 
-                        <controls:MethodSelectorControl 
-                                Label="{DynamicResource m_KartAssignment}"
-                                SelectedMethodId="{Binding SelectedKartMethodId, Mode=TwoWay}"
-                                AvailableMethods="{Binding AvailableKartMethods}"
-                                ShowSettingsCommand="{Binding ShowSettingsCommand}"
-                                SettingsType="{x:Static vm:MethodSettingsType.Kart}"
-                                HasSettings="{Binding HasKartSettings}"
-                                IsActive="{Binding IsKartActive}"/>
+                            <controls:MethodSelectorControl 
+                                    Label="{DynamicResource m_KartAssignment}"
+                                    SelectedMethodId="{Binding SelectedKartMethodId, Mode=TwoWay}"
+                                    AvailableMethods="{Binding AvailableKartMethods}"
+                                    ShowSettingsCommand="{Binding ShowSettingsCommand}"
+                                    SettingsType="{x:Static vm:MethodSettingsType.Kart}"
+                                    HasSettings="{Binding HasKartSettings}"
+                                    IsActive="{Binding IsKartActive}"/>
 
-                        <controls:MethodSelectorControl 
-                                Label="{DynamicResource m_ScoringSystem}"
-                                SelectedMethodId="{Binding SelectedScoreMethodId, Mode=TwoWay}"
-                                AvailableMethods="{Binding AvailableScoreMethods}"
-                                ShowSettingsCommand="{Binding ShowSettingsCommand}"
-                                SettingsType="{x:Static vm:MethodSettingsType.Score}"
-                                HasSettings="{Binding HasScoreSettings}"
-                                IsActive="{Binding IsScoreActive}"/>
+                            <controls:MethodSelectorControl 
+                                    Label="{DynamicResource m_ScoringSystem}"
+                                    SelectedMethodId="{Binding SelectedScoreMethodId, Mode=TwoWay}"
+                                    AvailableMethods="{Binding AvailableScoreMethods}"
+                                    ShowSettingsCommand="{Binding ShowSettingsCommand}"
+                                    SettingsType="{x:Static vm:MethodSettingsType.Score}"
+                                    HasSettings="{Binding HasScoreSettings}"
+                                    IsActive="{Binding IsScoreActive}"/>
 
-                    </StackPanel>
-                </Grid>
-            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
         </Border>
 
         <Border Grid.Row="2"
