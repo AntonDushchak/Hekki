@@ -1,4 +1,5 @@
 ﻿using Hekki.Application.DTOs.Race;
+using Hekki.Application.Models;
 
 namespace Hekki.Application.Methods
 {
@@ -9,19 +10,18 @@ namespace Hekki.Application.Methods
         public string Description => "Randomly assigns participants to groups.";
 
 
-        public List<List<ParticipantAssignmentDto>> AssignGroups(List<RaceParticipantDto> participants, int groupSize, int groupCount)
+        public List<List<ParticipantAssignment>> AssignGroups(List<RaceParticipantDto> participants, int groupSize, int groupCount)
         {
-            var groups = new List<List<ParticipantAssignmentDto>>();
-            int countGroups = (int)Math.Ceiling((double)participants.Count / groupSize);
+            var groups = new List<List<ParticipantAssignment>>();
 
             for (int i = 0; i < groupCount; i++)
-                groups.Add(new List<ParticipantAssignmentDto>());
+                groups.Add(new List<ParticipantAssignment>());
 
             for (int i = 0, j = 0; i < participants.Count; i++, j++)
             {
                 if (j == groupCount)
                     j = 0;
-                groups[j].Add(new ParticipantAssignmentDto() 
+                groups[j].Add(new ParticipantAssignment()
                 { 
                     ParticipantId = participants[i].ParticipantId,
                     GridPosition = i,
@@ -37,7 +37,7 @@ namespace Hekki.Application.Methods
         public string Title => "Card Group Assignment";
         public string Description => "Assigns participants to groups based on cards.";
 
-        public List<List<ParticipantAssignmentDto>> AssignGroups(List<RaceParticipantDto> participants, int groupSize, int groupCount)
+        public List<List<ParticipantAssignment>> AssignGroups(List<RaceParticipantDto> participants, int groupSize, int groupCount)
         {
             throw new NotImplementedException();
         }
@@ -49,13 +49,12 @@ namespace Hekki.Application.Methods
         public string Title => "List Group Assignment";
         public string Description => "Assigns participants to groups based on a list.";
 
-        public List<List<ParticipantAssignmentDto>> AssignGroups(List<RaceParticipantDto> participants, int groupSize, int groupCount)
+        public List<List<ParticipantAssignment>> AssignGroups(List<RaceParticipantDto> participants, int groupSize, int groupCount)
         {
-            var groups = new List<List<ParticipantAssignmentDto>>();
-            int countGroups = (int)Math.Ceiling((double)participants.Count / groupSize);
+            var groups = new List<List<ParticipantAssignment>>();
 
             for (int i = 0; i < groupCount; i++)
-                groups.Add(new List<ParticipantAssignmentDto>());
+                groups.Add(new List<ParticipantAssignment>());
 
             int gridPosition = 1;
             for (int i = 0, j = 0; i < participants.Count; i++, j++)
@@ -65,7 +64,7 @@ namespace Hekki.Application.Methods
                     gridPosition++; 
                     j = 0;
                 }
-                groups[j].Add(new ParticipantAssignmentDto()
+                groups[j].Add(new ParticipantAssignment()
                 {
                     ParticipantId = participants[i].ParticipantId,
                     GridPosition = gridPosition,
@@ -83,7 +82,7 @@ namespace Hekki.Application.Methods
         private readonly int _toDown;
         private readonly int _toUp;
 
-        public List<List<ParticipantAssignmentDto>> AssignGroups(List<RaceParticipantDto> participants, int groupSize, int groupCount)
+        public List<List<ParticipantAssignment>> AssignGroups(List<RaceParticipantDto> participants, int groupSize, int groupCount)
         {
             throw new NotImplementedException();
         }

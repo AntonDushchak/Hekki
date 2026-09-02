@@ -9,6 +9,8 @@ namespace Hekki.UI.Mappers
         {
             heatEntryView.KartNumber = entry.KartNumber;
             heatEntryView.GridPosition = entry.GridPosition;
+            heatEntryView.PilotName = entry.PilotName;
+            heatEntryView.ParticipantId = entry.ParticipantId;
         }
 
         public static HeatViewModel MapToHeatViewModel(HeatDto heat)

@@ -80,6 +80,8 @@ namespace Hekki.UI.ViewModels.Race
                     {
                         Mappers.HeatUiMapper.ApplyEntryAssignmentTo(dto, row.Entry);
                     }
+
+                 
                 }
                 else
                 {

@@ -72,7 +72,7 @@ namespace Hekki.UI.ViewModels
             cell.SetValue(new ParticipantCellValue
             {
                 Name = context.Participant.Name,
-                KartNumbers = context.GetKartNumbers().ToString()
+                KartNumbers = string.Join(", ", context.GetKartNumbers())
             });
         }
     }
@@ -240,7 +240,7 @@ namespace Hekki.UI.ViewModels
                 h => h.Groups
                     .SelectMany(g => g.Rows)
                     .FirstOrDefault(r =>
-                        r.Entry.ParticipantId == participant.PilotId)
+                        r.Entry.ParticipantId == participant.Id)
                     ?.Result);
 
             Entries = heats.ToDictionary(
@@ -248,7 +248,7 @@ namespace Hekki.UI.ViewModels
                 h => h.Groups
                     .SelectMany(g => g.Rows)
                     .FirstOrDefault(r =>
-                        r.Entry.ParticipantId == participant.PilotId)
+                        r.Entry.ParticipantId == participant.Id)
                     ?.Entry);
         }
 

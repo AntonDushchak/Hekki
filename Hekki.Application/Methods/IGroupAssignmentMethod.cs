@@ -1,5 +1,6 @@
 ﻿using Hekki.Application.DTOs.Pilot;
 using Hekki.Application.DTOs.Race;
+using Hekki.Application.Models;
 using System.Text.Json.Serialization;
 
 namespace Hekki.Application.Methods
@@ -13,7 +14,7 @@ namespace Hekki.Application.Methods
         string Id { get; }
         string Title { get; }
         string Description { get; }
-        List<List<ParticipantAssignmentDto>> AssignGroups(List<RaceParticipantDto> participants, int groupSize, int groupCount);
+        List<List<ParticipantAssignment>> AssignGroups(List<RaceParticipantDto> participants, int groupSize, int groupCount);
     }
 
     public interface IGroupAssignmentCatalog

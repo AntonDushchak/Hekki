@@ -13,7 +13,7 @@ namespace Hekki.UI.ViewModels.Race
         private int? _raceId;
         private readonly List<RaceParticipantViewModel> _participants = [];
 
-        public ObservableCollection<HeatViewModel> Heats { get; } = [];
+        public ObservableCollection<HeatViewModel> Heats { get; } = []; //TODO: зачем тут ваще хиты?
         public ObservableCollection<TotalTableRowViewModel> TotalTableRows { get; } = [];
         public ObservableCollection<ColumnViewModel> Columns { get; } = [];
 

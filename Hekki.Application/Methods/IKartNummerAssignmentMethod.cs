@@ -1,4 +1,4 @@
-﻿using Hekki.Application.DTOs.Race;
+﻿using Hekki.Application.Models;
 using System.Text.Json.Serialization;
 
 namespace Hekki.Application.Methods
@@ -10,7 +10,10 @@ namespace Hekki.Application.Methods
         string Id { get; }
         string Title { get; }
         string Description { get; }
-        List<ParticipantAssignmentDto> AssignKartNummer(Dictionary<ParticipantAssignmentDto, List<int>> participantKartOptions, List<int> avaibleKarts);
+        void AssignKartNummer(
+            IReadOnlyList<ParticipantAssignment> assignments,
+            IReadOnlyDictionary<int, IReadOnlyList<int>> previousKartNumbers,
+            IReadOnlyList<int> availableKarts);
     }
 
     public interface IKartNummerAssignmentCatalog

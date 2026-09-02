@@ -1,4 +1,4 @@
-﻿using Hekki.Application.DTOs.Race;
+﻿using Hekki.Application.Models;
 
 namespace Hekki.Application.Methods
 {
@@ -8,17 +8,15 @@ namespace Hekki.Application.Methods
         public string Title => "Random Kart Assignment";
         public string Description => "Randomly assigns kart numbers to participants.";
 
-        public List<ParticipantAssignmentDto> AssignKartNummer(Dictionary<ParticipantAssignmentDto, List<int>> participantKartOptions, List<int> avaibleKarts)
+        public void AssignKartNummer(
+            IReadOnlyList<ParticipantAssignment> assignments,
+            IReadOnlyDictionary<int, IReadOnlyList<int>> previousKartNumbers,
+            IReadOnlyList<int> availableKarts)
         {
-            int i = 0;
-            var dtoList = new List<ParticipantAssignmentDto>();
-            foreach (var item in participantKartOptions)
+            for (var i = 0; i < assignments.Count; i++)
             {
-                item.Value.Add(avaibleKarts[i]);
-                i++;
-                dtoList.Add(item.Key with { KartNumber = item.Value.Last() });
+                assignments[i].KartNumber = availableKarts[i];
             }
-            return dtoList;
         }
     }
 
@@ -28,7 +26,10 @@ namespace Hekki.Application.Methods
         public string Title => "Random No Repeat Kart Assignment";
         public string Description => "Randomly assigns kart numbers to participants without repetition.";
 
-        public List<ParticipantAssignmentDto> AssignKartNummer(Dictionary<ParticipantAssignmentDto, List<int>> participantKartOptions, List<int> avaibleKarts)
+        public void AssignKartNummer(
+            IReadOnlyList<ParticipantAssignment> assignments,
+            IReadOnlyDictionary<int, IReadOnlyList<int>> previousKartNumbers,
+            IReadOnlyList<int> availableKarts)
         {
             throw new NotImplementedException();
         }
