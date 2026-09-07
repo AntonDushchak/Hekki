@@ -5,7 +5,7 @@ namespace Hekki.UI.ViewModels
 {
     public partial class RaceParticipantViewModel : ObservableObject
     {
-        [ObservableProperty] private int _id;
+        [ObservableProperty] private Guid _id;
         [ObservableProperty] private int _raceId;
         [ObservableProperty] private int _pilotId;
         [ObservableProperty] private string _name = string.Empty;

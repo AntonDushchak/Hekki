@@ -4,7 +4,7 @@
     {
         public int GroupId { get; set; }
         public HeatGroupEntity Group { get; set; } = null!;
-        public int ParticipantId { get; set; }
+        public Guid ParticipantId { get; set; }
         public RaceParticipantEntity Participant { get; set; } = null!;
         public int? FinishPosition { get; set; }
         public long? TotalTimeMs { get; set; }

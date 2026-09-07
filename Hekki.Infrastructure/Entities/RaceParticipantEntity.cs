@@ -2,7 +2,7 @@
 {
     public class RaceParticipantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public int RaceId { get; set; }
         public RaceEntity Race { get; set; } = null!;
         public int PilotId { get; set; }

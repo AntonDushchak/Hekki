@@ -4,7 +4,7 @@ namespace Hekki.UI.ViewModels
 {
     public partial class HeatResultViewModel : ObservableObject
     {
-        [ObservableProperty] private int _participantId;
+        [ObservableProperty] private Guid _participantId;
         [ObservableProperty] private int? _finishPosition;
         [ObservableProperty] private long? _totalTimeMs;
         [ObservableProperty] private long? _bestLapMs;

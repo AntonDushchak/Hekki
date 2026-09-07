@@ -10,7 +10,7 @@ namespace Hekki.Application.Methods
 
         public void AssignKartNummer(
             IReadOnlyList<ParticipantAssignment> assignments,
-            IReadOnlyDictionary<int, IReadOnlyList<int>> previousKartNumbers,
+            IReadOnlyDictionary<Guid, IReadOnlyList<int>> previousKartNumbers,
             IReadOnlyList<int> availableKarts)
         {
             for (var i = 0; i < assignments.Count; i++)
@@ -28,7 +28,7 @@ namespace Hekki.Application.Methods
 
         public void AssignKartNummer(
             IReadOnlyList<ParticipantAssignment> assignments,
-            IReadOnlyDictionary<int, IReadOnlyList<int>> previousKartNumbers,
+            IReadOnlyDictionary<Guid, IReadOnlyList<int>> previousKartNumbers,
             IReadOnlyList<int> availableKarts)
         {
             throw new NotImplementedException();

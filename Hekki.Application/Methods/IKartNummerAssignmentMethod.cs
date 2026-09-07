@@ -12,7 +12,7 @@ namespace Hekki.Application.Methods
         string Description { get; }
         void AssignKartNummer(
             IReadOnlyList<ParticipantAssignment> assignments,
-            IReadOnlyDictionary<int, IReadOnlyList<int>> previousKartNumbers,
+            IReadOnlyDictionary<Guid, IReadOnlyList<int>> previousKartNumbers,
             IReadOnlyList<int> availableKarts);
     }
 

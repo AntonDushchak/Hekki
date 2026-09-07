@@ -1,26 +1,28 @@
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Hekki.UI.ViewModels
 {
-    public class CellViewModel
+    public partial class CellViewModel : ObservableObject
     {
         public ColumnViewModel Column { get; }
 
         public bool IsEditable { get; init; }
-        public ICellValue Value { get; private set; }
+        [ObservableProperty]
+        private ICellValue _value;
 
         public IRelayCommand? SaveCommand { get; init; }
 
         public CellViewModel(ColumnViewModel column, ICellValue value, bool isEditable = false)
         {
             Column = column ?? throw new ArgumentNullException(nameof(column));
-            Value = value ?? throw new ArgumentNullException(nameof(value));
+            _value = value ?? throw new ArgumentNullException(nameof(value));
             IsEditable = isEditable;
         }
 
         public void SetValue(ICellValue value)
         {
-            Value = value;
+            Value = value ?? throw new ArgumentNullException(nameof(value));
         }
     }
 }

@@ -2,7 +2,7 @@ namespace Hekki.Application.DTOs.Race
 {
     public record RaceParticipantDto
     {
-        public int ParticipantId { get; init; }
+        public Guid ParticipantId { get; init; }
         public int PilotId { get; init; }
         public string Name { get; init; } = string.Empty;
         public string? PhotoPath { get; init; }

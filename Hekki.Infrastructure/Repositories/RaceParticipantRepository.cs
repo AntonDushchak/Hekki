@@ -17,7 +17,7 @@ namespace Hekki.Infrastructure.Repositories
             _mapper = mapper;
         }
 
-        public async Task<RaceParticipantDto?> GetByIdAsync(int participantId, CancellationToken ct = default)
+        public async Task<RaceParticipantDto?> GetByIdAsync(Guid participantId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
@@ -45,7 +45,7 @@ namespace Hekki.Infrastructure.Repositories
             return participants.Select(p => _mapper.Map<RaceParticipantDto>(p)).ToList();
         }
 
-        public async Task<int> AddAsync(RaceParticipantDto participant, int raceId, CancellationToken ct = default)
+        public async Task<Guid> AddAsync(RaceParticipantDto participant, int raceId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
@@ -72,7 +72,7 @@ namespace Hekki.Infrastructure.Repositories
             await db.SaveChangesAsync(ct);
         }
 
-        public async Task DeleteAsync(int participantId, CancellationToken ct = default)
+        public async Task DeleteAsync(Guid participantId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
@@ -84,7 +84,7 @@ namespace Hekki.Infrastructure.Repositories
             await db.SaveChangesAsync(ct);
         }
 
-        public async Task<bool> ExistsAsync(int participantId, CancellationToken ct = default)
+        public async Task<bool> ExistsAsync(Guid participantId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 

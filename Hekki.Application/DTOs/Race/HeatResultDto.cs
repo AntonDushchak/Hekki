@@ -3,7 +3,7 @@ namespace Hekki.Application.DTOs.Race
     public record HeatResultDto
     {
         public int GroupId { get; init; }
-        public int ParticipantId { get; init; }
+        public Guid ParticipantId { get; init; }
         public int? FinishPosition { get; init; }
         public long? TotalTimeMs { get; init; }
         public long? BestLapMs { get; init; }

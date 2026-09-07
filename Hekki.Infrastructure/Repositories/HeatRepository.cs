@@ -101,7 +101,7 @@ namespace Hekki.Infrastructure.Repositories
             await db.SaveChangesAsync(ct);
         }
 
-        public async Task UpdateEntryAsync(int groupId, int participantId, HeatEntryDto entry, CancellationToken ct = default)
+        public async Task UpdateEntryAsync(int groupId, Guid participantId, HeatEntryDto entry, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
@@ -160,7 +160,7 @@ namespace Hekki.Infrastructure.Repositories
             return await db.Heats.AnyAsync(h => h.Id == heatId, ct);
         }
 
-        public async Task UpdateResultAsync(int groupId, int participantId, HeatResultDto result, CancellationToken ct = default)
+        public async Task UpdateResultAsync(int groupId, Guid participantId, HeatResultDto result, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 

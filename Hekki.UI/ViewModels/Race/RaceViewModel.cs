@@ -2,7 +2,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.Abstrations;
 using Hekki.UI.Mappers;
-using Hekki.Application.Messages.Race;
 using Hekki.UI.Services;
 using Hekki.UI.ViewModels.Race;
 
@@ -20,6 +19,7 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty] private string _location = string.Empty;
         [ObservableProperty] private DateTime _raceDate = DateTime.Today;
         [ObservableProperty] private bool _showFirstSettings;
+        private List<HeatViewModel> _heatList;
 
         public bool IsNewRace => RaceId == null;
 
@@ -104,13 +104,13 @@ namespace Hekki.UI.ViewModels
                 .Select(PilotUiMapper.MapToParticipantViewModel)
                 .ToList();
 
-            var heatVms = raceDto.Heats
+            _heatList = raceDto.Heats
                 .Select(HeatUiMapper.MapToHeatViewModel)
                 .ToList();
 
             Participants.Initialize(RaceId!.Value, participantVms);
-            HeatsTable.Initialize(RaceId!.Value, heatVms);
-            TotalTable.Initialize(RaceId!.Value, heatVms, participantVms);
+            HeatsTable.Initialize(RaceId!.Value, _heatList);
+            TotalTable.Initialize(RaceId!.Value, _heatList, participantVms);
         });
 
         [RelayCommand]

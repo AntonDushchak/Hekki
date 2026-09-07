@@ -4,11 +4,11 @@ namespace Hekki.Application.Abstrations
 {
     public interface IRaceParticipantRepository
     {
-        Task<RaceParticipantDto?> GetByIdAsync(int id, CancellationToken ct = default);
+        Task<RaceParticipantDto?> GetByIdAsync(Guid id, CancellationToken ct = default);
         Task<IReadOnlyList<RaceParticipantDto>> GetByRaceIdAsync(int raceId, CancellationToken ct = default);
-        Task<int> AddAsync(RaceParticipantDto participant, int raceId, CancellationToken ct = default);
+        Task<Guid> AddAsync(RaceParticipantDto participant, int raceId, CancellationToken ct = default);
         Task UpdateAsync(RaceParticipantDto participant, CancellationToken ct = default);
-        Task DeleteAsync(int id, CancellationToken ct = default);
-        Task<bool> ExistsAsync(int id, CancellationToken ct = default);
+        Task DeleteAsync(Guid id, CancellationToken ct = default);
+        Task<bool> ExistsAsync(Guid id, CancellationToken ct = default);
     }
 }

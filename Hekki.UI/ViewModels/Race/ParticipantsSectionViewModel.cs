@@ -117,7 +117,7 @@ namespace Hekki.UI.ViewModels.Race
             await _raceService.RemoveParticipantAsync(participant.Id);
             Participants.Remove(participant);
 
-            Publish(new ParticipantRemovedMessage(_raceId.Value, participant.PilotId));
+            Publish(new ParticipantRemovedMessage(_raceId.Value, participant.Id));
         });
     }
 }

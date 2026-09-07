@@ -3,12 +3,14 @@ using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs.Race;
 using Hekki.Application.Messages.Race;
+using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels.Race
 {
     public partial class HeatsTableViewModel : ViewModelBase,
-        IRecipient<HeatGeneratedMessage>
+        IRecipient<HeatGeneratedMessage>, 
+        IRecipient<GroupsAssignedMessage>
     {
         private readonly IRaceService _raceService;
         private int? _raceId;
@@ -41,55 +43,8 @@ namespace Hekki.UI.ViewModels.Race
         private Task AssignGroupsAndNumbersAsync(HeatViewModel heat) => ExecuteSafeAsync(async () =>
         {
             if (heat == null || _raceId == null) return;
-            var results = await _raceService.AssignGroupsAndNumbersAsync(_raceId.Value, heat.HeatNumber);
-            UpdateGroupsAsync(results.ToList());
+            await _raceService.AssignGroupsAndNumbersAsync(_raceId.Value, heat.HeatNumber);
         });
-
-        private void UpdateGroupsAsync(List<GroupAssignmentResultDto> results)
-        {
-            if (results == null || results.Count == 0) return;
-
-            foreach (var groupResult in results)
-            {
-                var groupVm = Heats
-                    .SelectMany(h => h.Groups)
-                    .FirstOrDefault(g => g.GroupId == groupResult.Group.Id);
-
-                if (groupVm is null)
-                    continue;
-
-                UpdateGroup(groupVm, groupResult.UpdatedEntries);
-            }
-        }
-
-        private void UpdateGroup(HeatGroupViewModel groupVm, IReadOnlyList<HeatEntryDto> entries)
-        {
-            for (var i = 0; i < groupVm.Rows.Count; i++)
-            {
-                var row = groupVm.Rows[i];
-
-                if (i < entries.Count)
-                {
-                    var dto = entries[i];
-
-                    if (row.Entry is null)
-                    {
-                        row.Entry = Mappers.HeatUiMapper.CreateEntry(dto);
-                    }
-                    else
-                    {
-                        Mappers.HeatUiMapper.ApplyEntryAssignmentTo(dto, row.Entry);
-                    }
-
-                 
-                }
-                else
-                {
-                    row.Entry = null;
-                    row.Result = null;
-                }
-            }
-        }
 
         private void CreateRows(HeatGroupViewModel heatGroup)
         {
@@ -115,6 +70,14 @@ namespace Hekki.UI.ViewModels.Race
         public void Receive(HeatGeneratedMessage message)
         {
             throw new NotImplementedException();
+        }
+
+        public void Receive(GroupsAssignedMessage message)
+        {
+            if (message.RaceId != _raceId)
+                return;
+
+            HeatAssignmentApplier.Apply(Heats, message.Result);
         }
     }
 }

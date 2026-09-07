@@ -1,6 +1,8 @@
 using CommunityToolkit.Mvvm.Messaging;
+using Hekki.Application.DTOs.Race;
 using Hekki.Application.Messages.Race;
 using Hekki.UI.Mappers;
+using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels.Race
@@ -46,14 +48,16 @@ namespace Hekki.UI.ViewModels.Race
         {
             if (message.RaceId != _raceId) return;
 
-            _participants.RemoveAll(p => p.PilotId == message.ParticipantId);
-            var row = TotalTableRows.FirstOrDefault(r => r.Participant.PilotId == message.ParticipantId);
+            _participants.RemoveAll(p => p.Id == message.ParticipantId);
+            var row = TotalTableRows.FirstOrDefault(r => r.Participant.Id == message.ParticipantId);
             if (row != null) TotalTableRows.Remove(row);
         }
 
         public void Receive(GroupsAssignedMessage message)
         {
             if (message.RaceId != _raceId) return;
+
+            HeatAssignmentApplier.Apply(Heats, message.Result);
             RebuildStandingsKart();
         }
 

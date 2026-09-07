@@ -235,21 +235,21 @@ namespace Hekki.UI.ViewModels
         {
             Participant = participant;
 
-            Results = heats.ToDictionary(
-                h => h,
-                h => h.Groups
-                    .SelectMany(g => g.Rows)
-                    .FirstOrDefault(r =>
-                        r.Entry.ParticipantId == participant.Id)
-                    ?.Result);
-
             Entries = heats.ToDictionary(
                 h => h,
                 h => h.Groups
                     .SelectMany(g => g.Rows)
                     .FirstOrDefault(r =>
-                        r.Entry.ParticipantId == participant.Id)
+                        r.Entry?.ParticipantId == participant.Id)
                     ?.Entry);
+
+            Results = heats.ToDictionary(
+                h => h,
+                h => h.Groups
+                    .SelectMany(g => g.Rows)
+                    .FirstOrDefault(r =>
+                        r.Entry?.ParticipantId == participant.Id)
+                    ?.Result);
         }
 
         public IEnumerable<int> GetKartNumbers()

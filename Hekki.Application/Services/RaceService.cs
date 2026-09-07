@@ -48,13 +48,13 @@ namespace Hekki.Application.Services
         public async Task<RaceParticipantDto> AddParticipantAsync(int raceId, int pilotId, CancellationToken ct = default)
         {
             var pilot = await _pilotRepository.GetByIdAsync(pilotId, ct) ?? throw new ArgumentNullException(nameof(pilotId));
-            var participant = new RaceParticipantDto { PilotId = pilot.Id, Name = pilot.Name, Team = pilot.Team, IsActive = true };
+            var participant = new RaceParticipantDto { ParticipantId = Guid.NewGuid(), PilotId = pilot.Id, Name = pilot.Name, Team = pilot.Team, IsActive = true };
             await _participantRepository.AddAsync(participant, raceId, ct);
             _eventPublisher.Publish(new ParticipantAddedMessage(raceId, participant));
             return participant;
         }
 
-        public async Task RemoveParticipantAsync(int participantId, CancellationToken ct = default)
+        public async Task RemoveParticipantAsync(Guid participantId, CancellationToken ct = default)
         {
             await _participantRepository.DeleteAsync(participantId, ct);
         }
@@ -138,7 +138,7 @@ namespace Hekki.Application.Services
             return groups;
         }
 
-        public async Task<IReadOnlyList<GroupAssignmentResultDto>> AssignGroupsAndNumbersAsync(int raceId, int heatNumber, CancellationToken ct = default)
+        public async Task AssignGroupsAndNumbersAsync(int raceId, int heatNumber, CancellationToken ct = default)
         {
             var race = await GetRaceDataAsync(raceId, ct)
                 ?? throw new RaceNotFoundException(raceId);
@@ -147,9 +147,11 @@ namespace Hekki.Application.Services
             var heats = await _heatRepository.GetByRaceIdAsync(raceId, ct);
             var heat = heats.FirstOrDefault(h => h.HeatNumber == heatNumber)
                 ?? throw new HeatNotFoundException(heatNumber);
+
             var configurationIndex = heat.ConfigurationIndex;
             var config = reg.Config.HeatConfigs[configurationIndex];
             var assignConfig = config.Assignment;
+
             var entries = heats.SelectMany(h => h.Groups.SelectMany(g => g.Entries)).ToList();
             var groups = heat.Groups;
 
@@ -166,7 +168,7 @@ namespace Hekki.Application.Services
             {
                 var assignedGroup = assignedGroups[i];
                 AssignKartNumbers(assignedGroup, assignConfig, entries);
-                var assignedEntries = await GenerateEntriesAsync(
+                var assignedEntries = await GenerateEntriesForGroupAsync(
                     heat.HeatId,
                     groups[i].Id,
                     assignedGroup,
@@ -180,12 +182,10 @@ namespace Hekki.Application.Services
                 });
             }
 
-            _eventPublisher.Publish(new GroupsAssignedMessage(raceId, heat.HeatId));
-
-            return result;
+            _eventPublisher.Publish(new GroupsAssignedMessage(raceId, heat.HeatId, result));
         }
 
-        private async Task<IReadOnlyList<HeatEntryDto>> GenerateEntriesAsync(
+        private async Task<IReadOnlyList<HeatEntryDto>> GenerateEntriesForGroupAsync(
             int heatId,
             int groupId,
             IReadOnlyList<ParticipantAssignment> assignments,
@@ -255,9 +255,9 @@ namespace Hekki.Application.Services
             return Enumerable.Range(1, 10).ToArray();
         }
 
-        private Dictionary<int, IReadOnlyList<int>> BuildKartNumbersWithPilots(IReadOnlyList<ParticipantAssignment> participants, List<HeatEntryDto> entries)
+        private Dictionary<Guid, IReadOnlyList<int>> BuildKartNumbersWithPilots(IReadOnlyList<ParticipantAssignment> participants, List<HeatEntryDto> entries)
         {
-            var result = new Dictionary<int, IReadOnlyList<int>>();
+            var result = new Dictionary<Guid, IReadOnlyList<int>>();
             foreach (var participant in participants)
             {
                 result[participant.ParticipantId] = entries
