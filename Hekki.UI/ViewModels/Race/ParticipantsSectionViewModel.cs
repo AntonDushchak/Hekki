@@ -93,10 +93,19 @@ namespace Hekki.UI.ViewModels.Race
         });
 
         [RelayCommand]
-        private Task AddParticipantAsync() => ExecuteSafeAsync(async () =>
-        {
+        private Task AddParticipantAsync(string name) => ExecuteSafeAsync(async () =>
+        {   
+            if (string.IsNullOrEmpty(name)) return;
+
+            if (_raceId == null) return;
+
             var pilot = SelectedPilot;
-            if (pilot == null || _raceId == null) return;
+
+            if (pilot == null)
+            {
+                await ShowNewPilotWindow();
+                return;
+            }
 
             if (Participants.Any(p => p.PilotId == pilot.PilotId)) return;
 
@@ -108,6 +117,11 @@ namespace Hekki.UI.ViewModels.Race
 
             Publish(new ParticipantAddedMessage(_raceId.Value, participant));
         });
+
+        private async Task ShowNewPilotWindow()
+        {
+            throw new NotImplementedException();
+        }
 
         [RelayCommand]
         private Task RemoveParticipantAsync(RaceParticipantViewModel participant) => ExecuteSafeAsync(async () =>

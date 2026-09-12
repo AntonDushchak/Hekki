@@ -1,6 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,6 +7,8 @@ namespace Hekki.UI.ViewModels
 {
     public partial class RaceSettingsViewModel : ObservableValidator
     {
+        [ObservableProperty]
+        private bool? _dialogResult;
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
         [Required(ErrorMessage = "Race name is required")]
@@ -21,21 +22,14 @@ namespace Hekki.UI.ViewModels
 
         [ObservableProperty]
         private string? _selectedLocation;
-
         public ObservableCollection<string> AvailableLocations { get; } = [];
 
-        public Action? CloseAction { get; set; }
-        public bool DialogResult { get; private set; }
-
-        private readonly INavigationService _navigationService;
 
         public RaceSettingsViewModel(
-            INavigationService navigationService,
             string raceName = "",
             DateTime? raceDate = null,
             string? selectedLocation = null)
         {
-            _navigationService = navigationService;
             _raceName = raceName;
             _raceDate = raceDate ?? DateTime.Today;
             _selectedLocation = selectedLocation;
@@ -47,6 +41,7 @@ namespace Hekki.UI.ViewModels
 
         private bool CanSave => !HasErrors && !string.IsNullOrWhiteSpace(RaceName);
 
+
         [RelayCommand(CanExecute = nameof(CanSave))]
         private void Save()
         {
@@ -55,15 +50,12 @@ namespace Hekki.UI.ViewModels
                 return;
 
             DialogResult = true;
-            CloseAction?.Invoke();
         }
 
         [RelayCommand]
         private void Cancel()
         {
             DialogResult = false;
-            CloseAction?.Invoke();
-            _navigationService.NavigateToSelection();
         }
 
         partial void OnRaceNameChanged(string value)

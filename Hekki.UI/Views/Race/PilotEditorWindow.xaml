@@ -1,0 +1,115 @@
+﻿<Window x:Class="Hekki.UI.Views.Race.PilotEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{DynamicResource m_EditPilot}"
+        Width="500"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        Background="{StaticResource Brush.Base}">
+    <Border Background="{StaticResource Brush.Base}"
+            BorderBrush="{StaticResource Brush.Border}"
+            BorderThickness="1"
+            Padding="30">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Text="{DynamicResource m_EditPilot}"
+                       FontSize="20"
+                       FontWeight="SemiBold"
+                       Foreground="{StaticResource Brush.TextPrimary}"
+                       Margin="0,0,0,20"/>
+
+            <Grid Grid.Row="1" Margin="0,0,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{DynamicResource m_FirstName}"
+                               Foreground="{StaticResource Brush.TextPrimary}"
+                               Margin="0,0,0,5"/>
+                    <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}"
+                             MinHeight="30"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="{DynamicResource m_LastName}"
+                               Foreground="{StaticResource Brush.TextPrimary}"
+                               Margin="0,0,0,5"/>
+                    <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}"
+                             MinHeight="30"/>
+                </StackPanel>
+            </Grid>
+
+            <StackPanel Grid.Row="2" Margin="0,0,0,15">
+                <TextBlock Text="{DynamicResource m_SwsId}"
+                           Foreground="{StaticResource Brush.TextPrimary}"
+                           Margin="0,0,0,5"/>
+                <TextBox Text="{Binding SwsId, UpdateSourceTrigger=PropertyChanged}"
+                         MinHeight="30"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="3" Margin="0,0,0,15">
+                <TextBlock Text="{DynamicResource m_SwsLink}"
+                           Foreground="{StaticResource Brush.TextPrimary}"
+                           Margin="0,0,0,5"/>
+                <TextBox Text="{Binding SwsLink, UpdateSourceTrigger=PropertyChanged}"
+                         MinHeight="30"/>
+            </StackPanel>
+
+            <Grid Grid.Row="4" Margin="0,0,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{DynamicResource m_Team}"
+                               Foreground="{StaticResource Brush.TextPrimary}"
+                               Margin="0,0,0,5"/>
+                    <ComboBox ItemsSource="{Binding AvailableTeams}"
+                              SelectedItem="{Binding SelectedTeam, Mode=TwoWay}"
+                              MinHeight="30"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="{DynamicResource m_League}"
+                               Foreground="{StaticResource Brush.TextPrimary}"
+                               Margin="0,0,0,5"/>
+                    <ComboBox ItemsSource="{Binding AvailableLeagues}"
+                              SelectedItem="{Binding SelectedLeague, Mode=TwoWay}"
+                              MinHeight="30"/>
+                </StackPanel>
+            </Grid>
+
+            <CheckBox Grid.Row="5"
+                      Content="{DynamicResource m_DisplayPilotsProfilePic}"
+                      IsChecked="{Binding ShowProfilePicture, Mode=TwoWay}"
+                      Foreground="{StaticResource Brush.TextPrimary}"
+                      Margin="0,0,0,20"/>
+
+            <StackPanel Grid.Row="6"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Content="{DynamicResource m_Cancel}"
+                        Command="{Binding CancelCommand}"
+                        MinWidth="80"
+                        Margin="0,0,10,0"/>
+                <Button Content="{DynamicResource m_Save}"
+                        Command="{Binding SaveCommand}"
+                        MinWidth="80"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

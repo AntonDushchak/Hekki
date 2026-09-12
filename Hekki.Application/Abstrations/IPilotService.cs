@@ -4,6 +4,8 @@ namespace Hekki.Application.Abstrations
 {
     public interface IPilotService
     {
+        void CreatePilot(string name);
+
         /// <summary>
         /// Get all pilots with basic information
         /// </summary>

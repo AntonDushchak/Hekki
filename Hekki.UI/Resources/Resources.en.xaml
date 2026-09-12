@@ -9,6 +9,8 @@
     <system:String x:Key="m_RegulationName">Regulation name</system:String>
     <system:String x:Key="m_Heats">Heats</system:String>
     <system:String x:Key="m_Name">Name</system:String>
+    <system:String x:Key="m_FirstName">First name</system:String>
+    <system:String x:Key="m_LastName">Last name</system:String>
     <system:String x:Key="m_AddHeat">Add Heat</system:String>
     <system:String x:Key="m_HeatDetails">Heat Details</system:String>
     <system:String x:Key="m_ShuffleSystem">Shuffle system</system:String>
@@ -36,6 +38,7 @@
     <system:String x:Key="m_EditPilot">Edit pilot</system:String>
     <system:String x:Key="m_Link">Link</system:String>
     <system:String x:Key="m_SwsId">SWS ID</system:String>
+    <system:String x:Key="m_SwsLink">SWS link</system:String>
     <system:String x:Key="m_Team">Team</system:String>
     <system:String x:Key="m_League">League</system:String>
     <system:String x:Key="m_ShowProfilePic">Show profile pic?</system:String>

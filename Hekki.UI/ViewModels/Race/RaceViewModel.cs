@@ -123,11 +123,7 @@ namespace Hekki.UI.ViewModels
 
         private void OpenRaceSettings()
         {
-            var settingsViewModel = new RaceSettingsViewModel(
-                _navigationService,
-                RaceName,
-                RaceDate,
-                Location);
+            var settingsViewModel = new RaceSettingsViewModel(RaceName, RaceDate, Location);
 
             var wasShown = _dialogService.ShowRaceSettings(settingsViewModel);
 

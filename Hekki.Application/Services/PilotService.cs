@@ -12,6 +12,11 @@ namespace Hekki.Application.Services
             _pilotRepository = pilotRepository;
         }
 
+        public void CreatePilot(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IReadOnlyList<PilotDto>> GetAllPilotsAsync(CancellationToken ct = default)
         {
             return await _pilotRepository.GetAllAsync(ct);
