@@ -1,6 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.Abstrations;
+using Hekki.UI.Mappers;
+using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels.Race
@@ -9,7 +11,7 @@ namespace Hekki.UI.ViewModels.Race
     {
         private readonly IRaceService _raceService;
         private readonly IPilotService _pilotService;
-
+        private readonly IDialogService _dialogService;
         private int? _raceId;
         private bool _isUpdatingFromSelection;
         private CancellationTokenSource? _searchCancellation;
@@ -21,10 +23,11 @@ namespace Hekki.UI.ViewModels.Race
         private IEnumerable<RaceParticipantViewModel> _participants;
         public ObservableCollection<PilotViewModel> FilteredPilots { get; } = [];
 
-        public ParticipantsSectionViewModel(IRaceService raceService, IPilotService pilotService)
+        public ParticipantsSectionViewModel(IRaceService raceService, IPilotService pilotService, IDialogService dialogService)
         {
             _raceService = raceService;
             _pilotService = pilotService;
+            _dialogService = dialogService;
             _participants = [];
         }
 
@@ -100,8 +103,14 @@ namespace Hekki.UI.ViewModels.Race
 
             if (pilot == null)
             {
-                await ShowNewPilotWindow();
-                return;
+                var editorViewModel = new PilotEditorViewModel(_pilotService);
+
+                var createdPilotDto = _dialogService.ShowPilotEditor(editorViewModel);
+
+                if (createdPilotDto == null)
+                    return;
+
+                pilot = PilotUiMapper.MapToViewModel(createdPilotDto);
             }
 
             if (_participants.Any(p => p.PilotId == pilot.PilotId)) return;

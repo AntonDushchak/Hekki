@@ -6,7 +6,7 @@ namespace Hekki.UI.Mappers
 {
     public static class PilotUiMapper
     {
-        public static PilotViewModel MapToPilotViewModel(PilotDto pilot)
+        public static PilotViewModel MapToViewModel(PilotDto pilot)
         {
             return new PilotViewModel
             {

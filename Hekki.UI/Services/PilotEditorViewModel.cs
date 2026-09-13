@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs.Pilot;
 using System.Collections.ObjectModel;
 
@@ -36,15 +37,18 @@ namespace Hekki.UI.Services
         private bool _showProfilePicture;
 
         private int _pilotId;
+        private readonly IPilotService _pilotService;
 
         public ObservableCollection<string> AvailableTeams { get; } = [];
         public ObservableCollection<string> AvailableLeagues { get; } = [];
 
         public PilotEditorViewModel(
+            IPilotService pilotService,
             PilotDto? pilot = null,
             IEnumerable<string>? teams = null,
             IEnumerable<string>? leagues = null)
         {
+            _pilotService = pilotService;
             if (pilot is not null)
             {
                 _pilotId = pilot.Id;
@@ -83,6 +87,8 @@ namespace Hekki.UI.Services
                 Team = SelectedTeam,
                 League = SelectedLeague
             };
+
+            _pilotService.CreatePilot(FirstName, LastName); //TODO: Implement the actual logic for creating or updating a pilot using the service.
 
             DialogResult = true;
         }
