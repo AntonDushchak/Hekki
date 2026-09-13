@@ -12,7 +12,7 @@ namespace Hekki.Application.Services
             _pilotRepository = pilotRepository;
         }
 
-        public void CreatePilot(string name)
+        public void CreatePilot(string firstName, string lastName)
         {
             throw new NotImplementedException();
         }
@@ -27,9 +27,9 @@ namespace Hekki.Application.Services
             return await _pilotRepository.GetByIdAsync(pilotId, ct);
         }
 
-        public async Task<IReadOnlyList<PilotDto>> SearchPilotsByNameAsync(string searchText, CancellationToken ct = default)
+        public async Task<IReadOnlyList<PilotDto>> SearchPilotsByFullNameAsync(string searchText, CancellationToken ct = default)
         {
-            return await _pilotRepository.SearchByNameAsync(searchText, ct);
+            return await _pilotRepository.SearchByFullNameAsync(searchText, ct);
         }
     }
 }

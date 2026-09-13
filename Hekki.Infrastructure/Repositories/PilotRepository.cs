@@ -23,7 +23,8 @@ namespace Hekki.Infrastructure.Repositories
 
             var entities = await db.Pilots
                 .AsNoTracking()
-                .OrderBy(p => p.Name)
+                .OrderBy(p => p.LastName)
+                .ThenBy(p => p.FirstName)
                 .ToListAsync(ct);
 
             return entities.Select(e => _mapper.Map<PilotDto>(e)).ToList();
@@ -82,14 +83,20 @@ namespace Hekki.Infrastructure.Repositories
             return await db.Pilots.AnyAsync(p => p.Id == id, ct);
         }
 
-        public async Task<IReadOnlyList<PilotDto>> SearchByNameAsync(string searchText, CancellationToken ct = default)
+        public async Task<IReadOnlyList<PilotDto>> SearchByFullNameAsync(string searchText, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
+            var normalizedSearchText = string.Join(" ", searchText.Split(' ', StringSplitOptions.RemoveEmptyEntries));
+            var searchPattern = $"%{normalizedSearchText.Replace(" ", "%")}%";
+
             var entities = await db.Pilots
                 .AsNoTracking()
-                .Where(p => p.Name.Contains(searchText))
-                .OrderBy(p => p.Name)
+                .Where(p =>
+                    EF.Functions.ILike(p.FirstName + " " + p.LastName, searchPattern) ||
+                    EF.Functions.ILike(p.LastName + " " + p.FirstName, searchPattern))
+                .OrderBy(p => p.LastName)
+                .ThenBy(p => p.FirstName)
                 .ToListAsync(ct);
 
             return entities.Select(e => _mapper.Map<PilotDto>(e)).ToList();

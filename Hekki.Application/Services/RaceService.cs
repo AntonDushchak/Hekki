@@ -48,7 +48,7 @@ namespace Hekki.Application.Services
         public async Task<RaceParticipantDto> AddParticipantAsync(int raceId, int pilotId, CancellationToken ct = default)
         {
             var pilot = await _pilotRepository.GetByIdAsync(pilotId, ct) ?? throw new ArgumentNullException(nameof(pilotId));
-            var participant = new RaceParticipantDto { ParticipantId = Guid.NewGuid(), PilotId = pilot.Id, Name = pilot.Name, Team = pilot.Team, IsActive = true };
+            var participant = new RaceParticipantDto { ParticipantId = Guid.NewGuid(), PilotId = pilot.Id, FirstName = pilot.FirstName, LastName = pilot.LastName, Team = pilot.Team, IsActive = true };
             await _participantRepository.AddAsync(participant, raceId, ct);
             _eventPublisher.Publish(new ParticipantAddedMessage(raceId, participant));
             return participant;
@@ -207,7 +207,7 @@ namespace Hekki.Application.Services
             }
 
             var assignedEntries = new List<HeatEntryDto>();
-            var participantNames = participants.ToDictionary(p => p.ParticipantId, p => p.Name);
+            var participantNames = participants.ToDictionary(p => p.ParticipantId, p => $"{p.FirstName} {p.LastName}".Trim());
             for (int i = 0; i < assignments.Count; i++)
             {
                 var assignedEntry = new HeatEntryDto

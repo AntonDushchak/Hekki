@@ -8,7 +8,8 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty] private Guid _id;
         [ObservableProperty] private int _raceId;
         [ObservableProperty] private int _pilotId;
-        [ObservableProperty] private string _name = string.Empty;
+        [ObservableProperty] private string _firstName = string.Empty;
+        [ObservableProperty] private string _lastName = string.Empty;
         [ObservableProperty] private string? _team;
         [ObservableProperty] private string? _league;
         [ObservableProperty] private bool _isActive = true;
@@ -16,5 +17,6 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty] private string? _pilotProfileUrl;
         private ObservableCollection<int> _kartNumbers = [];
         public string KartNumbersDisplay => string.Join(", ", _kartNumbers);
+        public string FullName => $"{FirstName} {LastName}".Trim();
     }
 }

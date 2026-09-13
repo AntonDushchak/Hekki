@@ -33,9 +33,13 @@ namespace Hekki.Infrastructure
 
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.FirstName)
                     .IsRequired()
-                    .HasMaxLength(200);
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.LastName)
+                    .IsRequired()
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.ProfileUrl)
                     .HasMaxLength(500);
@@ -104,6 +108,14 @@ namespace Hekki.Infrastructure
                 entity.ToTable("race_participants");
 
                 entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.LastName)
+                    .IsRequired()
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Team)
                     .HasMaxLength(100);

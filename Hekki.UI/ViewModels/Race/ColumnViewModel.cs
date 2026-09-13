@@ -54,7 +54,7 @@ namespace Hekki.UI.ViewModels
         {
             var value = new ParticipantCellValue
             {
-                Name = context.Participant.Name,
+                Name = context.Participant.FullName,
                 KartNumbers = string.Join(", ",
                     context.GetKartNumbers())
             };
@@ -71,7 +71,7 @@ namespace Hekki.UI.ViewModels
         {
             cell.SetValue(new ParticipantCellValue
             {
-                Name = context.Participant.Name,
+                Name = context.Participant.FullName,
                 KartNumbers = string.Join(", ", context.GetKartNumbers())
             });
         }

@@ -117,7 +117,7 @@ namespace Hekki.UI.ViewModels
         private Task AddTestDataAsync() => ExecuteSafeAsync(async () =>
         {
             if (RaceId == null) return;
-            for (int i = 1; i <= 10; i++)
+            for (int i = 334; i <= 344; i++)
                 await _raceService.AddParticipantAsync(RaceId.Value, i);
         });
 

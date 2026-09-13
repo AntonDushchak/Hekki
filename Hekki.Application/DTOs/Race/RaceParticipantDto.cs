@@ -4,7 +4,8 @@ namespace Hekki.Application.DTOs.Race
     {
         public Guid ParticipantId { get; init; }
         public int PilotId { get; init; }
-        public string Name { get; init; } = string.Empty;
+        public string FirstName { get; init; } = string.Empty;
+        public string LastName { get; init; } = string.Empty;
         public string? PhotoPath { get; init; }
         public string? Team { get; init; }
         public string? League { get; init; }

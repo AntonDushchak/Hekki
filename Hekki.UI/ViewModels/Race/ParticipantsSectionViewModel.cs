@@ -1,8 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.Abstrations;
-using Hekki.UI.Mappers;
-using Hekki.Application.Messages.Race;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels.Race
@@ -20,28 +18,27 @@ namespace Hekki.UI.ViewModels.Race
         [ObservableProperty] private PilotViewModel? _selectedPilot;
         [ObservableProperty] private bool _isPopupOpen;
 
-        public ObservableCollection<RaceParticipantViewModel> Participants { get; } = [];
+        private IEnumerable<RaceParticipantViewModel> _participants;
         public ObservableCollection<PilotViewModel> FilteredPilots { get; } = [];
 
         public ParticipantsSectionViewModel(IRaceService raceService, IPilotService pilotService)
         {
             _raceService = raceService;
             _pilotService = pilotService;
+            _participants = [];
         }
 
         public void Initialize(int raceId, IEnumerable<RaceParticipantViewModel> participants)
         {
             _raceId = raceId;
-            Participants.Clear();
-            foreach (var p in participants)
-                Participants.Add(p);
+            _participants = participants;
         }
 
         partial void OnSelectedPilotChanged(PilotViewModel? value)
         {
             if (value == null) return;
             _isUpdatingFromSelection = true;
-            SearchText = value.Name;
+            SearchText = value.FullName;
             IsPopupOpen = false;
             _isUpdatingFromSelection = false;
         }
@@ -57,7 +54,7 @@ namespace Hekki.UI.ViewModels.Race
                 return;
             }
 
-            if (SelectedPilot != null && SelectedPilot.Name != value)
+            if (SelectedPilot != null && SelectedPilot.FullName != value)
                 SelectedPilot = null;
 
             _ = FilterPilotsForSearchAsync(value);
@@ -79,13 +76,13 @@ namespace Hekki.UI.ViewModels.Race
             try
             {
                 await Task.Delay(300, ct);
-                var pilots = await _pilotService.SearchPilotsByNameAsync(searchText, ct);
+                var pilots = await _pilotService.SearchPilotsByFullNameAsync(searchText, ct);
 
                 if (ct.IsCancellationRequested) return;
 
                 FilteredPilots.Clear();
                 foreach (var pilot in pilots)
-                    FilteredPilots.Add(new PilotViewModel { PilotId = pilot.Id, Name = pilot.Name });
+                    FilteredPilots.Add(new PilotViewModel { PilotId = pilot.Id, FirstName = pilot.FirstName, LastName = pilot.LastName });
 
                 IsPopupOpen = FilteredPilots.Count > 0;
             }
@@ -94,7 +91,7 @@ namespace Hekki.UI.ViewModels.Race
 
         [RelayCommand]
         private Task AddParticipantAsync(string name) => ExecuteSafeAsync(async () =>
-        {   
+        {
             if (string.IsNullOrEmpty(name)) return;
 
             if (_raceId == null) return;
@@ -107,31 +104,16 @@ namespace Hekki.UI.ViewModels.Race
                 return;
             }
 
-            if (Participants.Any(p => p.PilotId == pilot.PilotId)) return;
+            if (_participants.Any(p => p.PilotId == pilot.PilotId)) return;
 
             var participant = await _raceService.AddParticipantAsync(_raceId.Value, pilot.PilotId);
-            var vm = PilotUiMapper.MapToParticipantViewModel(participant);
 
-            Participants.Add(vm);
             SearchText = string.Empty;
-
-            Publish(new ParticipantAddedMessage(_raceId.Value, participant));
         });
 
         private async Task ShowNewPilotWindow()
         {
             throw new NotImplementedException();
         }
-
-        [RelayCommand]
-        private Task RemoveParticipantAsync(RaceParticipantViewModel participant) => ExecuteSafeAsync(async () =>
-        {
-            if (participant == null || _raceId == null) return;
-
-            await _raceService.RemoveParticipantAsync(participant.Id);
-            Participants.Remove(participant);
-
-            Publish(new ParticipantRemovedMessage(_raceId.Value, participant.Id));
-        });
     }
 }

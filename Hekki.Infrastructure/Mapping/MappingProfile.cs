@@ -34,7 +34,8 @@ namespace Hekki.Infrastructure.Mapping
             // ===== RaceParticipant =====
             CreateMap<RaceParticipantEntity, RaceParticipantDto>()
                 .ForMember(d => d.ParticipantId, opt => opt.MapFrom(s => s.Id))
-                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.Pilot.Name))
+                .ForMember(d => d.FirstName, opt => opt.MapFrom(s => s.FirstName))
+                .ForMember(d => d.LastName, opt => opt.MapFrom(s => s.LastName))
                 .ForMember(d => d.PhotoPath, opt => opt.MapFrom(s => s.Pilot.PhotoPath))
                 .ForMember(d => d.League, opt => opt.MapFrom(s => s.League));
 
@@ -74,7 +75,7 @@ namespace Hekki.Infrastructure.Mapping
 
             // ===== HeatEntry =====
             CreateMap<HeatEntryEntity, HeatEntryDto>()
-                .ForMember(d => d.PilotName, opt => opt.MapFrom(s => s.Participant.Pilot.Name))
+                .ForMember(d => d.PilotName, opt => opt.MapFrom(s => $"{s.Participant.FirstName} {s.Participant.LastName}".Trim()))
                 .ForMember(d => d.KartNumber, opt => opt.MapFrom(s => s.KartNumber))
                 .ForMember(d => d.GridPosition, opt => opt.MapFrom(s => s.GridPosition));
 

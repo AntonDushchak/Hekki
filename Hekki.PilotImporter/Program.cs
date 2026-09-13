@@ -19,19 +19,21 @@ namespace Hekki.PilotImporter
 
             using var context = new HekkiDbContext(optionsBuilder.Options);
 
-            await context.Database.EnsureCreatedAsync();
+            await context.Database.MigrateAsync();
 
             var importService = new PilotImportService(context);
 
-            var jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Hekki.Infrastructure", "jsconfig1.json");
-            jsonFilePath = Path.GetFullPath(jsonFilePath);
+            var csvFilePath = args.Length > 0
+                ? Path.GetFullPath(args[0])
+                : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Hekki.Infrastructure", "pilots.csv");
+            csvFilePath = Path.GetFullPath(csvFilePath);
 
-            Console.WriteLine($"Importing pilots from: {jsonFilePath}");
+            Console.WriteLine($"Importing pilots from: {csvFilePath}");
             Console.WriteLine();
 
-            if (!File.Exists(jsonFilePath))
+            if (!File.Exists(csvFilePath))
             {
-                Console.WriteLine($"ERROR: File not found: {jsonFilePath}");
+                Console.WriteLine($"ERROR: File not found: {csvFilePath}");
                 Console.WriteLine("Press any key to exit...");
                 Console.ReadKey();
                 return;
@@ -42,7 +44,7 @@ namespace Hekki.PilotImporter
                 var pilotsBefore = await importService.GetPilotsCountAsync();
                 Console.WriteLine($"Pilots in database before import: {pilotsBefore}");
 
-                var importedCount = await importService.ImportPilotsFromJsonAsync(jsonFilePath);
+                var importedCount = await importService.ImportPilotsFromCsvAsync(csvFilePath);
 
                 var pilotsAfter = await importService.GetPilotsCountAsync();
                 Console.WriteLine($"Imported {importedCount} new pilots");

@@ -4,7 +4,7 @@ namespace Hekki.Application.Abstrations
 {
     public interface IPilotService
     {
-        void CreatePilot(string name);
+        void CreatePilot(string firstName, string lastName);
 
         /// <summary>
         /// Get all pilots with basic information
@@ -19,6 +19,6 @@ namespace Hekki.Application.Abstrations
         /// <summary>
         /// Search pilots by name
         /// </summary>
-        Task<IReadOnlyList<PilotDto>> SearchPilotsByNameAsync(string searchText, CancellationToken ct = default);
+        Task<IReadOnlyList<PilotDto>> SearchPilotsByFullNameAsync(string searchText, CancellationToken ct = default);
     }
 }

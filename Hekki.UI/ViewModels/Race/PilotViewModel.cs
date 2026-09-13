@@ -8,6 +8,13 @@ namespace Hekki.UI.ViewModels
         private int _pilotId;
 
         [ObservableProperty]
-        private string _name = string.Empty;
+        [NotifyPropertyChangedFor(nameof(FullName))]
+        private string _firstName = string.Empty;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(FullName))]
+        private string _lastName = string.Empty;
+
+        public string FullName => $"{FirstName} {LastName}".Trim();
     }
 }

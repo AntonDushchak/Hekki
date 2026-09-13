@@ -48,9 +48,8 @@ namespace Hekki.UI.Services
             if (pilot is not null)
             {
                 _pilotId = pilot.Id;
-                var nameParts = pilot.Name.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-                FirstName = nameParts.ElementAtOrDefault(0) ?? string.Empty;
-                LastName = nameParts.ElementAtOrDefault(1) ?? string.Empty;
+                FirstName = pilot.FirstName;
+                LastName = pilot.LastName;
                 SwsLink = pilot.ProfileUrl ?? string.Empty;
                 SelectedTeam = pilot.Team;
                 SelectedLeague = pilot.League;
@@ -78,7 +77,8 @@ namespace Hekki.UI.Services
             Result = new PilotDto
             {
                 Id = _pilotId,
-                Name = $"{FirstName.Trim()} {LastName.Trim()}",
+                FirstName = FirstName.Trim(),
+                LastName = LastName.Trim(),
                 ProfileUrl = string.IsNullOrWhiteSpace(SwsLink) ? null : SwsLink.Trim(),
                 Team = SelectedTeam,
                 League = SelectedLeague

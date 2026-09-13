@@ -11,7 +11,8 @@ namespace Hekki.UI.Mappers
             return new PilotViewModel
             {
                 PilotId = pilot.Id,
-                Name = pilot.Name,
+                FirstName = pilot.FirstName,
+                LastName = pilot.LastName,
             };
         }
 
@@ -21,7 +22,8 @@ namespace Hekki.UI.Mappers
             {
                 Id = raceParticipant.ParticipantId,
                 PilotId = raceParticipant.PilotId,
-                Name = raceParticipant.Name,
+                FirstName = raceParticipant.FirstName,
+                LastName = raceParticipant.LastName,
                 PilotPhotoPath = raceParticipant.PhotoPath,
                 Team = raceParticipant.Team,
                 League = raceParticipant.League,
