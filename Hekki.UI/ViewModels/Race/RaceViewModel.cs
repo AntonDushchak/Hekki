@@ -41,7 +41,7 @@ namespace Hekki.UI.ViewModels
             _dialogService = dialogService;
             _navigationService = navigationService;
 
-            Participants = new ParticipantsSectionViewModel(raceService, pilotService);
+            Participants = new ParticipantsSectionViewModel(raceService, pilotService, dialogService);
             TotalTable = new TotalTableViewModel();
             HeatsTable = new HeatsTableViewModel(raceService);
 
