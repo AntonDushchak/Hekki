@@ -12,6 +12,7 @@ namespace Hekki.UI.ViewModels.Race
         private readonly IRaceService _raceService;
         private readonly IPilotService _pilotService;
         private readonly IDialogService _dialogService;
+        private readonly AppSettings _appSettings;
         private int? _raceId;
         private bool _isUpdatingFromSelection;
         private CancellationTokenSource? _searchCancellation;
@@ -23,11 +24,16 @@ namespace Hekki.UI.ViewModels.Race
         private IEnumerable<RaceParticipantViewModel> _participants;
         public ObservableCollection<PilotViewModel> FilteredPilots { get; } = [];
 
-        public ParticipantsSectionViewModel(IRaceService raceService, IPilotService pilotService, IDialogService dialogService)
+        public ParticipantsSectionViewModel(
+            IRaceService raceService,
+            IPilotService pilotService,
+            IDialogService dialogService,
+            AppSettings appSettings)
         {
             _raceService = raceService;
             _pilotService = pilotService;
             _dialogService = dialogService;
+            _appSettings = appSettings;
             _participants = [];
         }
 
@@ -103,7 +109,7 @@ namespace Hekki.UI.ViewModels.Race
 
             if (pilot == null)
             {
-                var editorViewModel = new PilotEditorViewModel(_pilotService);
+                var editorViewModel = new PilotEditorViewModel(_pilotService, _appSettings);
 
                 var createdPilotDto = _dialogService.ShowPilotEditor(editorViewModel);
 

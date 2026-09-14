@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Hekki.UI.Views.Shared.Layout"
              xmlns:components="clr-namespace:Hekki.UI.Views.Shared.Controls"
              mc:Ignorable="d" d:DesignWidth="800" Height="60">
-    <Grid Background="{StaticResource Brush.SurfaceHigh}">
+    <Grid Background="{DynamicResource Brush.SurfaceHigh}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
@@ -32,7 +32,7 @@
                     Margin="10,0">
 
             <Button Content="📁" Width="40" Height="40" Margin="5,0"/>
-            <Button Content="⚙" Width="40" Height="40" Margin="5,0"/>
+            <Button Content="⚙" Width="40" Height="40" Margin="5,0" Command="{Binding OpenSettingsCommand}"/>
 
         </StackPanel>
     </Grid>

@@ -12,7 +12,7 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
-        Background="{StaticResource Brush.Base}">
+        Background="{DynamicResource Brush.Base}">
 
     <Window.Resources>
         <Style x:Key="MessageIconStyle" TargetType="TextBlock">
@@ -24,8 +24,8 @@
         </Style>
     </Window.Resources>
 
-    <Border Background="{StaticResource Brush.Base}" 
-            BorderBrush="{StaticResource Brush.Border}" 
+    <Border Background="{DynamicResource Brush.Base}" 
+            BorderBrush="{DynamicResource Brush.Border}" 
             BorderThickness="1"
             MinWidth="400"
             MaxWidth="600"
@@ -50,7 +50,7 @@
                            x:Name="MessageTextBlock"
                            TextWrapping="Wrap"
                            FontSize="14"
-                           Foreground="{StaticResource Brush.TextPrimary}"
+                           Foreground="{DynamicResource Brush.TextPrimary}"
                            VerticalAlignment="Center"/>
             </Grid>
 

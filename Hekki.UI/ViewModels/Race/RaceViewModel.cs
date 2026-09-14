@@ -33,7 +33,8 @@ namespace Hekki.UI.ViewModels
             IRaceService raceService,
             IPilotService pilotService,
             INavigationService navigationService,
-            IDialogService dialogService)
+            IDialogService dialogService,
+            AppSettings appSettings)
         {
             RegulationId = regulationId;
             RaceId = raceId;
@@ -41,7 +42,7 @@ namespace Hekki.UI.ViewModels
             _dialogService = dialogService;
             _navigationService = navigationService;
 
-            Participants = new ParticipantsSectionViewModel(raceService, pilotService, dialogService);
+            Participants = new ParticipantsSectionViewModel(raceService, pilotService, dialogService, appSettings);
             TotalTable = new TotalTableViewModel();
             HeatsTable = new HeatsTableViewModel(raceService);
 

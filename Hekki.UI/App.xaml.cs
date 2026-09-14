@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application;
 using Hekki.Infrastructure;
+using Hekki.UI.Services;
 using Hekki.UI.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -55,6 +56,7 @@ namespace Hekki.UI
             }
             _uiScope = Host.Services.CreateScope();
             base.OnStartup(e);
+            await UiServices.GetRequiredService<IAppSettingsService>().LoadAsync();
             var main = _uiScope.ServiceProvider.GetRequiredService<MainWindow>();
             main.Show();
         }

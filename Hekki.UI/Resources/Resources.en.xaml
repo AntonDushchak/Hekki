@@ -60,6 +60,12 @@
     <system:String x:Key="m_Location">Location</system:String>
     <system:String x:Key="m_Cancel">Cancel</system:String>
     <system:String x:Key="m_TotalTable">Total Table</system:String>
+    <system:String x:Key="m_Settings">Settings</system:String>
+    <system:String x:Key="m_Language">Language</system:String>
+    <system:String x:Key="m_Theme">Theme</system:String>
+    <system:String x:Key="m_KartNumbers">Kart numbers</system:String>
+    <system:String x:Key="m_Teams">Teams</system:String>
+    <system:String x:Key="m_Leagues">Leagues</system:String>
 
     <system:String x:Key="m_AssignGroupsAndNumbers">Assign Groups and Numbers</system:String>
     <system:String x:Key="m_DeleteHeat">Delete Heat</system:String>

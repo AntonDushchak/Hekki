@@ -7,9 +7,9 @@
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
-        Background="{StaticResource Brush.Base}">
-    <Border Background="{StaticResource Brush.Base}"
-            BorderBrush="{StaticResource Brush.Border}"
+        Background="{DynamicResource Brush.Base}">
+    <Border Background="{DynamicResource Brush.Base}"
+            BorderBrush="{DynamicResource Brush.Border}"
             BorderThickness="1"
             Padding="30">
         <Grid>
@@ -28,7 +28,7 @@
                        Text="{DynamicResource m_EditPilot}"
                        FontSize="20"
                        FontWeight="SemiBold"
-                       Foreground="{StaticResource Brush.TextPrimary}"
+                       Foreground="{DynamicResource Brush.TextPrimary}"
                        Margin="0,0,0,20"/>
 
             <Grid Grid.Row="1" Margin="0,0,0,15">
@@ -39,14 +39,14 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0">
                     <TextBlock Text="{DynamicResource m_FirstName}"
-                               Foreground="{StaticResource Brush.TextPrimary}"
+                               Foreground="{DynamicResource Brush.TextPrimary}"
                                Margin="0,0,0,5"/>
                     <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}"
                              MinHeight="30"/>
                 </StackPanel>
                 <StackPanel Grid.Column="2">
                     <TextBlock Text="{DynamicResource m_LastName}"
-                               Foreground="{StaticResource Brush.TextPrimary}"
+                               Foreground="{DynamicResource Brush.TextPrimary}"
                                Margin="0,0,0,5"/>
                     <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}"
                              MinHeight="30"/>
@@ -55,7 +55,7 @@
 
             <StackPanel Grid.Row="2" Margin="0,0,0,15">
                 <TextBlock Text="{DynamicResource m_SwsId}"
-                           Foreground="{StaticResource Brush.TextPrimary}"
+                           Foreground="{DynamicResource Brush.TextPrimary}"
                            Margin="0,0,0,5"/>
                 <TextBox Text="{Binding SwsId, UpdateSourceTrigger=PropertyChanged}"
                          MinHeight="30"/>
@@ -63,7 +63,7 @@
 
             <StackPanel Grid.Row="3" Margin="0,0,0,15">
                 <TextBlock Text="{DynamicResource m_SwsLink}"
-                           Foreground="{StaticResource Brush.TextPrimary}"
+                           Foreground="{DynamicResource Brush.TextPrimary}"
                            Margin="0,0,0,5"/>
                 <TextBox Text="{Binding SwsLink, UpdateSourceTrigger=PropertyChanged}"
                          MinHeight="30"/>
@@ -77,7 +77,7 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0">
                     <TextBlock Text="{DynamicResource m_Team}"
-                               Foreground="{StaticResource Brush.TextPrimary}"
+                               Foreground="{DynamicResource Brush.TextPrimary}"
                                Margin="0,0,0,5"/>
                     <ComboBox ItemsSource="{Binding AvailableTeams}"
                               SelectedItem="{Binding SelectedTeam, Mode=TwoWay}"
@@ -85,7 +85,7 @@
                 </StackPanel>
                 <StackPanel Grid.Column="2">
                     <TextBlock Text="{DynamicResource m_League}"
-                               Foreground="{StaticResource Brush.TextPrimary}"
+                               Foreground="{DynamicResource Brush.TextPrimary}"
                                Margin="0,0,0,5"/>
                     <ComboBox ItemsSource="{Binding AvailableLeagues}"
                               SelectedItem="{Binding SelectedLeague, Mode=TwoWay}"
@@ -96,7 +96,7 @@
             <CheckBox Grid.Row="5"
                       Content="{DynamicResource m_DisplayPilotsProfilePic}"
                       IsChecked="{Binding ShowProfilePicture, Mode=TwoWay}"
-                      Foreground="{StaticResource Brush.TextPrimary}"
+                      Foreground="{DynamicResource Brush.TextPrimary}"
                       Margin="0,0,0,20"/>
 
             <StackPanel Grid.Row="6"

@@ -26,9 +26,13 @@ namespace Hekki.UI.ViewModels
         protected void OnPropertyChanged(string name)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        public MainViewModel(INavigationService navigationService, RegulationPickerViewModel regulationPicker)
+        public MainViewModel(
+            INavigationService navigationService,
+            RegulationPickerViewModel regulationPicker,
+            IDialogService dialogService,
+            IAppSettingsService appSettingsService)
         {
-            TopPanelVM = new TopPanelViewModel(regulationPicker);
+            TopPanelVM = new TopPanelViewModel(regulationPicker, dialogService, appSettingsService);
 
             _navigationService = navigationService;
 

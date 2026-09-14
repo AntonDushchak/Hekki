@@ -39,16 +39,18 @@ namespace Hekki.UI.Services
         private int _pilotId;
         private readonly IPilotService _pilotService;
 
-        public ObservableCollection<string> AvailableTeams { get; } = [];
-        public ObservableCollection<string> AvailableLeagues { get; } = [];
+        public ObservableCollection<string> AvailableTeams { get; }
+        public ObservableCollection<string> AvailableLeagues { get; }
 
         public PilotEditorViewModel(
             IPilotService pilotService,
-            PilotDto? pilot = null,
-            IEnumerable<string>? teams = null,
-            IEnumerable<string>? leagues = null)
+            AppSettings appSettings,
+            PilotDto? pilot = null)
         {
             _pilotService = pilotService;
+            AvailableTeams = appSettings.Teams;
+            AvailableLeagues = appSettings.Leagues;
+
             if (pilot is not null)
             {
                 _pilotId = pilot.Id;
@@ -59,17 +61,6 @@ namespace Hekki.UI.Services
                 SelectedLeague = pilot.League;
             }
 
-            if (teams is not null)
-            {
-                foreach (var team in teams)
-                    AvailableTeams.Add(team);
-            }
-
-            if (leagues is not null)
-            {
-                foreach (var league in leagues)
-                    AvailableLeagues.Add(league);
-            }
         }
 
         private bool CanSave => !string.IsNullOrWhiteSpace(FirstName)

@@ -24,7 +24,8 @@ namespace Hekki.UI.Services
             var pilotService = _serviceProvider.GetRequiredService<IPilotService>();
             var navigationService = _serviceProvider.GetRequiredService<INavigationService>();
             var dialogService = _serviceProvider.GetRequiredService<IDialogService>();
-            return new RaceViewModel(regulationId, raceId, raceService, pilotService, navigationService, dialogService);
+            var appSettings = _serviceProvider.GetRequiredService<AppSettings>();
+            return new RaceViewModel(regulationId, raceId, raceService, pilotService, navigationService, dialogService, appSettings);
         }
     }
 
