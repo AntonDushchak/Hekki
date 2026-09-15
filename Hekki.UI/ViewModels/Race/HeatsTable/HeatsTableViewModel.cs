@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
-using Hekki.Application.Messages.Race;
+using Hekki.Application.Messages;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 

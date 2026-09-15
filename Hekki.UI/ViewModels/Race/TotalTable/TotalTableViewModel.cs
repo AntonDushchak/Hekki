@@ -1,6 +1,5 @@
 using CommunityToolkit.Mvvm.Messaging;
-using Hekki.Application.DTOs.Race;
-using Hekki.Application.Messages.Race;
+using Hekki.Application.Messages;
 using Hekki.UI.Mappers;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
@@ -115,7 +114,7 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
                     Columns.Add(new HeatScoreColumn(heat));
 
                 if (heat.ShowTime)
-                    Columns.Add(new HeatTimeColumn(heat));            
+                    Columns.Add(new HeatTimeColumn(heat));
             }
 
             if (Heats.Any(h => h.ShowTime))

@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Hekki.Application.Messages.App;
+using Hekki.Application.Messages;
 using System.Runtime.CompilerServices;
 
 namespace Hekki.UI.ViewModels

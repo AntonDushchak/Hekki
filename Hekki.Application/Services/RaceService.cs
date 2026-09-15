@@ -2,7 +2,7 @@ using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs.Race;
 using Hekki.Application.DTOs.Regulation;
 using Hekki.Application.Exceptions;
-using Hekki.Application.Messages.Race;
+using Hekki.Application.Messages;
 using Hekki.Application.Models;
 
 namespace Hekki.Application.Services
