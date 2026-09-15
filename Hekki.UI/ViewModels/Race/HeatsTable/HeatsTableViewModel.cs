@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
-using Hekki.Application.DTOs.Race;
 using Hekki.Application.Messages.Race;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
@@ -9,7 +8,7 @@ using System.Collections.ObjectModel;
 namespace Hekki.UI.ViewModels.Race
 {
     public partial class HeatsTableViewModel : ViewModelBase,
-        IRecipient<HeatGeneratedMessage>, 
+        IRecipient<HeatGeneratedMessage>,
         IRecipient<GroupsAssignedMessage>
     {
         private readonly IRaceService _raceService;

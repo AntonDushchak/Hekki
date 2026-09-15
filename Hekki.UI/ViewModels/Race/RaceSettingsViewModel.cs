@@ -26,6 +26,7 @@ namespace Hekki.UI.ViewModels
 
 
         public RaceSettingsViewModel(
+            AppSettings appSettings,
             string raceName = "",
             DateTime? raceDate = null,
             string? selectedLocation = null)
@@ -34,9 +35,7 @@ namespace Hekki.UI.ViewModels
             _raceDate = raceDate ?? DateTime.Today;
             _selectedLocation = selectedLocation;
 
-            AvailableLocations.Add("Location 1"); //TODO: Load from service
-            AvailableLocations.Add("Location 2");
-            AvailableLocations.Add("Location 3");
+            AvailableLocations = appSettings.Locations;
         }
 
         private bool CanSave => !HasErrors && !string.IsNullOrWhiteSpace(RaceName);

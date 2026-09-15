@@ -19,5 +19,8 @@ namespace Hekki.UI
 
         [ObservableProperty]
         private ObservableCollection<string> _leagues = new();
+
+        [ObservableProperty]
+        private ObservableCollection<string> _locations = new();
     }
 }

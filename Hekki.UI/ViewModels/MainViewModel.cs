@@ -28,11 +28,10 @@ namespace Hekki.UI.ViewModels
 
         public MainViewModel(
             INavigationService navigationService,
-            RegulationPickerViewModel regulationPicker,
             IDialogService dialogService,
             IAppSettingsService appSettingsService)
         {
-            TopPanelVM = new TopPanelViewModel(regulationPicker, dialogService, appSettingsService);
+            TopPanelVM = new TopPanelViewModel(dialogService, appSettingsService);
 
             _navigationService = navigationService;
 

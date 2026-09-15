@@ -12,14 +12,8 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty]
         private string _title = string.Empty;
 
-        public RegulationPickerViewModel RegulationPicker { get; }
-
-        public TopPanelViewModel(
-            RegulationPickerViewModel regulationPicker,
-            IDialogService dialogService,
-            IAppSettingsService appSettingsService)
+        public TopPanelViewModel(IDialogService dialogService, IAppSettingsService appSettingsService)
         {
-            RegulationPicker = regulationPicker;
             _dialogService = dialogService;
             _appSettingsService = appSettingsService;
         }

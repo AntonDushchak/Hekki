@@ -1,5 +1,5 @@
 ﻿using Hekki.UI.ViewModels;
-using Hekki.UI.ViewModels.Race;
+using Hekki.UI.ViewModels.Race.TotalTable;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;

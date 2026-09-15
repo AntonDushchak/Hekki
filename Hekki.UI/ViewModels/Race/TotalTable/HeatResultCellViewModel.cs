@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Hekki.UI.ViewModels
+namespace Hekki.UI.ViewModels.Race.TotalTable
 {
     public partial class HeatResultCellViewModel : ObservableObject
     {

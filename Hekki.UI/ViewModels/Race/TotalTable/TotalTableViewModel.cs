@@ -5,7 +5,7 @@ using Hekki.UI.Mappers;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 
-namespace Hekki.UI.ViewModels.Race
+namespace Hekki.UI.ViewModels.Race.TotalTable
 {
     public partial class TotalTableViewModel : ViewModelBase,
         IRecipient<ParticipantAddedMessage>,

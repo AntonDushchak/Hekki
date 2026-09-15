@@ -19,7 +19,6 @@ namespace Hekki.UI
             services.AddSingleton<AppSettings>();
             services.AddSingleton<IAppSettingsService, AppSettingsService>();
 
-            services.AddSingleton<RegulationPickerViewModel>();
             services.AddTransient<SelectionViewModel>();
             services.AddTransient<CreateRegulationViewModel>();
             services.AddSingleton<MainViewModel>();

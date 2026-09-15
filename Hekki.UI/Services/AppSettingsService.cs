@@ -62,6 +62,7 @@ namespace Hekki.UI.Services
             target.KartNumbers = new ObservableCollection<int>(source.KartNumbers);
             target.Teams = new ObservableCollection<string>(source.Teams);
             target.Leagues = new ObservableCollection<string>(source.Leagues);
+            target.Locations = new ObservableCollection<string>(source.Locations);
         }
 
         private static void ApplyResources(AppSettings settings)

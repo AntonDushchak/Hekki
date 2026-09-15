@@ -12,11 +12,6 @@ namespace Hekki.UI.Views
             InitializeComponent();
             _mainViewModel = mainViewModel;
             DataContext = mainViewModel;
-
-            Loaded += async (s, e) =>
-            {
-                await _mainViewModel.TopPanelVM.RegulationPicker.InitializeAsync();
-            };
         }
     }
 }

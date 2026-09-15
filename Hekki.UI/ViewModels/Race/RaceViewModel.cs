@@ -4,6 +4,7 @@ using Hekki.Application.Abstrations;
 using Hekki.UI.Mappers;
 using Hekki.UI.Services;
 using Hekki.UI.ViewModels.Race;
+using Hekki.UI.ViewModels.Race.TotalTable;
 
 namespace Hekki.UI.ViewModels
 {
@@ -26,6 +27,7 @@ namespace Hekki.UI.ViewModels
         public ParticipantsSectionViewModel Participants { get; }
         public TotalTableViewModel TotalTable { get; }
         public HeatsTableViewModel HeatsTable { get; }
+        private AppSettings _appSettings;
 
         public RaceViewModel(
             int regulationId,
@@ -45,6 +47,8 @@ namespace Hekki.UI.ViewModels
             Participants = new ParticipantsSectionViewModel(raceService, pilotService, dialogService, appSettings);
             TotalTable = new TotalTableViewModel();
             HeatsTable = new HeatsTableViewModel(raceService);
+            _heatList = new List<HeatViewModel>();
+            _appSettings = appSettings;
 
             _ = InitializeAsync();
         }
@@ -124,7 +128,7 @@ namespace Hekki.UI.ViewModels
 
         private void OpenRaceSettings()
         {
-            var settingsViewModel = new RaceSettingsViewModel(RaceName, RaceDate, Location);
+            var settingsViewModel = new RaceSettingsViewModel(_appSettings, RaceName, RaceDate, Location);
 
             var wasShown = _dialogService.ShowRaceSettings(settingsViewModel);
 

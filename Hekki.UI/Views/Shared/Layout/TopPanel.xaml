@@ -20,12 +20,6 @@
                    FontSize="20" 
                    FontWeight="Bold"/>
 
-        <components:RegulationPicker Grid.Column="1"
-                                     DataContext="{Binding RegulationPicker}"
-                                     VerticalAlignment="Center"
-                                     HorizontalAlignment="Left"
-                                     Margin="10,0"/>
-
         <StackPanel Grid.Column="2"
                     Orientation="Horizontal"
                     VerticalAlignment="Center"
