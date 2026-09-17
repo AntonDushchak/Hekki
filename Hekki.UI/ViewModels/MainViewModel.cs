@@ -1,30 +1,14 @@
-﻿using Hekki.UI.Services;
-using System.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Hekki.UI.Services;
 
 namespace Hekki.UI.ViewModels
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public partial class MainViewModel : ViewModelBase
     {
         private readonly INavigationService _navigationService;
-
         public TopPanelViewModel TopPanelVM { get; }
+        [ObservableProperty] private object? _currentPageVM = null;
 
-        private object? _currentPageVM;
-
-        public object? CurrentPageVM
-        {
-            get => _currentPageVM;
-            set
-            {
-                _currentPageVM = value;
-                OnPropertyChanged(nameof(CurrentPageVM));
-            }
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected void OnPropertyChanged(string name)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         public MainViewModel(
             INavigationService navigationService,
@@ -37,7 +21,7 @@ namespace Hekki.UI.ViewModels
 
             _navigationService.Navigated += OnNavigate;
 
-            _navigationService.NavigateToRace(14);
+            _navigationService.NavigateToRace(14); //TODO: Remove this on prod
             //_navigationService.NavigateToSelection();
         }
 

@@ -49,11 +49,9 @@ namespace Hekki.UI.ViewModels
             HeatsTable = new HeatsTableViewModel(raceService);
             _heatList = new List<HeatViewModel>();
             _appSettings = appSettings;
-
-            _ = InitializeAsync();
         }
 
-        private Task InitializeAsync() => ExecuteSafeAsync(async () =>
+        public Task InitializeAsync() => ExecuteSafeAsync(async () =>
         {
             if (RaceId == null)
             {
@@ -68,6 +66,7 @@ namespace Hekki.UI.ViewModels
         partial void OnShowFirstSettingsChanged(bool value)
         {
             if (!value) return;
+            //TODO: Remove this on prod
             RaceName = "Test";
             RaceDate = DateTime.UtcNow;
             Location = "Location 1";

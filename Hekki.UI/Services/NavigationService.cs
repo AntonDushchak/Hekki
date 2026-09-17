@@ -9,7 +9,7 @@ public interface INavigationService
 
     void NavigateToSelection();
     void NavigateToCreateRace();
-    void NavigateToRace(int regulationId, int? raceId = null);
+    Task NavigateToRace(int regulationId, int? raceId = null);
 }
 
 public class NavigationService : INavigationService
@@ -35,9 +35,10 @@ public class NavigationService : INavigationService
         Navigated?.Invoke(vm);
     }
 
-    public void NavigateToRace(int regulationId, int? raceId = null)
+    public async Task NavigateToRace(int regulationId, int? raceId = null)
     {
         var vm = _viewModelFactory.CreateRaceViewModel(regulationId, raceId);
+        await vm.InitializeAsync();
         Navigated?.Invoke(vm);
     }
 }
