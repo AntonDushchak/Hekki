@@ -16,8 +16,6 @@ namespace Hekki.UI.ViewModels
         private readonly IMethodCatalogService _methodCatalog;
         private readonly IRegulationRepository _regulationRepository;
 
-        private readonly Dictionary<MethodSettingsType, MethodConfiguration> _methodConfigurations;
-
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
         [Required(ErrorMessage = "Regulation name is required")]
@@ -27,30 +25,8 @@ namespace Hekki.UI.ViewModels
         private string _regulationName = string.Empty;
         [ObservableProperty] private HeatConfigurationViewModel? _selectedHeat;
 
-        [ObservableProperty] private string? _selectedShuffleMethodId;
-        [ObservableProperty] private string? _selectedGroupMethodId;
-        [ObservableProperty] private string? _selectedKartMethodId;
-        [ObservableProperty] private string? _selectedScoreMethodId;
-
-        [ObservableProperty] private MethodParameters? _currentActiveSettings;
-        [ObservableProperty] private string? _currentActiveSettingsTitle;
-        [ObservableProperty] private MethodSettingsType? _currentSettingsType;
-
-        [ObservableProperty] private bool _hasShuffleSettings;
-        [ObservableProperty] private bool _hasGroupSettings;
-        [ObservableProperty] private bool _hasKartSettings;
-        [ObservableProperty] private bool _hasScoreSettings;
-
         public ObservableCollection<HeatConfigurationViewModel> Heats { get; } = [];
-        public ObservableCollection<MethodOption> AvailableShuffleMethods { get; } = [];
-        public ObservableCollection<MethodOption> AvailableGroupMethods { get; } = [];
-        public ObservableCollection<MethodOption> AvailableKartMethods { get; } = [];
-        public ObservableCollection<MethodOption> AvailableScoreMethods { get; } = [];
-
-        public bool IsShuffleActive => CurrentSettingsType == MethodSettingsType.Shuffle;
-        public bool IsGroupActive => CurrentSettingsType == MethodSettingsType.Group;
-        public bool IsKartActive => CurrentSettingsType == MethodSettingsType.Kart;
-        public bool IsScoreActive => CurrentSettingsType == MethodSettingsType.Score;
+        public MethodSettingsEditorViewModel MethodSettingsEditor { get; }
 
         public CreateRegulationViewModel(
             INavigationService navigationService,
@@ -61,112 +37,14 @@ namespace Hekki.UI.ViewModels
             _methodCatalog = methodCatalog;
             _regulationRepository = regulationRepository;
 
-            foreach (var o in _methodCatalog.GetShuffleOptions()) AvailableShuffleMethods.Add(o);
-            foreach (var o in _methodCatalog.GetGroupOptions()) AvailableGroupMethods.Add(o);
-            foreach (var o in _methodCatalog.GetKartOptions()) AvailableKartMethods.Add(o);
-            foreach (var o in _methodCatalog.GetScoreOptions()) AvailableScoreMethods.Add(o);
-
-            _methodConfigurations = new()
-            {
-                [MethodSettingsType.Shuffle] = new(
-                    () => SelectedShuffleMethodId,
-                    () => SelectedHeat?.ShuffleParameters,
-                    AvailableShuffleMethods
-                ),
-                [MethodSettingsType.Group] = new(
-                    () => SelectedGroupMethodId,
-                    () => SelectedHeat?.GroupParameters,
-                    AvailableGroupMethods
-                ),
-                [MethodSettingsType.Kart] = new(
-                    () => SelectedKartMethodId,
-                    () => SelectedHeat?.KartParameters,
-                    AvailableKartMethods
-                ),
-                [MethodSettingsType.Score] = new(
-                    () => SelectedScoreMethodId,
-                    () => SelectedHeat?.ScoreParameters,
-                    AvailableScoreMethods
-                )
-            };
-        }
-
-        partial void OnSelectedShuffleMethodIdChanged(string? value)
-        {
-            if (SelectedHeat == null) return;
-
-            SelectedHeat.ShuffleMethodId = value ?? string.Empty;
-            SelectedHeat.ShuffleParameters = CreateParametersVm(value);
-            HasShuffleSettings = SelectedHeat.ShuffleParameters != null;
-        }
-
-        partial void OnSelectedGroupMethodIdChanged(string? value)
-        {
-            if (SelectedHeat == null) return;
-
-            SelectedHeat.GroupMethodId = value ?? string.Empty;
-            SelectedHeat.GroupParameters = CreateParametersVm(value);
-            HasGroupSettings = SelectedHeat.GroupParameters != null;
-        }
-
-        partial void OnSelectedKartMethodIdChanged(string? value)
-        {
-            if (SelectedHeat == null) return;
-
-            SelectedHeat.KartMethodId = value ?? string.Empty;
-            SelectedHeat.KartParameters = CreateParametersVm(value);
-            HasKartSettings = SelectedHeat.KartParameters != null;
-        }
-
-        partial void OnSelectedScoreMethodIdChanged(string? value)
-        {
-            if (SelectedHeat == null) return;
-
-            SelectedHeat.ScoreMethodId = value ?? string.Empty;
-            SelectedHeat.ScoreParameters = CreateParametersVm(value);
-            HasScoreSettings = SelectedHeat.ScoreParameters != null;
+            MethodSettingsEditor = new MethodSettingsEditorViewModel(methodCatalog);
         }
 
         partial void OnSelectedHeatChanged(HeatConfigurationViewModel? value)
         {
-            if (value == null)
-            {
-                HasShuffleSettings = false;
-                HasGroupSettings = false;
-                HasKartSettings = false;
-                HasScoreSettings = false;
-                CurrentActiveSettings = null;
-                CurrentSettingsType = null;
-                return;
-            }
-
-            SelectedShuffleMethodId = value.ShuffleMethodId;
-            SelectedGroupMethodId = value.GroupMethodId;
-            SelectedKartMethodId = value.KartMethodId;
-            SelectedScoreMethodId = value.ScoreMethodId;
-
-            HasShuffleSettings = value.ShuffleParameters != null;
-            HasGroupSettings = value.GroupParameters != null;
-            HasKartSettings = value.KartParameters != null;
-            HasScoreSettings = value.ScoreParameters != null;
-
-            CurrentActiveSettings = null;
-            CurrentSettingsType = null;
+            MethodSettingsEditor.SelectedHeat = value;
         }
 
-        partial void OnCurrentSettingsTypeChanged(MethodSettingsType? value)
-        {
-            OnPropertyChanged(nameof(IsShuffleActive));
-            OnPropertyChanged(nameof(IsGroupActive));
-            OnPropertyChanged(nameof(IsKartActive));
-            OnPropertyChanged(nameof(IsScoreActive));
-        }
-
-        private MethodParameters? CreateParametersVm(string? methodId) => methodId switch
-        {
-            "replacement_group_assignment" => new ReplacementParameters(),
-            _ => null
-        };
 
         [RelayCommand]
         private void AddHeat()
@@ -219,6 +97,21 @@ namespace Hekki.UI.ViewModels
         private Task Save() => ExecuteSafeAsync(async () =>
         {
             ValidateAllProperties();
+            ValidateForm();
+
+
+            var dto = BuildRegulationDto();
+
+            var regulationId = await _regulationRepository.AddAsync(dto);
+
+            WeakReferenceMessenger.Default.Send(new AppSuccessMessage("Regulation saved successfully!"));
+
+            _navigationService.NavigateToRace(regulationId);
+
+        });
+
+        private void ValidateForm()
+        {
             if (HasErrors)
             {
                 var errors = string.Join("\n", GetErrors().Select(e => e.ErrorMessage));
@@ -239,7 +132,10 @@ namespace Hekki.UI.ViewModels
                 WeakReferenceMessenger.Default.Send(new AppErrorMessage($"Please select at least one scoring type (Points or Time) for: {heatNames}"));
                 return;
             }
+        }
 
+        private RegulationEditDto BuildRegulationDto()
+        {
             var heatConfigs = Heats.Select(h => new HeatConfig
             {
                 Name = h.Name,
@@ -260,7 +156,7 @@ namespace Hekki.UI.ViewModels
                 }
             }).ToList();
 
-            var dto = new RegulationEditDto
+            return new RegulationEditDto
             {
                 Name = RegulationName,
                 Config = new RegulationConfig
@@ -268,34 +164,8 @@ namespace Hekki.UI.ViewModels
                     HeatConfigs = heatConfigs
                 }
             };
-
-
-            var regulationId = await _regulationRepository.AddAsync(dto);
-
-            WeakReferenceMessenger.Default.Send(new AppSuccessMessage("Regulation saved successfully!"));
-
-            _navigationService.NavigateToRace(regulationId);
-
-        });
-
-        [RelayCommand]
-        private void ShowSettings(MethodSettingsType type)
-        {
-            if (SelectedHeat == null) return;
-
-            CurrentSettingsType = type;
-
-            var config = _methodConfigurations[type];
-            CurrentActiveSettings = config.GetExistingVm();
-            CurrentActiveSettingsTitle = config.AvailableMethods
-                .FirstOrDefault(x => x.Id == config.GetSelectedMethodId())?.Title;
         }
 
         private bool CanSave() => !HasErrors && !string.IsNullOrWhiteSpace(RegulationName);
-
-        private record MethodConfiguration(
-                Func<string?> GetSelectedMethodId,
-                Func<MethodParameters?> GetExistingVm,
-                ObservableCollection<MethodOption> AvailableMethods);
     }
 }

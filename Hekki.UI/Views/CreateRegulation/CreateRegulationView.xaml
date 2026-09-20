@@ -13,16 +13,6 @@
     <UserControl.Resources>
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
-        
-        <DataTemplate DataType="{x:Type vm:ReplacementParameters}">
-            <StackPanel Margin="10">
-                <TextBlock Text="{DynamicResource m_ToDown}"/>
-                <TextBox Text="{Binding NumberToDown, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                <TextBlock Text="{DynamicResource m_ToUp}"/>
-                <TextBox Text="{Binding NumberToUp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </StackPanel>
-        </DataTemplate>
     </UserControl.Resources>
 
     <Grid HorizontalAlignment="Stretch" 

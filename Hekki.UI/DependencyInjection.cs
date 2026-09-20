@@ -24,7 +24,6 @@ namespace Hekki.UI
             services.AddSingleton<MainViewModel>();
             services.AddTransient<SelectionViewModel>();
             services.AddTransient<CreateRegulationViewModel>();
-            services.AddTransient<RaceViewModel>();
             services.AddTransient<MainSettingsViewModel>();
 
             services.AddSingleton<MainWindow>();

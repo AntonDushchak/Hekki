@@ -21,8 +21,8 @@ namespace Hekki.UI.ViewModels
 
             _navigationService.Navigated += OnNavigate;
 
-            _navigationService.NavigateToRace(14); //TODO: Remove this on prod
-            //_navigationService.NavigateToSelection();
+            //_navigationService.NavigateToRace(14); //TODO: Remove this on prod
+            _navigationService.NavigateToSelection();
         }
 
         private void OnNavigate(object vm)

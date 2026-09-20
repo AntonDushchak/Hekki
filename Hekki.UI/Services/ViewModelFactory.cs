@@ -1,4 +1,5 @@
 ﻿using Hekki.UI.ViewModels;
+using Hekki.Application.Abstrations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hekki.UI.Services
@@ -19,7 +20,14 @@ namespace Hekki.UI.Services
 
         public RaceViewModel CreateRaceViewModel(int regulationId, int? raceId = null)
         {
-            return ActivatorUtilities.CreateInstance<RaceViewModel>(_serviceProvider, regulationId, raceId!);
+            return new RaceViewModel(
+                regulationId,
+                raceId,
+                _serviceProvider.GetRequiredService<IRaceService>(),
+                _serviceProvider.GetRequiredService<IPilotService>(),
+                _serviceProvider.GetRequiredService<INavigationService>(),
+                _serviceProvider.GetRequiredService<IDialogService>(),
+                _serviceProvider.GetRequiredService<AppSettings>());
         }
     }
 
