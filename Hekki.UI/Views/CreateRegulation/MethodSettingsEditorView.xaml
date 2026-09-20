@@ -6,6 +6,7 @@
              xmlns:vm="clr-namespace:Hekki.UI.ViewModels">
     <UserControl.Resources>
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <converters:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
 
         <DataTemplate DataType="{x:Type vm:ReplacementParameters}">
             <StackPanel Margin="10">
@@ -27,38 +28,38 @@
         <StackPanel Grid.Row="0">
             <controls:MethodSelectorControl
                 Label="{DynamicResource m_ShuffleSystem}"
-                SelectedMethodId="{Binding SelectedShuffleMethodId, Mode=TwoWay}"
+                SelectedMethodId="{Binding SelectedHeat.ShuffleMethodId, Mode=TwoWay}"
                 AvailableMethods="{Binding AvailableShuffleMethods}"
                 ShowSettingsCommand="{Binding ShowSettingsCommand}"
                 SettingsType="{x:Static vm:MethodSettingsType.Shuffle}"
-                HasSettings="{Binding HasShuffleSettings}"
+                HasSettings="{Binding SelectedHeat.ShuffleParameters, Converter={StaticResource NullToBooleanConverter}}"
                 IsActive="{Binding IsShuffleActive}" />
 
             <controls:MethodSelectorControl
                 Label="{DynamicResource m_GroupAssignment}"
-                SelectedMethodId="{Binding SelectedGroupMethodId, Mode=TwoWay}"
+                SelectedMethodId="{Binding SelectedHeat.GroupMethodId, Mode=TwoWay}"
                 AvailableMethods="{Binding AvailableGroupMethods}"
                 ShowSettingsCommand="{Binding ShowSettingsCommand}"
                 SettingsType="{x:Static vm:MethodSettingsType.Group}"
-                HasSettings="{Binding HasGroupSettings}"
+                HasSettings="{Binding SelectedHeat.GroupParameters, Converter={StaticResource NullToBooleanConverter}}"
                 IsActive="{Binding IsGroupActive}" />
 
             <controls:MethodSelectorControl
                 Label="{DynamicResource m_KartAssignment}"
-                SelectedMethodId="{Binding SelectedKartMethodId, Mode=TwoWay}"
+                SelectedMethodId="{Binding SelectedHeat.KartMethodId, Mode=TwoWay}"
                 AvailableMethods="{Binding AvailableKartMethods}"
                 ShowSettingsCommand="{Binding ShowSettingsCommand}"
                 SettingsType="{x:Static vm:MethodSettingsType.Kart}"
-                HasSettings="{Binding HasKartSettings}"
+                HasSettings="{Binding SelectedHeat.KartParameters, Converter={StaticResource NullToBooleanConverter}}"
                 IsActive="{Binding IsKartActive}" />
 
             <controls:MethodSelectorControl
                 Label="{DynamicResource m_ScoringSystem}"
-                SelectedMethodId="{Binding SelectedScoreMethodId, Mode=TwoWay}"
+                SelectedMethodId="{Binding SelectedHeat.ScoreMethodId, Mode=TwoWay}"
                 AvailableMethods="{Binding AvailableScoreMethods}"
                 ShowSettingsCommand="{Binding ShowSettingsCommand}"
                 SettingsType="{x:Static vm:MethodSettingsType.Score}"
-                HasSettings="{Binding HasScoreSettings}"
+                HasSettings="{Binding SelectedHeat.ScoreParameters, Converter={StaticResource NullToBooleanConverter}}"
                 IsActive="{Binding IsScoreActive}" />
         </StackPanel>
 

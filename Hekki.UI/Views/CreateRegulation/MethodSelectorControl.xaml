@@ -18,7 +18,7 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Column="0">
-            <TextBlock Text="{Binding Label, ElementName=Root}" Margin="0,0,0,5"/>
+            <TextBlock Text="{Binding Label, ElementName=Root, Mode=TwoWay}" Margin="0,0,0,5"/>
             <ComboBox SelectedValue="{Binding SelectedMethodId, ElementName=Root, Mode=TwoWay}"
                       DisplayMemberPath="Title"
                       SelectedValuePath="Id"

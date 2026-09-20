@@ -11,22 +11,72 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty] private int _groupCapacity;
         [ObservableProperty] private bool _usePenalty;
         [ObservableProperty] private ScoringMode _scoringMode;
-
         [ObservableProperty] private bool _usePoints;
         [ObservableProperty] private bool _useTime;
-
-
         [ObservableProperty] private string _shuffleMethodId = string.Empty;
         [ObservableProperty] private MethodParameters? _shuffleParameters;
-
         [ObservableProperty] private string _groupMethodId = string.Empty;
         [ObservableProperty] private MethodParameters? _groupParameters;
-
         [ObservableProperty] private string _kartMethodId = string.Empty;
         [ObservableProperty] private MethodParameters? _kartParameters;
-
         [ObservableProperty] private string _scoreMethodId = string.Empty;
         [ObservableProperty] private MethodParameters? _scoreParameters;
+
+        partial void OnShuffleMethodIdChanged(string? value)
+        {
+            UpdateMethodSelection(MethodSettingsType.Shuffle, value);
+        }
+
+        partial void OnGroupMethodIdChanged(string? value)
+        {
+            UpdateMethodSelection(MethodSettingsType.Group, value);
+        }
+
+        partial void OnKartMethodIdChanged(string? value)
+        {
+            UpdateMethodSelection(MethodSettingsType.Kart, value);
+        }
+
+        partial void OnScoreMethodIdChanged(string? value)
+        {
+            UpdateMethodSelection(MethodSettingsType.Score, value);
+        }
+
+        private void UpdateMethodSelection(MethodSettingsType type, string? methodId)
+        {
+            var hasMethod = !string.IsNullOrEmpty(methodId);
+            var safeMethodId = methodId ?? string.Empty;
+            var parameters = hasMethod ? CreateParametersVm(methodId) : null;
+
+            switch (type)
+            {
+                case MethodSettingsType.Shuffle:
+                    ShuffleMethodId = safeMethodId;
+                    ShuffleParameters = parameters;
+                    break;
+
+                case MethodSettingsType.Group:
+                    GroupMethodId = safeMethodId;
+                    GroupParameters = parameters;
+                    break;
+
+                case MethodSettingsType.Kart:
+                    KartMethodId = safeMethodId;
+                    KartParameters = parameters;
+                    break;
+
+                case MethodSettingsType.Score:
+                    ScoreMethodId = safeMethodId;
+                    ScoreParameters = parameters;
+                    break;
+            }
+        }
+
+        private MethodParameters? CreateParametersVm(string? methodId) => methodId switch
+        {
+            "replacement_group_assignment" => new ReplacementParameters(),
+            _ => null
+        };
 
         partial void OnUsePointsChanged(bool value)
         {
