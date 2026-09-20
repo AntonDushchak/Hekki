@@ -172,8 +172,6 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="40" />
-                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0">
@@ -198,118 +196,15 @@
                             </StackPanel>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="2">
-
-                            <controls:MethodSelectorControl 
-                                    Label="{DynamicResource m_ShuffleSystem}"
-                                    SelectedMethodId="{Binding SelectedShuffleMethodId, Mode=TwoWay}"
-                                    AvailableMethods="{Binding AvailableShuffleMethods}"
-                                    ShowSettingsCommand="{Binding ShowSettingsCommand}"
-                                    SettingsType="{x:Static vm:MethodSettingsType.Shuffle}"
-                                    HasSettings="{Binding HasShuffleSettings}"
-                                    IsActive="{Binding IsShuffleActive}"/>
-
-                            <controls:MethodSelectorControl 
-                                    Label="{DynamicResource m_GroupAssignment}"
-                                    SelectedMethodId="{Binding SelectedGroupMethodId, Mode=TwoWay}"
-                                    AvailableMethods="{Binding AvailableGroupMethods}"
-                                    ShowSettingsCommand="{Binding ShowSettingsCommand}"
-                                    SettingsType="{x:Static vm:MethodSettingsType.Group}"
-                                    HasSettings="{Binding HasGroupSettings}"
-                                    IsActive="{Binding IsGroupActive}"/>
-
-                            <controls:MethodSelectorControl 
-                                    Label="{DynamicResource m_KartAssignment}"
-                                    SelectedMethodId="{Binding SelectedKartMethodId, Mode=TwoWay}"
-                                    AvailableMethods="{Binding AvailableKartMethods}"
-                                    ShowSettingsCommand="{Binding ShowSettingsCommand}"
-                                    SettingsType="{x:Static vm:MethodSettingsType.Kart}"
-                                    HasSettings="{Binding HasKartSettings}"
-                                    IsActive="{Binding IsKartActive}"/>
-
-                            <controls:MethodSelectorControl 
-                                    Label="{DynamicResource m_ScoringSystem}"
-                                    SelectedMethodId="{Binding SelectedScoreMethodId, Mode=TwoWay}"
-                                    AvailableMethods="{Binding AvailableScoreMethods}"
-                                    ShowSettingsCommand="{Binding ShowSettingsCommand}"
-                                    SettingsType="{x:Static vm:MethodSettingsType.Score}"
-                                    HasSettings="{Binding HasScoreSettings}"
-                                    IsActive="{Binding IsScoreActive}"/>
-
-                        </StackPanel>
                     </Grid>
                 </StackPanel>
             </ScrollViewer>
         </Border>
 
-        <Border Grid.Row="2"
-                Grid.Column="2"
-                CornerRadius="8"
-                Padding="20"
-                Background="{DynamicResource Brush.SurfaceLow}"
-                Visibility="{Binding SelectedHeat, Converter={StaticResource NullToVisibilityConverter}}">
-
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                
-                <TextBlock Text="{DynamicResource m_AdditionalSettings}"
-                           FontSize="18"
-                           FontWeight="SemiBold"
-                           Grid.ColumnSpan="3"/>
-
-                <TextBlock HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           Opacity="0.6"
-                           Text="{DynamicResource m_NoSetttingSelected}"
-                           Grid.Column="1"
-                           Grid.Row="1">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding CurrentSettingsType}" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-
-
-                <StackPanel Grid.Row="1"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Top">
-                    <StackPanel.Style>
-                        <Style TargetType="StackPanel">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                            <Style.Triggers>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding CurrentSettingsType, Converter={StaticResource NullToVisibilityConverter}}" Value="Visible" />
-                                        <Condition Binding="{Binding CurrentActiveSettings, Converter={StaticResource NullToVisibilityConverter}}" Value="Visible" />
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </MultiDataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </StackPanel.Style>
-
-                    <TextBlock Text="{Binding CurrentActiveSettingsTitle}" 
-                               HorizontalAlignment="Center" 
-                               FontWeight="SemiBold"
-                               FontSize="16"
-                               Margin="0,0,0,15"
-                               TextTrimming="CharacterEllipsis"
-                               ToolTip="{Binding CurrentActiveSettingsTitle}"/>
-
-                    <ContentControl Content="{Binding CurrentActiveSettings}"
-                                    HorizontalAlignment="Stretch"/>
-                </StackPanel>
-            </Grid>
-        </Border>
+        <controls:MethodSettingsEditorView Grid.Row="2"
+                                           Grid.Column="2"
+                                           DataContext="{Binding MethodSettingsEditor}"
+                                           Visibility="{Binding SelectedHeat, Converter={StaticResource NullToVisibilityConverter}}" />
 
         <Grid Grid.Row="3" Grid.ColumnSpan="3" Margin="0,30,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
