@@ -30,14 +30,6 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Add Pilot Control -->
-                <Border Grid.Row="0"
-                        Background="{DynamicResource Brush.SurfaceLow}"
-                        CornerRadius="4"
-                        Padding="15"
-                        Margin="0,0,0,20">
-                    <components:AddPilotControl DataContext="{Binding Participants}"/>
-                </Border>
                 <Button Content="Add Test"
                         Command="{Binding AddTestDataCommand}"
                         HorizontalAlignment="Right"
@@ -54,7 +46,8 @@
                                    FontSize="20"
                                    FontWeight="SemiBold"
                                    Margin="0,0,0,15"/>
-                        <components:TotalTable DataContext="{Binding TotalTable}"/>
+                        <components:TotalTable DataContext="{Binding TotalTable}"
+                                               Participants="{Binding DataContext.Participants, RelativeSource={RelativeSource AncestorType={x:Type local:RaceView}}}"/>
                     </DockPanel>
                 </Border>
             </Grid>

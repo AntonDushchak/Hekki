@@ -1,3 +1,5 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Messages;
 using Hekki.UI.Mappers;
@@ -12,15 +14,17 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
         IRecipient<GroupsAssignedMessage>
     {
         private int? _raceId;
-        private readonly List<RaceParticipantViewModel> _participants = [];
+        public ObservableCollection<RaceParticipantViewModel> Participants = [];
 
         public ObservableCollection<HeatViewModel> Heats { get; } = []; //TODO: зачем тут ваще хиты?
         public ObservableCollection<TotalTableRowViewModel> TotalTableRows { get; } = [];
         public ObservableCollection<ColumnViewModel> Columns { get; } = [];
+        [ObservableProperty] private bool _isAddPilotEditorOpen = false;
 
         public void Initialize(int raceId, IEnumerable<HeatViewModel> heats, IEnumerable<RaceParticipantViewModel> participants)
         {
             _raceId = raceId;
+            IsAddPilotEditorOpen = false;
 
             Heats.Clear();
             foreach (var h in heats)
@@ -28,8 +32,9 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
 
             BuildColumns();
 
-            _participants.Clear();
-            _participants.AddRange(participants);
+            Participants.Clear();
+            foreach (var participant in participants)
+                Participants.Add(participant);
 
             RebuildStandings();
         }
@@ -39,15 +44,17 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
             if (message.RaceId != _raceId) return;
 
             var vm = PilotUiMapper.MapToParticipantViewModel(message.RaceParticipant);
-            _participants.Add(vm);
+            Participants.Add(vm);
             TotalTableRows.Add(BuildRow(vm));
+            IsAddPilotEditorOpen = false;
         }
 
         public void Receive(ParticipantRemovedMessage message)
         {
             if (message.RaceId != _raceId) return;
 
-            _participants.RemoveAll(p => p.Id == message.ParticipantId);
+            var participant = Participants.FirstOrDefault(p => p.Id == message.ParticipantId);
+            if (participant != null) Participants.Remove(participant);
             var row = TotalTableRows.FirstOrDefault(r => r.Participant.Id == message.ParticipantId);
             if (row != null) TotalTableRows.Remove(row);
         }
@@ -95,7 +102,7 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
         private void RebuildStandings()
         {
             TotalTableRows.Clear();
-            foreach (var participant in _participants)
+            foreach (var participant in Participants)
                 TotalTableRows.Add(BuildRow(participant));
         }
 
@@ -136,6 +143,12 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
             }
 
             return row;
+        }
+
+        [RelayCommand]
+        private void OpenAddPilotEditor()
+        {
+            IsAddPilotEditorOpen = true;
         }
     }
 }

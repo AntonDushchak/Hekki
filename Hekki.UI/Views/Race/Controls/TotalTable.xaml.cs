@@ -1,4 +1,5 @@
 ﻿using Hekki.UI.ViewModels;
+using Hekki.UI.ViewModels.Race;
 using Hekki.UI.ViewModels.Race.TotalTable;
 using System.Collections.Specialized;
 using System.Windows;
@@ -13,7 +14,19 @@ namespace Hekki.UI.Views.Race.Controls
 {
     public partial class TotalTable : UserControl
     {
+        public static readonly DependencyProperty ParticipantsProperty =
+            DependencyProperty.Register(
+                nameof(Participants),
+                typeof(ParticipantsSectionViewModel),
+                typeof(TotalTable));
+
         private TotalTableViewModel? _viewModel;
+
+        public ParticipantsSectionViewModel? Participants
+        {
+            get => (ParticipantsSectionViewModel?)GetValue(ParticipantsProperty);
+            set => SetValue(ParticipantsProperty, value);
+        }
 
         public TotalTable()
         {
