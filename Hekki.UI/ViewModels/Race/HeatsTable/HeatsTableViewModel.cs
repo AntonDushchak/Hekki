@@ -68,7 +68,6 @@ namespace Hekki.UI.ViewModels.Race
 
         public void Receive(HeatGeneratedMessage message)
         {
-            throw new NotImplementedException();
         }
 
         public void Receive(GroupsAssignedMessage message)

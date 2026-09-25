@@ -23,9 +23,12 @@ namespace Hekki.UI.ViewModels
             {
                 await action();
             }
+            catch (OperationCanceledException)
+            {
+            }
             catch (Exception ex)
             {
-                WeakReferenceMessenger.Default.Send(new AppErrorMessage(ex.Message));
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage(ex.Message, ex, $"{GetType().Name}.{source}"));
             }
         }
 

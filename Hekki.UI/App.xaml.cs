@@ -65,6 +65,9 @@ namespace Hekki.UI
         {
             WeakReferenceMessenger.Default.Register<AppErrorMessage>(this, (r, m) =>
             {
+                if (m.Exception != null)
+                    Logger?.LogError(m.Exception, "Error in {Source}", m.Source ?? "unknown");
+
                 if (Dispatcher.CheckAccess())
                 {
                     ShowMessageWindow(m.Message, MessageType.Error);
@@ -113,26 +116,29 @@ namespace Hekki.UI
 
             this.DispatcherUnhandledException += (s, e) =>
             {
-                UiServices?.GetService<ILogger<App>>()?.LogError(e.Exception, "UI exception");
-                WeakReferenceMessenger.Default.Send(new AppErrorMessage(e.Exception.Message));
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage(e.Exception.Message, e.Exception, "Dispatcher"));
                 e.Handled = true;
             };
 
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
                 var ex = e.ExceptionObject as Exception;
-                UiServices?.GetService<ILogger<App>>()?.LogCritical(ex, "Critical exception");
-                if (!e.IsTerminating && ex != null)
-                    WeakReferenceMessenger.Default.Send(new AppErrorMessage(ex.Message));
+                if (e.IsTerminating || ex == null)
+                {
+                    Logger?.LogCritical(ex, "Critical exception");
+                    return;
+                }
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage(ex.Message, ex, "AppDomain"));
             };
 
             TaskScheduler.UnobservedTaskException += (s, e) =>
             {
-                UiServices?.GetService<ILogger<App>>()?.LogError(e.Exception, "Task exception");
-                WeakReferenceMessenger.Default.Send(new AppErrorMessage(e.Exception.Message));
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage(e.Exception.Message, e.Exception, "TaskScheduler"));
                 e.SetObserved();
             };
         }
+
+        private static ILogger? Logger => Host?.Services.GetService<ILogger<App>>();
 
         private void ShowMessageWindow(string message, MessageType type)
         {
