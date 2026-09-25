@@ -22,6 +22,11 @@ namespace Hekki.Application.Services
             return await _regulationRepository.GetForEditAsync(id);
         }
 
+        public async Task<int> AddRegulationAsync(RegulationEditDto dto)
+        {
+            return await _regulationRepository.AddAsync(dto);
+        }
+
         public async Task<IReadOnlyList<RegulationSummaryDto>> GetRegulationsAsync()
         {
             return await _regulationRepository.GetAllAsync();

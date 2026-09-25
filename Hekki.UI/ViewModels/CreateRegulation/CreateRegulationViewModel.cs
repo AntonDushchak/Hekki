@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Hekki.Application.Abstrations;
 using Hekki.Application.DTOs.Regulation;
 using Hekki.Application.Messages;
+using Hekki.Application.Services;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -14,7 +14,7 @@ namespace Hekki.UI.ViewModels
     {
         private readonly INavigationService _navigationService;
         private readonly IMethodCatalogService _methodCatalog;
-        private readonly IRegulationRepository _regulationRepository;
+        private readonly IRegulationService _regulationService;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
@@ -31,11 +31,11 @@ namespace Hekki.UI.ViewModels
         public CreateRegulationViewModel(
             INavigationService navigationService,
             IMethodCatalogService methodCatalog,
-            IRegulationRepository regulationRepository)
+            IRegulationService regulationService)
         {
             _navigationService = navigationService;
             _methodCatalog = methodCatalog;
-            _regulationRepository = regulationRepository;
+            _regulationService = regulationService;
 
             MethodSettingsEditor = new MethodSettingsEditorViewModel(methodCatalog);
         }
@@ -97,32 +97,30 @@ namespace Hekki.UI.ViewModels
         private Task Save() => ExecuteSafeAsync(async () =>
         {
             ValidateAllProperties();
-            ValidateForm();
-
+            if (!ValidateForm()) return;
 
             var dto = BuildRegulationDto();
 
-            var regulationId = await _regulationRepository.AddAsync(dto);
+            var regulationId = await _regulationService.AddRegulationAsync(dto);
 
             WeakReferenceMessenger.Default.Send(new AppSuccessMessage("Regulation saved successfully!"));
 
-            _navigationService.NavigateToRace(regulationId);
-
+            await _navigationService.NavigateToRace(regulationId);
         });
 
-        private void ValidateForm()
+        private bool ValidateForm()
         {
             if (HasErrors)
             {
                 var errors = string.Join("\n", GetErrors().Select(e => e.ErrorMessage));
                 WeakReferenceMessenger.Default.Send(new AppErrorMessage($"Validation failed:\n{errors}"));
-                return;
+                return false;
             }
 
             if (!Heats.Any())
             {
                 WeakReferenceMessenger.Default.Send(new AppErrorMessage("At least one heat is required"));
-                return;
+                return false;
             }
 
             var invalidHeats = Heats.Where(h => !h.IsValid()).ToList();
@@ -130,8 +128,10 @@ namespace Hekki.UI.ViewModels
             {
                 var heatNames = string.Join(", ", invalidHeats.Select(h => h.Name));
                 WeakReferenceMessenger.Default.Send(new AppErrorMessage($"Please select at least one scoring type (Points or Time) for: {heatNames}"));
-                return;
+                return false;
             }
+
+            return true;
         }
 
         private RegulationEditDto BuildRegulationDto()
