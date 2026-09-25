@@ -9,8 +9,6 @@ namespace Hekki.UI.Services
         public void Publish<TMessage>(TMessage message)
             where TMessage : class
         {
-            // Ошибка в обработчике UI не должна выглядеть как ошибка сервиса,
-            // который к этому моменту уже успешно отработал.
             try
             {
                 WeakReferenceMessenger.Default.Send(message);

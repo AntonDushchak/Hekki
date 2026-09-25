@@ -14,7 +14,12 @@ namespace Hekki.UI.ViewModels
 
         public void Dispose()
         {
+            OnDisposing();
             WeakReferenceMessenger.Default.UnregisterAll(this);
+        }
+
+        protected virtual void OnDisposing()
+        {
         }
 
         protected async Task ExecuteSafeAsync(Func<Task> action, [CallerMemberName] string? source = null)

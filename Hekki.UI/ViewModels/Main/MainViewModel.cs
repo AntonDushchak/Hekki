@@ -27,7 +27,10 @@ namespace Hekki.UI.ViewModels
 
         private void OnNavigate(object vm)
         {
+            var previous = CurrentPageVM;
             CurrentPageVM = vm;
+            if (!ReferenceEquals(previous, vm))
+                (previous as IDisposable)?.Dispose();
 
             TopPanelVM.Title = vm switch
             {

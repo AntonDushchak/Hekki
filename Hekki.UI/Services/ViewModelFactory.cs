@@ -15,7 +15,7 @@ namespace Hekki.UI.Services
 
         public T Create<T>() where T : class
         {
-            return _serviceProvider.GetRequiredService<T>();
+            return ActivatorUtilities.CreateInstance<T>(_serviceProvider);
         }
 
         public RaceViewModel CreateRaceViewModel(int regulationId, int? raceId = null)

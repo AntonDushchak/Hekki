@@ -125,6 +125,13 @@ namespace Hekki.UI.ViewModels
                 await _raceService.AddParticipantAsync(RaceId.Value, i);
         });
 
+        protected override void OnDisposing()
+        {
+            Participants.Dispose();
+            HeatsTable.Dispose();
+            TotalTable.Dispose();
+        }
+
         private void OpenRaceSettings()
         {
             var settingsViewModel = new RaceSettingsViewModel(_appSettings, RaceName, RaceDate, Location);
