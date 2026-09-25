@@ -1,14 +1,20 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
+using Hekki.Application.Messages;
 using Hekki.UI.Mappers;
 using Hekki.UI.Services;
 using Hekki.UI.ViewModels.Race;
 using Hekki.UI.ViewModels.Race.TotalTable;
+using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels
 {
-    public partial class RaceViewModel : ViewModelBase
+    public partial class RaceViewModel : ViewModelBase,
+        IRecipient<ParticipantAddedMessage>,
+        IRecipient<ParticipantRemovedMessage>,
+        IRecipient<GroupsAssignedMessage>
     {
         private readonly IRaceService _raceService;
         private readonly INavigationService _navigationService;
@@ -21,6 +27,7 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty] private DateTime _raceDate = DateTime.Today;
         [ObservableProperty] private bool _showFirstSettings;
         private List<HeatViewModel> _heatList;
+        private readonly ObservableCollection<RaceParticipantViewModel> _participantList = [];
 
         public bool IsNewRace => RaceId == null;
 
@@ -104,18 +111,45 @@ namespace Hekki.UI.ViewModels
 
             RaceUiMapper.ApplyTo(this, raceDto);
 
-            var participantVms = raceDto.Participants
-                .Select(PilotUiMapper.MapToParticipantViewModel)
-                .ToList();
+            _participantList.Clear();
+            foreach (var participant in raceDto.Participants)
+                _participantList.Add(PilotUiMapper.MapToParticipantViewModel(participant));
 
             _heatList = raceDto.Heats
                 .Select(HeatUiMapper.MapToHeatViewModel)
                 .ToList();
 
-            Participants.Initialize(RaceId!.Value, participantVms);
+            Participants.Initialize(RaceId!.Value, _participantList);
             HeatsTable.Initialize(RaceId!.Value, _heatList);
-            TotalTable.Initialize(RaceId!.Value, _heatList, participantVms);
+            TotalTable.Initialize(_heatList, _participantList);
         });
+
+        public void Receive(ParticipantAddedMessage message)
+        {
+            if (message.RaceId != RaceId) return;
+
+            var participant = PilotUiMapper.MapToParticipantViewModel(message.RaceParticipant);
+            _participantList.Add(participant);
+            TotalTable.AddRow(participant);
+            TotalTable.IsAddPilotEditorOpen = false;
+        }
+
+        public void Receive(ParticipantRemovedMessage message)
+        {
+            if (message.RaceId != RaceId) return;
+
+            var participant = _participantList.FirstOrDefault(p => p.Id == message.ParticipantId);
+            if (participant != null) _participantList.Remove(participant);
+            TotalTable.RemoveRow(message.ParticipantId);
+        }
+
+        public void Receive(GroupsAssignedMessage message)
+        {
+            if (message.RaceId != RaceId) return;
+
+            HeatAssignmentApplier.Apply(_heatList, message.Result);
+            TotalTable.RefreshAssignments();
+        }
 
         [RelayCommand]
         private Task AddTestDataAsync() => ExecuteSafeAsync(async () =>

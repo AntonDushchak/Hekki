@@ -21,7 +21,7 @@ namespace Hekki.UI.ViewModels.Race
         [ObservableProperty] private PilotViewModel? _selectedPilot;
         [ObservableProperty] private bool _isPopupOpen;
 
-        private IEnumerable<RaceParticipantViewModel> _participants;
+        private IReadOnlyCollection<RaceParticipantViewModel> _participants;
         public ObservableCollection<PilotViewModel> FilteredPilots { get; } = [];
 
         public ParticipantsSectionViewModel(
@@ -37,7 +37,7 @@ namespace Hekki.UI.ViewModels.Race
             _participants = [];
         }
 
-        public void Initialize(int raceId, IEnumerable<RaceParticipantViewModel> participants)
+        public void Initialize(int raceId, IReadOnlyCollection<RaceParticipantViewModel> participants)
         {
             _raceId = raceId;
             _participants = participants;

@@ -1,15 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
-using Hekki.Application.Messages;
-using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels.Race
 {
-    public partial class HeatsTableViewModel : ViewModelBase,
-        IRecipient<HeatGeneratedMessage>,
-        IRecipient<GroupsAssignedMessage>
+    public partial class HeatsTableViewModel : ViewModelBase
     {
         private readonly IRaceService _raceService;
         private int? _raceId;
@@ -47,7 +42,7 @@ namespace Hekki.UI.ViewModels.Race
 
         private void CreateRows(HeatGroupViewModel heatGroup)
         {
-            for (int i = 0; i < heatGroup.GroupCapacity; i++)
+            for (int i = heatGroup.Rows.Count; i < heatGroup.GroupCapacity; i++)
             {
                 heatGroup.Rows.Add(new HeatRowViewModel() { Entry = new HeatEntryViewModel(), Result = new HeatResultViewModel() });
             }
@@ -65,17 +60,5 @@ namespace Hekki.UI.ViewModels.Race
         {
             await Task.CompletedTask; // TODO
         });
-
-        public void Receive(HeatGeneratedMessage message)
-        {
-        }
-
-        public void Receive(GroupsAssignedMessage message)
-        {
-            if (message.RaceId != _raceId)
-                return;
-
-            HeatAssignmentApplier.Apply(Heats, message.Result);
-        }
     }
 }

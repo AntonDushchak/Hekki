@@ -1,69 +1,41 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Hekki.Application.Messages;
-using Hekki.UI.Mappers;
-using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels.Race.TotalTable
 {
-    public partial class TotalTableViewModel : ViewModelBase,
-        IRecipient<ParticipantAddedMessage>,
-        IRecipient<ParticipantRemovedMessage>,
-        IRecipient<GroupsAssignedMessage>
+    public partial class TotalTableViewModel : ViewModelBase
     {
-        private int? _raceId;
-        public ObservableCollection<RaceParticipantViewModel> Participants = [];
-
-        public ObservableCollection<HeatViewModel> Heats { get; } = []; //TODO: зачем тут ваще хиты?
+        public IReadOnlyList<RaceParticipantViewModel> Participants { get; private set; } = [];
+        public IReadOnlyList<HeatViewModel> Heats { get; private set; } = [];
         public ObservableCollection<TotalTableRowViewModel> TotalTableRows { get; } = [];
         public ObservableCollection<ColumnViewModel> Columns { get; } = [];
         [ObservableProperty] private bool _isAddPilotEditorOpen = false;
 
-        public void Initialize(int raceId, IEnumerable<HeatViewModel> heats, IEnumerable<RaceParticipantViewModel> participants)
+        public void Initialize(IReadOnlyList<HeatViewModel> heats, IReadOnlyList<RaceParticipantViewModel> participants)
         {
-            _raceId = raceId;
             IsAddPilotEditorOpen = false;
 
-            Heats.Clear();
-            foreach (var h in heats)
-                Heats.Add(h);
+            Heats = heats;
+            Participants = participants;
 
             BuildColumns();
-
-            Participants.Clear();
-            foreach (var participant in participants)
-                Participants.Add(participant);
-
             RebuildStandings();
         }
 
-        public void Receive(ParticipantAddedMessage message)
+        public void AddRow(RaceParticipantViewModel participant)
         {
-            if (message.RaceId != _raceId) return;
-
-            var vm = PilotUiMapper.MapToParticipantViewModel(message.RaceParticipant);
-            Participants.Add(vm);
-            TotalTableRows.Add(BuildRow(vm));
-            IsAddPilotEditorOpen = false;
+            TotalTableRows.Add(BuildRow(participant));
         }
 
-        public void Receive(ParticipantRemovedMessage message)
+        public void RemoveRow(Guid participantId)
         {
-            if (message.RaceId != _raceId) return;
-
-            var participant = Participants.FirstOrDefault(p => p.Id == message.ParticipantId);
-            if (participant != null) Participants.Remove(participant);
-            var row = TotalTableRows.FirstOrDefault(r => r.Participant.Id == message.ParticipantId);
+            var row = TotalTableRows.FirstOrDefault(r => r.Participant.Id == participantId);
             if (row != null) TotalTableRows.Remove(row);
         }
 
-        public void Receive(GroupsAssignedMessage message)
+        public void RefreshAssignments()
         {
-            if (message.RaceId != _raceId) return;
-
-            HeatAssignmentApplier.Apply(Heats, message.Result);
             RebuildStandingsKart();
         }
 
