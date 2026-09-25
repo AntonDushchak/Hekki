@@ -4,7 +4,7 @@ using Hekki.Application.Abstractions;
 using Hekki.Application.DTOs.Pilot;
 using System.Collections.ObjectModel;
 
-namespace Hekki.UI.Services
+namespace Hekki.UI.ViewModels
 {
     public partial class PilotEditorViewModel : ObservableValidator
     {
