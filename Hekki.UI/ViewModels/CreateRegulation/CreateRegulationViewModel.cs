@@ -1,8 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.DTOs.Regulation;
-using Hekki.Application.Messages;
 using Hekki.Application.Services;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
@@ -103,7 +101,7 @@ namespace Hekki.UI.ViewModels
 
             var regulationId = await _regulationService.AddRegulationAsync(dto);
 
-            WeakReferenceMessenger.Default.Send(new AppSuccessMessage("Regulation saved successfully!"));
+            ShowSuccess("Regulation saved successfully!");
 
             await _navigationService.NavigateToRace(regulationId);
         });
@@ -113,13 +111,13 @@ namespace Hekki.UI.ViewModels
             if (HasErrors)
             {
                 var errors = string.Join("\n", GetErrors().Select(e => e.ErrorMessage));
-                WeakReferenceMessenger.Default.Send(new AppErrorMessage($"Validation failed:\n{errors}"));
+                ShowError($"Validation failed:\n{errors}");
                 return false;
             }
 
             if (!Heats.Any())
             {
-                WeakReferenceMessenger.Default.Send(new AppErrorMessage("At least one heat is required"));
+                ShowError("At least one heat is required");
                 return false;
             }
 
@@ -127,7 +125,7 @@ namespace Hekki.UI.ViewModels
             if (invalidHeats.Count > 0)
             {
                 var heatNames = string.Join(", ", invalidHeats.Select(h => h.Name));
-                WeakReferenceMessenger.Default.Send(new AppErrorMessage($"Please select at least one scoring type (Points or Time) for: {heatNames}"));
+                ShowError($"Please select at least one scoring type (Points or Time) for: {heatNames}");
                 return false;
             }
 

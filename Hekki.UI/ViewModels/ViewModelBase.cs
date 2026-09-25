@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Hekki.Application.Messages;
+using Hekki.UI.Messages;
 using System.Runtime.CompilerServices;
 
 namespace Hekki.UI.ViewModels
@@ -33,8 +33,28 @@ namespace Hekki.UI.ViewModels
             }
             catch (Exception ex)
             {
-                WeakReferenceMessenger.Default.Send(new AppErrorMessage(ex.Message, ex, $"{GetType().Name}.{source}"));
+                ShowError(ex.Message, ex, source);
             }
+        }
+
+        protected void ShowError(string message, Exception? exception = null, [CallerMemberName] string? source = null)
+        {
+            WeakReferenceMessenger.Default.Send(new AppErrorMessage(message, exception, $"{GetType().Name}.{source}"));
+        }
+
+        protected void ShowSuccess(string message)
+        {
+            WeakReferenceMessenger.Default.Send(new AppSuccessMessage(message));
+        }
+
+        protected void ShowInfo(string message)
+        {
+            WeakReferenceMessenger.Default.Send(new AppInfoMessage(message));
+        }
+
+        protected void ShowWarning(string message)
+        {
+            WeakReferenceMessenger.Default.Send(new AppWarningMessage(message));
         }
 
         protected void Publish<TMessage>(TMessage message)

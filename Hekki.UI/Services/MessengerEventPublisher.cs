@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
-using Hekki.Application.Messages;
+using Hekki.UI.Messages;
 
 namespace Hekki.UI.Services
 {

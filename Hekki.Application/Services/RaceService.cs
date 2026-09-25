@@ -54,9 +54,10 @@ namespace Hekki.Application.Services
             return participant;
         }
 
-        public async Task RemoveParticipantAsync(Guid participantId, CancellationToken ct = default)
+        public async Task RemoveParticipantAsync(int raceId, Guid participantId, CancellationToken ct = default)
         {
             await _participantRepository.DeleteAsync(participantId, ct);
+            _eventPublisher.Publish(new ParticipantRemovedMessage(raceId, participantId));
         }
 
         public async Task<RegulationEditDto?> GetRegulationEditAsync(int regulationId, CancellationToken ct = default)
