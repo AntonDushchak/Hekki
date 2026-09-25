@@ -1,4 +1,4 @@
-using Hekki.Application.Abstrations;
+using Hekki.Application.Abstractions;
 using Hekki.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

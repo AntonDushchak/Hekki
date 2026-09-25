@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using Hekki.Application.Abstrations;
+using Hekki.Application.Abstractions;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels.Race

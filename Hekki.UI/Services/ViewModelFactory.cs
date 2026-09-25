@@ -1,5 +1,5 @@
 ﻿using Hekki.UI.ViewModels;
-using Hekki.Application.Abstrations;
+using Hekki.Application.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hekki.UI.Services

@@ -1,4 +1,4 @@
-using Hekki.Application.Abstrations;
+using Hekki.Application.Abstractions;
 using Hekki.Application.DTOs.Race;
 using Hekki.Application.DTOs.Regulation;
 using Hekki.Application.Exceptions;

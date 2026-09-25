@@ -1,6 +1,6 @@
 using Hekki.Application.DTOs.Pilot;
 
-namespace Hekki.Application.Abstrations
+namespace Hekki.Application.Abstractions
 {
     public interface IPilotService
     {

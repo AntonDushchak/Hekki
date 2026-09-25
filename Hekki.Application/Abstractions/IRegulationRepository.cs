@@ -1,6 +1,6 @@
 ﻿using Hekki.Application.DTOs.Regulation;
 
-namespace Hekki.Application.Abstrations
+namespace Hekki.Application.Abstractions
 {
     public interface IRegulationRepository
     {

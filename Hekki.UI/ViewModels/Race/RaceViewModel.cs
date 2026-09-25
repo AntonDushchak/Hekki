@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Hekki.Application.Abstrations;
+using Hekki.Application.Abstractions;
 using Hekki.Application.Exceptions;
 using Hekki.Application.Messages;
 using Hekki.UI.Mappers;

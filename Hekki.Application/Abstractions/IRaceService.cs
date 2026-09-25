@@ -1,7 +1,7 @@
 using Hekki.Application.DTOs.Race;
 using Hekki.Application.DTOs.Regulation;
 
-namespace Hekki.Application.Abstrations
+namespace Hekki.Application.Abstractions
 {
     public interface IRaceService
     {

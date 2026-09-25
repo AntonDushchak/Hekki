@@ -1,4 +1,4 @@
-using Hekki.Application.Abstrations;
+using Hekki.Application.Abstractions;
 using Hekki.Application.DTOs.Pilot;
 
 namespace Hekki.Application.Services

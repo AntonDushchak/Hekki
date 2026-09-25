@@ -1,5 +1,5 @@
 using AutoMapper;
-using Hekki.Application.Abstrations;
+using Hekki.Application.Abstractions;
 using Hekki.Application.DTOs.Regulation;
 using Hekki.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;

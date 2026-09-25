@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.DTOs.Regulation;
-using Hekki.Application.Services;
+using Hekki.Application.Abstractions;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;

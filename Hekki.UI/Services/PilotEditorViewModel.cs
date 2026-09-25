@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Hekki.Application.Abstrations;
+using Hekki.Application.Abstractions;
 using Hekki.Application.DTOs.Pilot;
 using System.Collections.ObjectModel;
 

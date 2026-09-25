@@ -1,4 +1,4 @@
-using Hekki.Application.Abstrations;
+using Hekki.Application.Abstractions;
 using Hekki.UI.Services;
 using Hekki.UI.ViewModels;
 using Hekki.UI.Views;

@@ -1,6 +1,6 @@
 using Hekki.Application.DTOs.Race;
 
-namespace Hekki.Application.Abstrations
+namespace Hekki.Application.Abstractions
 {
     public interface IHeatRepository
     {

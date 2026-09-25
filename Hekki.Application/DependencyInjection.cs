@@ -1,4 +1,4 @@
-using Hekki.Application.Abstrations;
+using Hekki.Application.Abstractions;
 using Hekki.Application.Methods;
 using Hekki.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
