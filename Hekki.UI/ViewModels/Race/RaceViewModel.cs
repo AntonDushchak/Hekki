@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Hekki.Application.Abstrations;
+using Hekki.Application.Exceptions;
 using Hekki.Application.Messages;
 using Hekki.UI.Mappers;
 using Hekki.UI.Services;
@@ -105,9 +106,8 @@ namespace Hekki.UI.ViewModels
             if (IsNewRace)
                 return;
 
-            var raceDto = await _raceService.GetRaceDataAsync(RaceId!.Value);
-            if (raceDto == null)
-                return;
+            var raceDto = await _raceService.GetRaceDataAsync(RaceId!.Value)
+                ?? throw new RaceNotFoundException(RaceId.Value);
 
             RaceUiMapper.ApplyTo(this, raceDto);
 

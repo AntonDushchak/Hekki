@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Hekki.UI.Messages;
+using Hekki.UI.Services;
 using System.Runtime.CompilerServices;
 
 namespace Hekki.UI.ViewModels
@@ -33,7 +34,7 @@ namespace Hekki.UI.ViewModels
             }
             catch (Exception ex)
             {
-                ShowError(ex.Message, ex, source);
+                ShowError(Localizer.ForException(ex), ex, source);
             }
         }
 

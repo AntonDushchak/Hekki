@@ -72,6 +72,18 @@
     <system:String x:Key="m_EditHeat">Редактировать заезд</system:String>
     <system:String x:Key="m_TotalScore">Сумма очков</system:String>
     <system:String x:Key="m_TotalTime">Общее время</system:String>
+    <system:String x:Key="m_RegulationSaved">Регламент сохранён.</system:String>
+
+    <system:String x:Key="err_Unexpected">Произошла непредвиденная ошибка. Подробности записаны в лог.</system:String>
+    <system:String x:Key="err_RaceNotFound">Гонка с id={0} не найдена.</system:String>
+    <system:String x:Key="err_RegulationNotFound">Регламент с id={0} не найден.</system:String>
+    <system:String x:Key="err_HeatNotFound">Заезд с id={0} не найден.</system:String>
+    <system:String x:Key="err_PilotNotFound">Пилот с id={0} не найден.</system:String>
+    <system:String x:Key="err_EntityNotFound">{0} с id={1} не найден.</system:String>
+    <system:String x:Key="err_EntityNotFoundWith">{0} для {1} с id={2} не найден.</system:String>
+    <system:String x:Key="err_ValidationFailed">Ошибка проверки данных:</system:String>
+    <system:String x:Key="err_NoHeats">Добавьте хотя бы один заезд.</system:String>
+    <system:String x:Key="err_NoScoringType">Выберите хотя бы один тип подсчёта (очки или время) для: {0}</system:String>
 
     <system:Double x:Key="TotalTable.HeatColumnWidth">100</system:Double>
     <system:Double x:Key="TotalTable.TotalColumnWidth">120</system:Double>

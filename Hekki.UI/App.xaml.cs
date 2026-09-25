@@ -116,7 +116,7 @@ namespace Hekki.UI
 
             this.DispatcherUnhandledException += (s, e) =>
             {
-                WeakReferenceMessenger.Default.Send(new AppErrorMessage(e.Exception.Message, e.Exception, "Dispatcher"));
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage(Localizer.ForException(e.Exception), e.Exception, "Dispatcher"));
                 e.Handled = true;
             };
 
@@ -128,12 +128,12 @@ namespace Hekki.UI
                     Logger?.LogCritical(ex, "Critical exception");
                     return;
                 }
-                WeakReferenceMessenger.Default.Send(new AppErrorMessage(ex.Message, ex, "AppDomain"));
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage(Localizer.ForException(ex), ex, "AppDomain"));
             };
 
             TaskScheduler.UnobservedTaskException += (s, e) =>
             {
-                WeakReferenceMessenger.Default.Send(new AppErrorMessage(e.Exception.Message, e.Exception, "TaskScheduler"));
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage(Localizer.ForException(e.Exception), e.Exception, "TaskScheduler"));
                 e.SetObserved();
             };
         }

@@ -101,7 +101,7 @@ namespace Hekki.UI.ViewModels
 
             var regulationId = await _regulationService.AddRegulationAsync(dto);
 
-            ShowSuccess("Regulation saved successfully!");
+            ShowSuccess(Localizer.Get("m_RegulationSaved"));
 
             await _navigationService.NavigateToRace(regulationId);
         });
@@ -111,13 +111,13 @@ namespace Hekki.UI.ViewModels
             if (HasErrors)
             {
                 var errors = string.Join("\n", GetErrors().Select(e => e.ErrorMessage));
-                ShowError($"Validation failed:\n{errors}");
+                ShowError($"{Localizer.Get("err_ValidationFailed")}\n{errors}");
                 return false;
             }
 
             if (!Heats.Any())
             {
-                ShowError("At least one heat is required");
+                ShowError(Localizer.Get("err_NoHeats"));
                 return false;
             }
 
@@ -125,7 +125,7 @@ namespace Hekki.UI.ViewModels
             if (invalidHeats.Count > 0)
             {
                 var heatNames = string.Join(", ", invalidHeats.Select(h => h.Name));
-                ShowError($"Please select at least one scoring type (Points or Time) for: {heatNames}");
+                ShowError(Localizer.Get("err_NoScoringType", heatNames));
                 return false;
             }
 

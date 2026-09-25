@@ -41,13 +41,14 @@ namespace Hekki.Application.Services
         {
             var utcDate = date.Kind == DateTimeKind.Utc ? date : DateTime.SpecifyKind(date, DateTimeKind.Utc);
             var race = new RaceDataDto { RaceName = name, Location = location, Date = utcDate, RegulationId = regulationId, Heats = [], Participants = [] };
-            var regulation = await _regulationRepository.GetByIdAsync(regulationId, ct);
+            if (!await _regulationRepository.ExistsAsync(regulationId, ct))
+                throw new RegulationNotFoundException(regulationId);
             return await _raceRepository.AddAsync(race, ct);
         }
 
         public async Task<RaceParticipantDto> AddParticipantAsync(int raceId, int pilotId, CancellationToken ct = default)
         {
-            var pilot = await _pilotRepository.GetByIdAsync(pilotId, ct) ?? throw new ArgumentNullException(nameof(pilotId));
+            var pilot = await _pilotRepository.GetByIdAsync(pilotId, ct) ?? throw new PilotNotFoundException(pilotId);
             var participant = new RaceParticipantDto { ParticipantId = Guid.NewGuid(), PilotId = pilot.Id, FirstName = pilot.FirstName, LastName = pilot.LastName, Team = pilot.Team, IsActive = true };
             await _participantRepository.AddAsync(participant, raceId, ct);
             _eventPublisher.Publish(new ParticipantAddedMessage(raceId, participant));

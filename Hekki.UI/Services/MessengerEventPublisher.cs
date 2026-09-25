@@ -15,7 +15,7 @@ namespace Hekki.UI.Services
             }
             catch (Exception ex)
             {
-                WeakReferenceMessenger.Default.Send(new AppErrorMessage(ex.Message, ex, $"Receive({typeof(TMessage).Name})"));
+                WeakReferenceMessenger.Default.Send(new AppErrorMessage(Localizer.ForException(ex), ex, $"Receive({typeof(TMessage).Name})"));
             }
         }
     }

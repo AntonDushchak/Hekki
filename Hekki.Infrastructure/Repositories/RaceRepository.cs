@@ -56,7 +56,7 @@ namespace Hekki.Infrastructure.Repositories
 
             if (raceEntity == null)
             {
-                return null; //TODO: error handler/logger
+                return null;
             }
 
             return _mapper.Map<RaceDataDto>(raceEntity);
