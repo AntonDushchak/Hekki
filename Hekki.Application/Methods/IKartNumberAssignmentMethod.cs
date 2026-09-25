@@ -5,28 +5,28 @@ namespace Hekki.Application.Methods
 {
     [JsonDerivedType(typeof(RandomKartAssignment), "random_kart_assignment")]
     [JsonDerivedType(typeof(RandomNoRepeatKartAssignment), "random_no_repeat_kart_assignment")]
-    public interface IKartNummerAssignmentMethod
+    public interface IKartNumberAssignmentMethod
     {
         string Id { get; }
         string Title { get; }
         string Description { get; }
-        void AssignKartNummer(
+        void AssignKartNumber(
             IReadOnlyList<ParticipantAssignment> assignments,
             IReadOnlyDictionary<Guid, IReadOnlyList<int>> previousKartNumbers,
             IReadOnlyList<int> availableKarts);
     }
 
-    public interface IKartNummerAssignmentCatalog
+    public interface IKartNumberAssignmentCatalog
     {
-        IReadOnlyList<IKartNummerAssignmentMethod> GetAll();
-        IKartNummerAssignmentMethod GetById(string id);
+        IReadOnlyList<IKartNumberAssignmentMethod> GetAll();
+        IKartNumberAssignmentMethod GetById(string id);
     }
 
-    public class KartNummerAssigmentCatalog : IKartNummerAssignmentCatalog
+    public class KartNumberAssignmentCatalog : IKartNumberAssignmentCatalog
     {
-        private readonly IReadOnlyList<IKartNummerAssignmentMethod> _all;
+        private readonly IReadOnlyList<IKartNumberAssignmentMethod> _all;
 
-        public KartNummerAssigmentCatalog(IEnumerable<IKartNummerAssignmentMethod> methods)
+        public KartNumberAssignmentCatalog(IEnumerable<IKartNumberAssignmentMethod> methods)
         {
             _all = methods
                 .OrderBy(m => m.Title)
@@ -35,19 +35,19 @@ namespace Hekki.Application.Methods
             _byId = _all.ToDictionary(m => m.Id, StringComparer.OrdinalIgnoreCase);
         }
 
-        private readonly IReadOnlyDictionary<string, IKartNummerAssignmentMethod> _byId;
+        private readonly IReadOnlyDictionary<string, IKartNumberAssignmentMethod> _byId;
 
 
-        public IReadOnlyList<IKartNummerAssignmentMethod> GetAll() => _all;
-        public IKartNummerAssignmentMethod GetById(string id)
+        public IReadOnlyList<IKartNumberAssignmentMethod> GetAll() => _all;
+        public IKartNumberAssignmentMethod GetById(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentException("Kart nummer assignment method id is null/empty.", nameof(id));
+                throw new ArgumentException("Kart number assignment method id is null/empty.", nameof(id));
 
             if (_byId.TryGetValue(id, out var method))
                 return method;
 
-            throw new KeyNotFoundException($"Unknown kart nummer assignment method id: '{id}'.");
+            throw new KeyNotFoundException($"Unknown kart number assignment method id: '{id}'.");
         }
     }
 }

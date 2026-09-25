@@ -23,11 +23,11 @@ namespace Hekki.Application
             services.AddSingleton<IGroupAssignmentMethod, CardGroupAssignment>();
             services.AddSingleton<IGroupAssignmentMethod, ListGroupAssignment>();
             services.AddSingleton<IGroupAssignmentMethod, ReplacementGroupAssignment>();
-            services.AddSingleton<IGroupAssignmentCatalog, GroupAssigmentCatalog>();
+            services.AddSingleton<IGroupAssignmentCatalog, GroupAssignmentCatalog>();
 
-            services.AddSingleton<IKartNummerAssignmentMethod, RandomKartAssignment>();
-            services.AddSingleton<IKartNummerAssignmentMethod, RandomNoRepeatKartAssignment>();
-            services.AddSingleton<IKartNummerAssignmentCatalog, KartNummerAssigmentCatalog>();
+            services.AddSingleton<IKartNumberAssignmentMethod, RandomKartAssignment>();
+            services.AddSingleton<IKartNumberAssignmentMethod, RandomNoRepeatKartAssignment>();
+            services.AddSingleton<IKartNumberAssignmentCatalog, KartNumberAssignmentCatalog>();
 
             services.AddSingleton<IScoreAssignmentMethod, DefaultScoreAssignment>();
             services.AddSingleton<IScoreAssignmentCatalog, ScoreAssignmentCatalog>();

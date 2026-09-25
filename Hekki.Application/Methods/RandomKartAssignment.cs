@@ -2,13 +2,13 @@
 
 namespace Hekki.Application.Methods
 {
-    public class RandomKartAssignment : IKartNummerAssignmentMethod
+    public class RandomKartAssignment : IKartNumberAssignmentMethod
     {
         public string Id => "random_kart_assignment";
         public string Title => "Random Kart Assignment";
         public string Description => "Randomly assigns kart numbers to participants.";
 
-        public void AssignKartNummer(
+        public void AssignKartNumber(
             IReadOnlyList<ParticipantAssignment> assignments,
             IReadOnlyDictionary<Guid, IReadOnlyList<int>> previousKartNumbers,
             IReadOnlyList<int> availableKarts)
@@ -20,13 +20,13 @@ namespace Hekki.Application.Methods
         }
     }
 
-    public class RandomNoRepeatKartAssignment : IKartNummerAssignmentMethod
+    public class RandomNoRepeatKartAssignment : IKartNumberAssignmentMethod
     {
         public string Id => "random_no_repeat_kart_assignment";
         public string Title => "Random No Repeat Kart Assignment";
         public string Description => "Randomly assigns kart numbers to participants without repetition.";
 
-        public void AssignKartNummer(
+        public void AssignKartNumber(
             IReadOnlyList<ParticipantAssignment> assignments,
             IReadOnlyDictionary<Guid, IReadOnlyList<int>> previousKartNumbers,
             IReadOnlyList<int> availableKarts)

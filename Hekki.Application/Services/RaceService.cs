@@ -249,7 +249,7 @@ namespace Hekki.Application.Services
         {
             var availableKarts = GetAvailableKartNumbers();
             var previousKartNumbers = BuildKartNumbersWithPilots(participants, entries);
-            assignConfig.KartMethod.AssignKartNummer(participants, previousKartNumbers, availableKarts);
+            assignConfig.KartMethod.AssignKartNumber(participants, previousKartNumbers, availableKarts);
         }
 
         private static IReadOnlyList<int> GetAvailableKartNumbers()

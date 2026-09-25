@@ -23,12 +23,12 @@ namespace Hekki.Application.Methods
         IGroupAssignmentMethod GetById(string id);
     }
 
-    public class GroupAssigmentCatalog : IGroupAssignmentCatalog
+    public class GroupAssignmentCatalog : IGroupAssignmentCatalog
     {
         private readonly IReadOnlyList<IGroupAssignmentMethod> _all;
 
         private readonly IReadOnlyDictionary<string, IGroupAssignmentMethod> _byId;
-        public GroupAssigmentCatalog(IEnumerable<IGroupAssignmentMethod> methods)
+        public GroupAssignmentCatalog(IEnumerable<IGroupAssignmentMethod> methods)
         {
             _all = methods
                 .OrderBy(m => m.Title)

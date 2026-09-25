@@ -13,7 +13,7 @@ namespace Hekki.UI.Services
 
         IParticipantShuffleMethod? CreateShuffleMethod(string id);
         IGroupAssignmentMethod? CreateGroupMethod(string id);
-        IKartNummerAssignmentMethod? CreateKartMethod(string id);
+        IKartNumberAssignmentMethod? CreateKartMethod(string id);
         IScoreAssignmentMethod? CreateScoreMethod(string id);
     }
 }

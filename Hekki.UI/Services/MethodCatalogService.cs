@@ -7,7 +7,7 @@ namespace Hekki.UI.Services
     {
         private readonly IParticipantShuffleCatalog _shuffle;
         private readonly IGroupAssignmentCatalog _group;
-        private readonly IKartNummerAssignmentCatalog _kart;
+        private readonly IKartNumberAssignmentCatalog _kart;
         private readonly IScoreAssignmentCatalog _score;
 
         private readonly Lazy<IReadOnlyList<MethodOption>> _shuffleOptions;
@@ -18,7 +18,7 @@ namespace Hekki.UI.Services
         public MethodCatalogService(
             IParticipantShuffleCatalog shuffle,
             IGroupAssignmentCatalog group,
-            IKartNummerAssignmentCatalog kart,
+            IKartNumberAssignmentCatalog kart,
             IScoreAssignmentCatalog score)
         {
             _shuffle = shuffle;
@@ -57,7 +57,7 @@ namespace Hekki.UI.Services
             return _group.GetById(id);
         }
 
-        public IKartNummerAssignmentMethod? CreateKartMethod(string id)
+        public IKartNumberAssignmentMethod? CreateKartMethod(string id)
         {
             if (string.IsNullOrEmpty(id)) return null;
             return _kart.GetById(id);
