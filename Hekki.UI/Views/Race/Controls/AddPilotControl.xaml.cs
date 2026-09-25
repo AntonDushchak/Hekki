@@ -1,8 +1,6 @@
 using Hekki.UI.ViewModels.Race;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace Hekki.UI.Views.Race.Controls
 {
@@ -18,8 +16,8 @@ namespace Hekki.UI.Views.Race.Controls
         {
             if (e.Key == Key.Down && Vm != null && Vm.IsPopupOpen && SuggestionsList.HasItems)
             {
-                SuggestionsList.Focus();
                 SuggestionsList.SelectedIndex = 0;
+                (SuggestionsList.ItemContainerGenerator.ContainerFromIndex(0) as ListBoxItem)?.Focus();
                 e.Handled = true;
             }
             else if (e.Key == Key.Escape)
@@ -28,11 +26,12 @@ namespace Hekki.UI.Views.Race.Controls
                 e.Handled = true;
             }
         }
-        private void SuggestionsList_KeyDown(object sender, KeyEventArgs e)
+
+        private void SuggestionsList_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (e.Key == Key.Enter && SuggestionsList.SelectedItem != null)
             {
-                SearchTextBox.Focus();
+                SelectSuggestion(SuggestionsList.SelectedItem);
                 e.Handled = true;
             }
             else if (e.Key == Key.Escape)
@@ -42,16 +41,22 @@ namespace Hekki.UI.Views.Race.Controls
                 e.Handled = true;
             }
         }
-        private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
+
+        private void SuggestionItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            if (sender is ListBoxItem item)
             {
-                if (!SuggestionsList.IsKeyboardFocusWithin && !SuggestionsList.IsMouseOver)
-                {
-                    if (Vm != null) Vm.IsPopupOpen = false;
-                }
-            }), DispatcherPriority.Input);
+                SelectSuggestion(item.DataContext);
+                e.Handled = true;
+            }
         }
+
+        private void SelectSuggestion(object suggestion)
+        {
+            Vm?.SelectSuggestionCommand.Execute(suggestion);
+            SearchTextBox.Focus();
+        }
+
         private void ClosePopupAndClear()
         {
             if (Vm == null) return;

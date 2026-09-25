@@ -1,7 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.Abstractions;
-using Hekki.UI.Mappers;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 
@@ -14,15 +13,13 @@ namespace Hekki.UI.ViewModels.Race
         private readonly IDialogService _dialogService;
         private readonly AppSettings _appSettings;
         private int? _raceId;
-        private bool _isUpdatingFromSelection;
         private CancellationTokenSource? _searchCancellation;
 
         [ObservableProperty] private string _searchText = string.Empty;
-        [ObservableProperty] private PilotViewModel? _selectedPilot;
         [ObservableProperty] private bool _isPopupOpen;
 
         private IReadOnlyCollection<RaceParticipantViewModel> _participants;
-        public ObservableCollection<PilotViewModel> FilteredPilots { get; } = [];
+        public ObservableCollection<object> Suggestions { get; } = [];
 
         public ParticipantsSectionViewModel(
             IRaceService raceService,
@@ -43,28 +40,15 @@ namespace Hekki.UI.ViewModels.Race
             _participants = participants;
         }
 
-        partial void OnSelectedPilotChanged(PilotViewModel? value)
-        {
-            if (value == null) return;
-            _isUpdatingFromSelection = true;
-            SearchText = value.FullName;
-            IsPopupOpen = false;
-            _isUpdatingFromSelection = false;
-        }
-
         partial void OnSearchTextChanged(string value)
         {
-            if (_isUpdatingFromSelection) return;
-
             if (string.IsNullOrWhiteSpace(value))
             {
-                FilteredPilots.Clear();
+                _searchCancellation?.Cancel();
+                Suggestions.Clear();
                 IsPopupOpen = false;
                 return;
             }
-
-            if (SelectedPilot != null && SelectedPilot.FullName != value)
-                SelectedPilot = null;
 
             _ = FilterPilotsForSearchAsync(value);
         }
@@ -75,60 +59,64 @@ namespace Hekki.UI.ViewModels.Race
             _searchCancellation = new CancellationTokenSource();
             var ct = _searchCancellation.Token;
 
-            if (string.IsNullOrWhiteSpace(searchText) || searchText.Length < 3)
+            if (searchText.Trim().Length < 3)
             {
-                FilteredPilots.Clear();
+                Suggestions.Clear();
                 IsPopupOpen = false;
                 return;
             }
 
-            try
-            {
-                await Task.Delay(300, ct);
-                var pilots = await _pilotService.SearchPilotsByFullNameAsync(searchText, ct);
+            await Task.Delay(300, ct);
+            var pilots = await _pilotService.SearchPilotsByFullNameAsync(searchText, ct);
 
-                if (ct.IsCancellationRequested) return;
+            ct.ThrowIfCancellationRequested();
 
-                FilteredPilots.Clear();
-                foreach (var pilot in pilots)
-                    FilteredPilots.Add(new PilotViewModel { PilotId = pilot.Id, FirstName = pilot.FirstName, LastName = pilot.LastName });
+            Suggestions.Clear();
+            foreach (var pilot in pilots.Where(p => !IsInRace(p.Id)))
+                Suggestions.Add(new PilotViewModel { PilotId = pilot.Id, FirstName = pilot.FirstName, LastName = pilot.LastName });
+            Suggestions.Add(new NewPilotSuggestion(searchText.Trim()));
 
-                IsPopupOpen = FilteredPilots.Count > 0;
-            }
-            catch (OperationCanceledException) { }
+            IsPopupOpen = true;
         });
 
         [RelayCommand]
-        private Task AddParticipantAsync(string name) => ExecuteSafeAsync(async () =>
+        private Task SelectSuggestionAsync(object? suggestion) => ExecuteSafeAsync(async () =>
         {
-            if (string.IsNullOrEmpty(name)) return;
-
             if (_raceId == null) return;
 
-            var pilot = SelectedPilot;
+            IsPopupOpen = false;
 
-            if (pilot == null)
+            var pilotId = suggestion switch
             {
-                var editorViewModel = new PilotEditorViewModel(_pilotService, _appSettings);
+                PilotViewModel pilot => pilot.PilotId,
+                NewPilotSuggestion newPilot => await CreatePilotAsync(newPilot.FullName),
+                _ => null
+            };
 
-                var createdPilotDto = _dialogService.ShowPilotEditor(editorViewModel);
+            if (pilotId == null || IsInRace(pilotId.Value)) return;
 
-                if (createdPilotDto == null)
-                    return;
-
-                pilot = PilotUiMapper.MapToViewModel(createdPilotDto);
-            }
-
-            if (_participants.Any(p => p.PilotId == pilot.PilotId)) return;
-
-            var participant = await _raceService.AddParticipantAsync(_raceId.Value, pilot.PilotId);
+            await _raceService.AddParticipantAsync(_raceId.Value, pilotId.Value);
 
             SearchText = string.Empty;
         });
 
-        private async Task ShowNewPilotWindow()
+        private async Task<int?> CreatePilotAsync(string fullName)
         {
-            throw new NotImplementedException();
+            var names = fullName.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var editorViewModel = new PilotEditorViewModel(_appSettings)
+            {
+                FirstName = names.ElementAtOrDefault(0) ?? string.Empty,
+                LastName = names.ElementAtOrDefault(1) ?? string.Empty
+            };
+
+            var pilot = _dialogService.ShowPilotEditor(editorViewModel);
+            if (pilot == null) return null;
+
+            return await _pilotService.CreatePilotAsync(pilot);
         }
+
+        private bool IsInRace(int pilotId) => _participants.Any(p => p.PilotId == pilotId);
     }
+
+    public record NewPilotSuggestion(string FullName);
 }

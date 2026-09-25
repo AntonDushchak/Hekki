@@ -73,6 +73,7 @@
     <system:String x:Key="m_TotalScore">Total Score</system:String>
     <system:String x:Key="m_TotalTime">Total Time</system:String>
     <system:String x:Key="m_RegulationSaved">Regulation saved.</system:String>
+    <system:String x:Key="m_NewPilot">New pilot:</system:String>
 
     <system:String x:Key="err_Unexpected">An unexpected error occurred. Details have been written to the log.</system:String>
     <system:String x:Key="err_RaceNotFound">Race with id={0} not found.</system:String>

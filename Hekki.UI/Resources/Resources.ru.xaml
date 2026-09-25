@@ -73,6 +73,7 @@
     <system:String x:Key="m_TotalScore">Сумма очков</system:String>
     <system:String x:Key="m_TotalTime">Общее время</system:String>
     <system:String x:Key="m_RegulationSaved">Регламент сохранён.</system:String>
+    <system:String x:Key="m_NewPilot">Новый пилот:</system:String>
 
     <system:String x:Key="err_Unexpected">Произошла непредвиденная ошибка. Подробности записаны в лог.</system:String>
     <system:String x:Key="err_RaceNotFound">Гонка с id={0} не найдена.</system:String>

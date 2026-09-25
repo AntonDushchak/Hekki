@@ -4,7 +4,7 @@ namespace Hekki.Application.Abstractions
 {
     public interface IPilotService
     {
-        void CreatePilot(string firstName, string lastName);
+        Task<int> CreatePilotAsync(PilotDto pilot, CancellationToken ct = default);
 
         /// <summary>
         /// Get all pilots with basic information

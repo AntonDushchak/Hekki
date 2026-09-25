@@ -12,9 +12,9 @@ namespace Hekki.Application.Services
             _pilotRepository = pilotRepository;
         }
 
-        public void CreatePilot(string firstName, string lastName)
+        public async Task<int> CreatePilotAsync(PilotDto pilot, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            return await _pilotRepository.AddAsync(pilot, ct);
         }
 
         public async Task<IReadOnlyList<PilotDto>> GetAllPilotsAsync(CancellationToken ct = default)
