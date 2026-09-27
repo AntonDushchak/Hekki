@@ -72,7 +72,7 @@
                         Command="{Binding DataContext.OpenAddPilotEditorCommand, ElementName=Root}"
                         MinHeight="40">
                     <Button.Style>
-                        <Style TargetType="Button">
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                             <Setter Property="Visibility" Value="Visible"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding DataContext.IsAddPilotEditorOpen, ElementName=Root}" Value="True">

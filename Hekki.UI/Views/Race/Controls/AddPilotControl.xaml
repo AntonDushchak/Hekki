@@ -47,14 +47,14 @@
                     </DataTemplate>
                 </ListBox.Resources>
                 <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         <Setter Property="Padding" Value="8,4"/>
                         <Setter Property="Cursor" Value="Hand"/>
                         <EventSetter Event="MouseLeftButtonUp" Handler="SuggestionItem_MouseLeftButtonUp"/>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource Brush.Surface}"/>
+                                <Setter Property="Background" Value="{DynamicResource Brush.SurfaceMid}"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>

@@ -36,14 +36,14 @@
                 Command="{Binding ShowSettingsCommand, ElementName=Root}"
                 CommandParameter="{Binding SettingsType, ElementName=Root}"
                 ToolTip="Configure settings"
-                Visibility="{Binding HasSettings, ElementName=Root, Converter={StaticResource BoolToVisibilityConverter}}"
-                Background="{DynamicResource Brush.SurfaceHigh}">
+                Visibility="{Binding HasSettings, ElementName=Root, Converter={StaticResource BoolToVisibilityConverter}}">
             <Button.Style>
                 <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Background" Value="{DynamicResource Brush.SurfaceHigh}"/>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsActive, ElementName=Root}" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource Brush.Primary}"/>
-                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Background" Value="{DynamicResource Brush.ActionDark}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource Brush.Base}"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
