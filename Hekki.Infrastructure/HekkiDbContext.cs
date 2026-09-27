@@ -238,7 +238,7 @@ namespace Hekki.Infrastructure
                     .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(e => e.Group)
-                    .WithMany()
+                    .WithMany(g => g.Results)
                     .HasForeignKey(e => e.GroupId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
