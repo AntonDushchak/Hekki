@@ -29,6 +29,7 @@ namespace Hekki.UI.ViewModels.Race
                 foreach (var group in heat.Groups)
                 {
                     CreateRows(group);
+                    group.RefreshCells();
                 }
             }
         }

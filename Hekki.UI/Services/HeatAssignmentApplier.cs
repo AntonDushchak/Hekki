@@ -37,6 +37,8 @@ namespace Hekki.UI.Services
                         row.Result = null;
                     }
                 }
+
+                groupVm.RefreshCells();
             }
         }
     }

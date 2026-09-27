@@ -21,5 +21,42 @@ namespace Hekki.UI.ViewModels
         private int _groupCapacity = 8;
 
         public ObservableCollection<HeatRowViewModel> Rows { get; set; } = [];
+        public ObservableCollection<HeatGroupColumn> Columns { get; } = [];
+
+        public void RefreshCells()
+        {
+            if (Columns.Count == 0)
+                BuildColumns();
+
+            foreach (var row in Rows)
+            {
+                if (row.Cells.Count != Columns.Count)
+                {
+                    row.Cells.Clear();
+                    foreach (var column in Columns)
+                        row.Cells.Add(column.CreateCell(row));
+                    continue;
+                }
+
+                for (var i = 0; i < Columns.Count; i++)
+                    Columns[i].UpdateCell(row.Cells[i], row);
+            }
+        }
+
+        private void BuildColumns()
+        {
+            Columns.Add(new PositionColumn());
+            Columns.Add(new KartColumn());
+            Columns.Add(new PilotColumn());
+
+            if (Heat.ShowTime)
+                Columns.Add(new BestLapColumn());
+
+            if (Heat.ShowScore)
+                Columns.Add(new ScoreColumn());
+
+            if (Heat.ShowPenalty)
+                Columns.Add(new PenaltyColumn());
+        }
     }
 }

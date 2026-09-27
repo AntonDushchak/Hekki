@@ -5,13 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Hekki.UI.Views.Race.Controls"
              mc:Ignorable="d"
-             xmlns:converters="clr-namespace:Hekki.UI.Converters"
-             xmlns:controls="clr-namespace:Hekki.UI.Views.CreateRegulation"
+             xmlns:table="clr-namespace:Hekki.UI.Views.Shared.Table"
              xmlns:vm="clr-namespace:Hekki.UI.ViewModels">
-
-    <UserControl.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-    </UserControl.Resources>
 
     <Border Background="{DynamicResource Brush.Base}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="12">
         <Grid>
@@ -35,36 +30,14 @@
 
             <StackPanel Grid.Column="1" Margin="20">
                 <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="0,0,0,10" Margin="0,0,0,5">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{DynamicResource m_Pos}" FontWeight="Bold" Width="60"/>
-                        <TextBlock Text="{DynamicResource m_Kart}" FontWeight="Bold" Width="80"/>
-                        <TextBlock Text="{DynamicResource m_Pilot}" FontWeight="Bold" Width="180"/>
-                        <TextBlock Text="{DynamicResource m_Time}" FontWeight="Bold" Width="100" TextAlignment="Right"
-                                   Visibility="{Binding Heat.ShowTime, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        <TextBlock Text="{DynamicResource m_Score}" FontWeight="Bold" Width="100" TextAlignment="Right"
-                                   Visibility="{Binding Heat.ShowScore, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        <TextBlock Text="{DynamicResource m_Penalty}" FontWeight="Bold" Width="100" TextAlignment="Right"
-                                   Visibility="{Binding Heat.ShowPenalty, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    </StackPanel>
+                    <table:TableHeader Columns="{Binding Columns}"/>
                 </Border>
 
-                <ItemsControl ItemsSource="{Binding Rows}" x:Name="RowsList">
+                <ItemsControl ItemsSource="{Binding Rows}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type vm:HeatRowViewModel}">
-                            <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="0,10">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Result.FinishPosition}" VerticalAlignment="Center" FontSize="16" Width="60"/>
-                                    <Border Background="{DynamicResource Brush.SurfaceMid}" CornerRadius="4" Padding="8,4" Width="70" Margin="0,0,10,0" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding Entry.KartNumber}" FontWeight="SemiBold" FontSize="14" HorizontalAlignment="Center"/>
-                                    </Border>
-                                    <TextBlock Text="{Binding Entry.PilotName}" VerticalAlignment="Center" FontSize="16" Width="180"/>
-                                    <TextBlock Text="{Binding Result.TotalTimeMs}" VerticalAlignment="Center" FontSize="16" Width="100" TextAlignment="Right"
-                               Visibility="{Binding DataContext.Heat.ShowTime, ElementName=RowsList, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                                    <TextBlock Text="{Binding Result.Score}" VerticalAlignment="Center" FontSize="16" Width="100" TextAlignment="Right"
-                               Visibility="{Binding DataContext.Heat.ShowScore, ElementName=RowsList, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                                    <TextBlock Text="{Binding Result.TotalScore}" VerticalAlignment="Center" FontSize="16" Width="100" TextAlignment="Right"
-                               Visibility="{Binding DataContext.Heat.ShowPenalty, ElementName=RowsList, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                                </StackPanel>
+                            <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="0,6">
+                                <table:TableRow/>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
