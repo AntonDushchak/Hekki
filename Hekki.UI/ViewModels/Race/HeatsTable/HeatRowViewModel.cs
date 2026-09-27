@@ -6,5 +6,7 @@ namespace Hekki.UI.ViewModels
     {
         [ObservableProperty] private HeatEntryViewModel? _entry;
         [ObservableProperty] private HeatResultViewModel? _result;
+
+        public bool HasParticipant => Entry != null && Entry.ParticipantId != Guid.Empty;
     }
 }

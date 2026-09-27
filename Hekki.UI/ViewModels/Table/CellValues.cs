@@ -25,12 +25,20 @@ namespace Hekki.UI.ViewModels
         private string _text;
 
         public CellInputKind InputKind { get; }
+        public string OriginalText { get; }
+        public bool IsDirty => Text != OriginalText;
 
         public TextCellValue(string text, CellInputKind inputKind = CellInputKind.Text, Func<string, string?>? validate = null)
         {
             _text = text;
+            OriginalText = text;
             InputKind = inputKind;
             _validate = validate;
+        }
+
+        public void Revert()
+        {
+            Text = OriginalText;
         }
 
         public bool HasErrors => _error != null;

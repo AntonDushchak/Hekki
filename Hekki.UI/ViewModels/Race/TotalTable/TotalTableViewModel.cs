@@ -45,6 +45,16 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
             if (row != null) TotalTableRows.Remove(row);
         }
 
+        public void RefreshRow(Guid participantId)
+        {
+            var row = TotalTableRows.FirstOrDefault(r => r.Participant.Id == participantId);
+            if (row == null) return;
+
+            var context = new ParticipantRaceContext(row.Participant, Heats);
+            for (var i = 0; i < Columns.Count; i++)
+                Columns[i].UpdateCell(row.Cells[i], context);
+        }
+
         public void RefreshAssignments()
         {
             RefreshColumn(Columns.OfType<ParticipantColumn>().FirstOrDefault());

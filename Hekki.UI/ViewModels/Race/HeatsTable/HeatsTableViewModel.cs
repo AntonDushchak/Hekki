@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.Abstractions;
+using Hekki.Application.DTOs.Race;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels.Race
@@ -39,6 +40,26 @@ namespace Hekki.UI.ViewModels.Race
         {
             if (heat == null || _raceId == null) return;
             await _raceService.AssignGroupsAndNumbersAsync(_raceId.Value, heat.HeatNumber);
+        });
+
+        public Task SaveCellAsync(HeatRowViewModel row, CellViewModel cell) => ExecuteSafeAsync(async () =>
+        {
+            if (_raceId == null || !row.HasParticipant) return;
+            if (cell.Column is not HeatGroupColumn { ResultField: HeatResultField field } column) return;
+            if (cell.Value is not TextCellValue text || !column.TryParse(text.Text, out var value)) return;
+
+            var heat = Heats.FirstOrDefault(h => h.Groups.Any(g => g.Rows.Contains(row)));
+            if (heat == null) return;
+
+            try
+            {
+                await _raceService.SetHeatResultValueAsync(_raceId.Value, heat.HeatId, row.Entry!.ParticipantId, field, value);
+            }
+            catch
+            {
+                text.Revert();
+                throw;
+            }
         });
 
         private void CreateRows(HeatGroupViewModel heatGroup)

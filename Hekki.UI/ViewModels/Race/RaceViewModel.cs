@@ -16,6 +16,7 @@ namespace Hekki.UI.ViewModels
         IRecipient<ParticipantAddedMessage>,
         IRecipient<ParticipantRemovedMessage>,
         IRecipient<ParticipantsReorderedMessage>,
+        IRecipient<HeatResultChangedMessage>,
         IRecipient<GroupsAssignedMessage>
     {
         private readonly IRaceService _raceService;
@@ -150,6 +151,23 @@ namespace Hekki.UI.ViewModels
 
             _participantList.ReorderBy(message.ParticipantIds, p => p.Id);
             TotalTable.ApplyOrder(message.ParticipantIds);
+        }
+
+        public void Receive(HeatResultChangedMessage message)
+        {
+            if (message.RaceId != RaceId) return;
+
+            var participantId = message.Result.ParticipantId;
+            var group = _heatList
+                .Where(h => h.HeatId == message.HeatId)
+                .SelectMany(h => h.Groups)
+                .FirstOrDefault(g => g.Rows.Any(r => r.Entry?.ParticipantId == participantId));
+            if (group == null) return;
+
+            var row = group.Rows.First(r => r.Entry?.ParticipantId == participantId);
+            row.Result = HeatUiMapper.MapToResultViewModel(message.Result);
+            group.RefreshCells();
+            TotalTable.RefreshRow(participantId);
         }
 
         public void Receive(GroupsAssignedMessage message)

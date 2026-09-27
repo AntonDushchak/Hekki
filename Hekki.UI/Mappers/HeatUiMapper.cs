@@ -68,13 +68,18 @@ namespace Hekki.UI.Mappers
                 KartNumber = entry.KartNumber,
                 GridPosition = entry.GridPosition
             },
-            Result = result == null ? null : new HeatResultViewModel
-            {
-                ParticipantId = result.ParticipantId,
-                FinishPosition = result.FinishPosition,
-                TotalTimeMs = result.TotalTimeMs,
-                Score = result.Score
-            }
+            Result = result == null ? null : MapToResultViewModel(result)
+        };
+
+        public static HeatResultViewModel MapToResultViewModel(HeatResultDto result) => new()
+        {
+            ParticipantId = result.ParticipantId,
+            FinishPosition = result.FinishPosition,
+            TotalTimeMs = result.TotalTimeMs,
+            BestLapMs = result.BestLapMs,
+            Laps = result.Laps,
+            Score = result.Score,
+            Penalty = result.Penalty
         };
     }
 }

@@ -6,7 +6,8 @@ namespace Hekki.UI.ViewModels
     {
         public TableColumnViewModel Column { get; }
 
-        public bool IsEditable { get; init; }
+        [ObservableProperty]
+        private bool _isEditable;
 
         [ObservableProperty]
         private ICellValue _value;
@@ -15,7 +16,7 @@ namespace Hekki.UI.ViewModels
         {
             Column = column ?? throw new ArgumentNullException(nameof(column));
             _value = value ?? throw new ArgumentNullException(nameof(value));
-            IsEditable = isEditable;
+            _isEditable = isEditable;
         }
 
         public void SetValue(ICellValue value)

@@ -67,6 +67,37 @@ namespace Hekki.Application.Services
             _eventPublisher.Publish(new ParticipantsReorderedMessage(raceId, orderedIds));
         }
 
+        public async Task SetHeatResultValueAsync(int raceId, int heatId, Guid participantId, HeatResultField field, long? value, CancellationToken ct = default)
+        {
+            if (value is < 0 || (field is HeatResultField.FinishPosition or HeatResultField.BestLap && value == 0))
+                throw new InvalidResultValueException(value.Value);
+
+            var heat = await _heatRepository.GetByIdAsync(heatId, ct)
+                ?? throw new HeatNotFoundException(heatId);
+
+            var group = heat.Groups.FirstOrDefault(g => g.Entries.Any(e => e.ParticipantId == participantId))
+                ?? throw new ParticipantNotInHeatException(participantId, heatId);
+
+            var existing = group.Results.FirstOrDefault(r => r.ParticipantId == participantId);
+            var result = existing ?? new HeatResultDto { GroupId = group.Id, ParticipantId = participantId };
+
+            result = field switch
+            {
+                HeatResultField.FinishPosition => result with { FinishPosition = (int?)value },
+                HeatResultField.BestLap => result with { BestLapMs = value },
+                HeatResultField.Score => result with { Score = (int?)value },
+                HeatResultField.Penalty => result with { Penalty = (int?)value },
+                _ => throw new ArgumentOutOfRangeException(nameof(field))
+            };
+
+            if (existing == null)
+                await _heatRepository.AddHeatResultAsync(heatId, group.Id, result, ct);
+            else
+                await _heatRepository.UpdateResultAsync(group.Id, participantId, result, ct);
+
+            _eventPublisher.Publish(new HeatResultChangedMessage(raceId, heatId, result));
+        }
+
         public async Task<RegulationEditDto?> GetRegulationEditAsync(int regulationId, CancellationToken ct = default)
         {
             return await _regulationRepository.GetForEditAsync(regulationId, ct);

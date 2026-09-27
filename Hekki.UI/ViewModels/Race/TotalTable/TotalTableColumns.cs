@@ -112,16 +112,10 @@ namespace Hekki.UI.ViewModels
 
         public override string HeaderText => Heat.Name;
         public override bool IsNumeric => true;
-        public override CellInputKind InputKind => CellInputKind.Time;
-
-        public override string? ValidateInput(string text)
-        {
-            return string.IsNullOrWhiteSpace(text) || LapTimeFormat.TryParse(text, out _) ? null : "err_InvalidTime";
-        }
 
         public override CellViewModel CreateCell(ParticipantRaceContext context)
         {
-            return new CellViewModel(this, CreateTextValue(GetValue(context)), true);
+            return new CellViewModel(this, CreateTextValue(GetValue(context)));
         }
 
         public override string GetValue(ParticipantRaceContext context)
@@ -143,16 +137,10 @@ namespace Hekki.UI.ViewModels
 
         public override string HeaderText => Heat.Name;
         public override bool IsNumeric => true;
-        public override CellInputKind InputKind => CellInputKind.Integer;
-
-        public override string? ValidateInput(string text)
-        {
-            return string.IsNullOrWhiteSpace(text) || int.TryParse(text, out _) ? null : "err_InvalidScore";
-        }
 
         public override CellViewModel CreateCell(ParticipantRaceContext context)
         {
-            return new CellViewModel(this, CreateTextValue(GetValue(context)), true);
+            return new CellViewModel(this, CreateTextValue(GetValue(context)));
         }
 
         public override string GetValue(ParticipantRaceContext context)
@@ -177,10 +165,12 @@ namespace Hekki.UI.ViewModels
 
         public override string GetValue(ParticipantRaceContext context)
         {
-            return context.Results.Values
-               .Where(r => r != null)
-               .Sum(r => r!.TotalTimeMs ?? 0)
-               .ToString();
+            var laps = context.Results.Values
+                .Where(r => r?.BestLapMs != null)
+                .Select(r => r!.BestLapMs!.Value)
+                .ToList();
+
+            return laps.Count == 0 ? string.Empty : LapTimeFormat.Format(laps.Sum());
         }
     }
 
