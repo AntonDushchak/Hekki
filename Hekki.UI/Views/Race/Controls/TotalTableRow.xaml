@@ -74,9 +74,9 @@
                                                     <DataTemplate>
                                                         <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
                                                                  BorderThickness="0"
-                                                                 Background="Transparent"
+                                                                 Background="{DynamicResource Brush.SurfaceMid}"
                                                                  TextAlignment="Center"
-                                                                 Margin="6,0"
+                                                                 Margin="4,2"
                                                                  VerticalAlignment="Center"/>
                                                     </DataTemplate>
                                                 </Setter.Value>
