@@ -1,0 +1,84 @@
+<UserControl x:Class="Hekki.UI.Views.Shared.Table.TableRow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:Hekki.UI.ViewModels"
+             xmlns:behaviors="clr-namespace:Hekki.UI.Views.Shared.Behaviors">
+
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type vm:TextCellValue}">
+            <TextBlock Text="{Binding Text}"
+                       Margin="6,0"
+                       VerticalAlignment="Center"/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:ParticipantCellValue}">
+            <StackPanel Margin="6,0">
+                <TextBlock Text="{Binding Name}"/>
+                <TextBlock Text="{Binding KartNumbers}"
+                           FontSize="11"/>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <ItemsControl ItemsSource="{Binding Cells}" VerticalAlignment="Center">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal"/>
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type vm:CellViewModel}">
+                <ContentControl Content="{Binding Value}"
+                                VerticalContentAlignment="Center"
+                                Width="{Binding Column.ColumnWidth}"
+                                MinWidth="50">
+                    <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ContentControl">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Column.IsNumeric}" Value="True">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsEditable}" Value="True">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+                                                         BorderThickness="0"
+                                                         Background="{DynamicResource Brush.SurfaceMid}"
+                                                         TextAlignment="Center"
+                                                         Margin="4,2"
+                                                         Padding="4,2"
+                                                         VerticalAlignment="Center"
+                                                         behaviors:InputFilter.Kind="{Binding InputKind}">
+                                                    <TextBox.Style>
+                                                        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                                                            <Style.Triggers>
+                                                                <Trigger Property="Validation.HasError" Value="True">
+                                                                    <Setter Property="ToolTip" Value="{Binding (Validation.Errors)/ErrorContent, RelativeSource={RelativeSource Self}}"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBox.Style>
+                                                </TextBox>
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>

@@ -1,15 +1,10 @@
-﻿using Hekki.UI.ViewModels;
-using Hekki.UI.ViewModels.Race;
+﻿using Hekki.UI.ViewModels.Race;
 using Hekki.UI.ViewModels.Race.TotalTable;
-using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace Hekki.UI.Views.Race.Controls
 {
@@ -21,10 +16,8 @@ namespace Hekki.UI.Views.Race.Controls
                 typeof(ParticipantsSectionViewModel),
                 typeof(TotalTable));
 
-        private const double DragHandleWidth = 24;
         private const string DragHandleTag = "DragHandle";
 
-        private TotalTableViewModel? _viewModel;
         private TotalTableRowViewModel? _dragRow;
         private Point _dragStart;
         private InsertionAdorner? _insertionAdorner;
@@ -35,81 +28,11 @@ namespace Hekki.UI.Views.Race.Controls
             set => SetValue(ParticipantsProperty, value);
         }
 
+        private TotalTableViewModel? ViewModel => DataContext as TotalTableViewModel;
+
         public TotalTable()
         {
             InitializeComponent();
-            DataContextChanged += OnDataContextChanged;
-        }
-
-        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (_viewModel != null)
-                _viewModel.Columns.CollectionChanged -= OnColumnsChanged;
-
-            _viewModel = e.NewValue as TotalTableViewModel;
-
-            if (_viewModel != null)
-            {
-                _viewModel.Columns.CollectionChanged += OnColumnsChanged;
-                RebuildHeader();
-            }
-        }
-
-        private void OnColumnsChanged(object? sender, NotifyCollectionChangedEventArgs e)
-            => RebuildHeader();
-
-        private void RebuildHeader()
-        {
-            PART_HeaderPanel.Children.Clear();
-            if (_viewModel == null) return;
-
-            var converter = Resources["ColumnHeaderConverter"] as IValueConverter;
-
-            PART_HeaderPanel.Children.Add(new Border { Width = DragHandleWidth });
-
-            foreach (var column in _viewModel.Columns)
-            {
-                var cell = new Grid();
-
-                // Bind cell width to ColumnViewModel.ColumnWidth
-                cell.SetBinding(WidthProperty, new Binding(nameof(ColumnViewModel.ColumnWidth))
-                {
-                    Source = column,
-                    Mode = BindingMode.OneWay
-                });
-
-                // Header text
-                var text = new TextBlock
-                {
-                    FontWeight = FontWeights.Bold,
-                    TextAlignment = column.IsNumeric ? TextAlignment.Center : TextAlignment.Left,
-                    TextTrimming = TextTrimming.CharacterEllipsis,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Margin = column.IsNumeric ? new Thickness(0) : new Thickness(6, 0, 5, 0)
-                };
-                if (converter != null)
-                    text.SetBinding(TextBlock.TextProperty, new Binding { Source = column, Converter = converter });
-                else
-                    text.Text = column.HeaderText ?? column.HeaderResourceKey ?? string.Empty;
-
-                cell.Children.Add(text);
-
-                // Resize thumb
-                var thumb = new Thumb
-                {
-                    Width = 5,
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    Cursor = Cursors.SizeWE,
-                    Template = CreateThumbTemplate()
-                };
-                var col = column;
-                thumb.DragDelta += (_, e) =>
-                    col.ColumnWidth = Math.Max(40, col.ColumnWidth + e.HorizontalChange);
-
-                cell.Children.Add(thumb);
-
-                PART_HeaderPanel.Children.Add(cell);
-            }
         }
 
         private void Rows_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -162,16 +85,17 @@ namespace Hekki.UI.Views.Race.Controls
         {
             RemoveInsertionAdorner();
 
-            if (_viewModel == null || e.Data.GetData(typeof(TotalTableRowViewModel)) is not TotalTableRowViewModel row)
+            var viewModel = ViewModel;
+            if (viewModel == null || e.Data.GetData(typeof(TotalTableRowViewModel)) is not TotalTableRowViewModel row)
                 return;
 
             e.Handled = true;
 
-            var oldIndex = _viewModel.TotalTableRows.IndexOf(row);
+            var oldIndex = viewModel.TotalTableRows.IndexOf(row);
             var insertionIndex = GetInsertionIndex(e.GetPosition(PART_Rows));
             var newIndex = insertionIndex > oldIndex ? insertionIndex - 1 : insertionIndex;
 
-            await _viewModel.MoveRowAsync(row, newIndex);
+            await viewModel.MoveRowAsync(row, newIndex);
         }
 
         private int GetInsertionIndex(Point position)
@@ -239,16 +163,6 @@ namespace Hekki.UI.Views.Race.Controls
                     : LogicalTreeHelper.GetParent(current);
             }
             return null;
-        }
-
-        private static ControlTemplate CreateThumbTemplate()
-        {
-            var template = new ControlTemplate(typeof(Thumb));
-            var rect = new FrameworkElementFactory(typeof(Rectangle));
-            rect.SetValue(Rectangle.FillProperty, new SolidColorBrush(Colors.Transparent));
-            rect.SetValue(CursorProperty, Cursors.SizeWE);
-            template.VisualTree = rect;
-            return template;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
         public IReadOnlyList<RaceParticipantViewModel> Participants { get; private set; } = [];
         public IReadOnlyList<HeatViewModel> Heats { get; private set; } = [];
         public ObservableCollection<TotalTableRowViewModel> TotalTableRows { get; } = [];
-        public ObservableCollection<ColumnViewModel> Columns { get; } = [];
+        public ObservableCollection<TotalTableColumn> Columns { get; } = [];
         [ObservableProperty] private bool _isAddPilotEditorOpen = false;
 
         public TotalTableViewModel(IRaceService raceService)
@@ -31,7 +31,7 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
             Participants = participants;
 
             BuildColumns();
-            RebuildStandings();
+            BuildRows();
         }
 
         public void AddRow(RaceParticipantViewModel participant)
@@ -47,7 +47,7 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
 
         public void RefreshAssignments()
         {
-            RebuildStandingsKart();
+            RefreshColumn(Columns.OfType<ParticipantColumn>().FirstOrDefault());
         }
 
         public Task MoveRowAsync(TotalTableRowViewModel row, int newIndex) => ExecuteSafeAsync(async () =>
@@ -75,20 +75,12 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
             //foreach (var participant in _participants)
             //    TotalTableRows.Add(BuildRow(participant));
         }
-        private void RebuildStandingsKart()
-        {
-            var column = Columns
-                .OfType<ParticipantColumn>()
-                .FirstOrDefault();
 
+        private void RefreshColumn(TotalTableColumn? column)
+        {
             if (column is null)
                 return;
 
-            UpdateColumn(column);
-        }
-
-        private void UpdateColumn(ColumnViewModel column)
-        {
             var columnIndex = Columns.IndexOf(column);
 
             if (columnIndex < 0)
@@ -101,7 +93,7 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
             }
         }
 
-        private void RebuildStandings()
+        private void BuildRows()
         {
             TotalTableRows.Clear();
             foreach (var participant in Participants)

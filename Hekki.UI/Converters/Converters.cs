@@ -30,7 +30,7 @@ namespace Hekki.UI.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is not ColumnViewModel column)
+            if (value is not TableColumnViewModel column)
                 return string.Empty;
 
             if (column.HeaderResourceKey is string resourceKey && App.Current.TryFindResource(resourceKey) is object resource)

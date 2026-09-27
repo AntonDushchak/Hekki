@@ -5,17 +5,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Hekki.UI.Views.Race.Controls"
-             xmlns:converters="clr-namespace:Hekki.UI.Converters"
+             xmlns:table="clr-namespace:Hekki.UI.Views.Shared.Table"
              mc:Ignorable="d"
-             xmlns:vm="clr-namespace:Hekki.UI.ViewModels"
              xmlns:components="clr-namespace:Hekki.UI.Views.Race.Controls"
              xmlns:totalTableVm="clr-namespace:Hekki.UI.ViewModels.Race.TotalTable"
              d:DesignHeight="450" d:DesignWidth="800">
-
-    <UserControl.Resources>
-        <converters:ResourceKeyToStringConverter x:Key="ResourceKeyToStringConverter"/>
-        <converters:ColumnHeaderConverter x:Key="ColumnHeaderConverter"/>
-    </UserControl.Resources>
 
     <Border Background="{DynamicResource Brush.Base}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="12">
         <Grid>
@@ -38,9 +32,7 @@
                     <Border Grid.Row="0"
                             BorderBrush="{DynamicResource Brush.Border}"
                             BorderThickness="0,0,0,1">
-                        <StackPanel x:Name="PART_HeaderPanel"
-                                    Orientation="Horizontal"
-                                    VerticalAlignment="Center"/>
+                        <table:TableHeader Columns="{Binding Columns}" LeadingWidth="24"/>
                     </Border>
 
                     <!-- Data rows -->

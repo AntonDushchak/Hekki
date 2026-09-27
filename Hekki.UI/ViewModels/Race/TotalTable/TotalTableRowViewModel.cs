@@ -1,11 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-
 namespace Hekki.UI.ViewModels.Race.TotalTable
 {
-    public partial class TotalTableRowViewModel : ObservableObject
+    public class TotalTableRowViewModel : TableRowViewModel
     {
         public RaceParticipantViewModel Participant { get; }
-        public List<CellViewModel> Cells { get; } = [];
 
         public TotalTableRowViewModel(RaceParticipantViewModel participant)
         {

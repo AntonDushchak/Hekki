@@ -1,93 +1,23 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 using Hekki.UI.Services;
-using System.Collections;
-using System.ComponentModel;
 
 namespace Hekki.UI.ViewModels
 {
-    public interface ICellValue
+    public abstract class TotalTableColumn : TableColumnViewModel
     {
-    }
-
-    public enum CellInputKind
-    {
-        Text,
-        Integer,
-        Time
-    }
-
-    public partial class TextCellValue : ObservableObject, ICellValue, INotifyDataErrorInfo
-    {
-        private readonly Func<string, string?>? _validate;
-        private string? _error;
-
-        [ObservableProperty]
-        private string _text;
-
-        public CellInputKind InputKind { get; }
-
-        public TextCellValue(string text, CellInputKind inputKind = CellInputKind.Text, Func<string, string?>? validate = null)
+        protected TotalTableColumn(double columnWidth = 80) : base(columnWidth)
         {
-            _text = text;
-            InputKind = inputKind;
-            _validate = validate;
-        }
-
-        public bool HasErrors => _error != null;
-
-        public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
-
-        public IEnumerable GetErrors(string? propertyName)
-        {
-            return propertyName == nameof(Text) && _error != null ? new[] { _error } : Array.Empty<string>();
-        }
-
-        partial void OnTextChanged(string value)
-        {
-            var errorKey = _validate?.Invoke(value);
-            var error = errorKey == null ? null : Localizer.Get(errorKey);
-            if (error == _error) return;
-
-            _error = error;
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(Text)));
-            OnPropertyChanged(nameof(HasErrors));
-        }
-    }
-
-    public class ParticipantCellValue : ICellValue
-    {
-        public string Name { get; init; } = "";
-        public string KartNumbers { get; init; } = "";
-    }
-
-    public abstract partial class ColumnViewModel : ObservableObject
-    {
-        public virtual string? HeaderResourceKey => null;
-        public virtual string? HeaderText => null;
-        public virtual bool IsNumeric => false;
-        public virtual CellInputKind InputKind => CellInputKind.Text;
-
-        public virtual string? ValidateInput(string text) => null;
-
-        protected TextCellValue CreateTextValue(string text) => new(text, InputKind, ValidateInput);
-
-        [ObservableProperty]
-        private double _columnWidth;
-
-        protected ColumnViewModel(double columnWidth = 80)
-        {
-            _columnWidth = columnWidth;
         }
 
         public abstract string GetValue(ParticipantRaceContext context);
         public abstract CellViewModel CreateCell(ParticipantRaceContext context);
+
         public virtual void UpdateCell(CellViewModel cell, ParticipantRaceContext context)
         {
             cell.SetValue(CreateTextValue(GetValue(context)));
         }
     }
 
-    public class ParticipantColumn : ColumnViewModel
+    public class ParticipantColumn : TotalTableColumn
     {
         public override string HeaderResourceKey => "m_Pilot";
 
@@ -120,7 +50,7 @@ namespace Hekki.UI.ViewModels
         }
     }
 
-    public class PhotoColumn : ColumnViewModel
+    public class PhotoColumn : TotalTableColumn
     {
         public override string HeaderText => "";
         public override CellViewModel CreateCell(ParticipantRaceContext context)
@@ -139,7 +69,7 @@ namespace Hekki.UI.ViewModels
         }
     }
 
-    public class LeagueColumn : ColumnViewModel
+    public class LeagueColumn : TotalTableColumn
     {
         public override string HeaderResourceKey => "m_League";
 
@@ -156,7 +86,7 @@ namespace Hekki.UI.ViewModels
         }
     }
 
-    public class TeamColumn : ColumnViewModel
+    public class TeamColumn : TotalTableColumn
     {
         public override string HeaderResourceKey => "m_Team";
 
@@ -171,7 +101,7 @@ namespace Hekki.UI.ViewModels
         }
     }
 
-    public class HeatTimeColumn : ColumnViewModel
+    public class HeatTimeColumn : TotalTableColumn
     {
         public HeatViewModel Heat { get; }
 
@@ -202,7 +132,7 @@ namespace Hekki.UI.ViewModels
         }
     }
 
-    public class HeatScoreColumn : ColumnViewModel
+    public class HeatScoreColumn : TotalTableColumn
     {
         public HeatViewModel Heat { get; }
 
@@ -233,7 +163,7 @@ namespace Hekki.UI.ViewModels
         }
     }
 
-    public class TotalTimeColumn : ColumnViewModel
+    public class TotalTimeColumn : TotalTableColumn
     {
         public override string HeaderResourceKey => "m_TotalTime";
         public override bool IsNumeric => true;
@@ -254,7 +184,7 @@ namespace Hekki.UI.ViewModels
         }
     }
 
-    public class TotalScoreColumn : ColumnViewModel
+    public class TotalScoreColumn : TotalTableColumn
     {
         public override string HeaderResourceKey => "m_TotalScore";
         public override bool IsNumeric => true;
