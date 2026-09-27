@@ -18,24 +18,20 @@ namespace Hekki.UI.Services
                 if (groupVm is null)
                     continue;
 
-                for (var i = 0; i < groupVm.Rows.Count; i++)
+                var previousRows = groupVm.Rows
+                    .Where(row => row.HasParticipant)
+                    .ToDictionary(row => row.Entry!.ParticipantId);
+
+                groupVm.Rows.Clear();
+
+                foreach (var entry in groupResult.UpdatedEntries)
                 {
-                    var row = groupVm.Rows[i];
-
-                    if (i < groupResult.UpdatedEntries.Count)
-                    {
-                        var entry = groupResult.UpdatedEntries[i];
-
-                        if (row.Entry is null)
-                            row.Entry = HeatUiMapper.CreateEntry(entry);
-                        else
-                            HeatUiMapper.ApplyEntryAssignmentTo(entry, row.Entry);
-                    }
+                    if (previousRows.TryGetValue(entry.ParticipantId, out var row))
+                        HeatUiMapper.ApplyEntryAssignmentTo(entry, row.Entry!);
                     else
-                    {
-                        row.Entry = null;
-                        row.Result = null;
-                    }
+                        row = new HeatRowViewModel { Entry = HeatUiMapper.CreateEntry(entry) };
+
+                    groupVm.Rows.Add(row);
                 }
 
                 groupVm.RefreshCells();

@@ -29,7 +29,7 @@ namespace Hekki.UI.ViewModels.Race
             {
                 foreach (var group in heat.Groups)
                 {
-                    CreateRows(group);
+                    AddEmptySlots(group);
                     group.RefreshCells();
                 }
             }
@@ -62,8 +62,10 @@ namespace Hekki.UI.ViewModels.Race
             }
         });
 
-        private void CreateRows(HeatGroupViewModel heatGroup)
+        private static void AddEmptySlots(HeatGroupViewModel heatGroup)
         {
+            if (heatGroup.Rows.Any(row => row.HasParticipant)) return;
+
             for (int i = heatGroup.Rows.Count; i < heatGroup.GroupCapacity; i++)
             {
                 heatGroup.Rows.Add(new HeatRowViewModel() { Entry = new HeatEntryViewModel(), Result = new HeatResultViewModel() });
