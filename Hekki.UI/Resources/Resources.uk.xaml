@@ -122,4 +122,6 @@
     <system:String x:Key="err_NameRequired">Назва обов'язкова.</system:String>
     <system:String x:Key="err_NameTooShort">Назва має містити щонайменше {0} символи.</system:String>
     <system:String x:Key="err_NameTooLong">Назва не може перевищувати {0} символів.</system:String>
+    <system:String x:Key="err_InvalidScore">Очки мають бути цілим числом.</system:String>
+    <system:String x:Key="err_InvalidTime">Час має виглядати як 01:44.965 або 34.992.</system:String>
 </ResourceDictionary>

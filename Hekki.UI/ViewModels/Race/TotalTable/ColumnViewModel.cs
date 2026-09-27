@@ -1,4 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using Hekki.UI.Services;
+using System.Collections;
+using System.ComponentModel;
 
 namespace Hekki.UI.ViewModels
 {
@@ -6,14 +9,48 @@ namespace Hekki.UI.ViewModels
     {
     }
 
-    public partial class TextCellValue : ObservableObject, ICellValue
+    public enum CellInputKind
     {
+        Text,
+        Integer,
+        Time
+    }
+
+    public partial class TextCellValue : ObservableObject, ICellValue, INotifyDataErrorInfo
+    {
+        private readonly Func<string, string?>? _validate;
+        private string? _error;
+
         [ObservableProperty]
         private string _text;
 
-        public TextCellValue(string text)
+        public CellInputKind InputKind { get; }
+
+        public TextCellValue(string text, CellInputKind inputKind = CellInputKind.Text, Func<string, string?>? validate = null)
         {
             _text = text;
+            InputKind = inputKind;
+            _validate = validate;
+        }
+
+        public bool HasErrors => _error != null;
+
+        public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
+
+        public IEnumerable GetErrors(string? propertyName)
+        {
+            return propertyName == nameof(Text) && _error != null ? new[] { _error } : Array.Empty<string>();
+        }
+
+        partial void OnTextChanged(string value)
+        {
+            var errorKey = _validate?.Invoke(value);
+            var error = errorKey == null ? null : Localizer.Get(errorKey);
+            if (error == _error) return;
+
+            _error = error;
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(Text)));
+            OnPropertyChanged(nameof(HasErrors));
         }
     }
 
@@ -28,6 +65,11 @@ namespace Hekki.UI.ViewModels
         public virtual string? HeaderResourceKey => null;
         public virtual string? HeaderText => null;
         public virtual bool IsNumeric => false;
+        public virtual CellInputKind InputKind => CellInputKind.Text;
+
+        public virtual string? ValidateInput(string text) => null;
+
+        protected TextCellValue CreateTextValue(string text) => new(text, InputKind, ValidateInput);
 
         [ObservableProperty]
         private double _columnWidth;
@@ -41,7 +83,7 @@ namespace Hekki.UI.ViewModels
         public abstract CellViewModel CreateCell(ParticipantRaceContext context);
         public virtual void UpdateCell(CellViewModel cell, ParticipantRaceContext context)
         {
-            cell.SetValue(new TextCellValue(GetValue(context)));
+            cell.SetValue(CreateTextValue(GetValue(context)));
         }
     }
 
@@ -133,31 +175,30 @@ namespace Hekki.UI.ViewModels
     {
         public HeatViewModel Heat { get; }
 
-        public HeatTimeColumn(HeatViewModel heat)
+        public HeatTimeColumn(HeatViewModel heat) : base(90)
         {
             Heat = heat;
         }
 
         public override string HeaderText => Heat.Name;
         public override bool IsNumeric => true;
+        public override CellInputKind InputKind => CellInputKind.Time;
+
+        public override string? ValidateInput(string text)
+        {
+            return string.IsNullOrWhiteSpace(text) || LapTimeFormat.TryParse(text, out _) ? null : "err_InvalidTime";
+        }
 
         public override CellViewModel CreateCell(ParticipantRaceContext context)
         {
-            return new CellViewModel(this, new TextCellValue(GetValue(context)), true);
-        }
-
-        private static string FormatTime(long? ms)
-        {
-            if (!ms.HasValue) return string.Empty;
-            var ts = TimeSpan.FromMilliseconds(ms.Value);
-            return ts.ToString(ts.TotalHours >= 1 ? "h\\:mm\\:ss\\.fff" : "m\\:ss\\.fff");
+            return new CellViewModel(this, CreateTextValue(GetValue(context)), true);
         }
 
         public override string GetValue(ParticipantRaceContext context)
         {
             var row = context.Results[Heat];
             if (row == null) return string.Empty;
-            return FormatTime(row.BestLapMs);
+            return LapTimeFormat.Format(row.BestLapMs);
         }
     }
 
@@ -165,17 +206,23 @@ namespace Hekki.UI.ViewModels
     {
         public HeatViewModel Heat { get; }
 
-        public HeatScoreColumn(HeatViewModel heat)
+        public HeatScoreColumn(HeatViewModel heat) : base(50)
         {
             Heat = heat;
         }
 
         public override string HeaderText => Heat.Name;
         public override bool IsNumeric => true;
+        public override CellInputKind InputKind => CellInputKind.Integer;
+
+        public override string? ValidateInput(string text)
+        {
+            return string.IsNullOrWhiteSpace(text) || int.TryParse(text, out _) ? null : "err_InvalidScore";
+        }
 
         public override CellViewModel CreateCell(ParticipantRaceContext context)
         {
-            return new CellViewModel(this, new TextCellValue(GetValue(context)), true);
+            return new CellViewModel(this, CreateTextValue(GetValue(context)), true);
         }
 
         public override string GetValue(ParticipantRaceContext context)

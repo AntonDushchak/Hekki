@@ -122,4 +122,6 @@
     <system:String x:Key="err_NameRequired">Name is required.</system:String>
     <system:String x:Key="err_NameTooShort">Name must be at least {0} characters.</system:String>
     <system:String x:Key="err_NameTooLong">Name cannot exceed {0} characters.</system:String>
+    <system:String x:Key="err_InvalidScore">Score must be a whole number.</system:String>
+    <system:String x:Key="err_InvalidTime">Time must look like 01:44.965 or 34.992.</system:String>
 </ResourceDictionary>

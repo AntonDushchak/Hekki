@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Hekki.UI.Views.Race.Controls"
              xmlns:converters="clr-namespace:Hekki.UI.Converters"
              xmlns:vm="clr-namespace:Hekki.UI.ViewModels"
+             xmlns:behaviors="clr-namespace:Hekki.UI.Views.Shared.Behaviors"
              mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -77,7 +78,19 @@
                                                                  Background="{DynamicResource Brush.SurfaceMid}"
                                                                  TextAlignment="Center"
                                                                  Margin="4,2"
-                                                                 VerticalAlignment="Center"/>
+                                                                 Padding="4,2"
+                                                                 VerticalAlignment="Center"
+                                                                 behaviors:InputFilter.Kind="{Binding InputKind}">
+                                                            <TextBox.Style>
+                                                                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                                                                    <Style.Triggers>
+                                                                        <Trigger Property="Validation.HasError" Value="True">
+                                                                            <Setter Property="ToolTip" Value="{Binding (Validation.Errors)/ErrorContent, RelativeSource={RelativeSource Self}}"/>
+                                                                        </Trigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBox.Style>
+                                                        </TextBox>
                                                     </DataTemplate>
                                                 </Setter.Value>
                                             </Setter>
