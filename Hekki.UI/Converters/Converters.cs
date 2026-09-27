@@ -115,8 +115,7 @@ namespace Hekki.UI.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null) return string.Empty;
-            var key = value.ToString();
-            if (key == null) return string.Empty;
+            var key = $"{parameter}{value}";
 
             var res = App.Current.TryFindResource(key);
             return res?.ToString() ?? key;

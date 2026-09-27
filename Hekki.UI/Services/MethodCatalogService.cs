@@ -73,7 +73,12 @@ namespace Hekki.UI.Services
         {
             var list = new List<MethodOption>(src.Count);
             foreach (dynamic m in src)
-                list.Add(new MethodOption(m.Id, m.Title, m.Description));
+            {
+                string id = m.Id;
+                string title = m.Title;
+                string description = m.Description;
+                list.Add(new MethodOption(id, new LocalizedText($"method_{id}", fallback: title), description));
+            }
             return list;
         }
     }

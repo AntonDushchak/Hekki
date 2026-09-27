@@ -47,7 +47,7 @@ namespace Hekki.UI.ViewModels
 
     public class ParticipantColumn : ColumnViewModel
     {
-        public override string HeaderResourceKey => "m_Name";
+        public override string HeaderResourceKey => "m_Pilot";
 
         public ParticipantColumn() : base(180) { }
 

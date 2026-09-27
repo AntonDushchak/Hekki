@@ -6,7 +6,14 @@ namespace Hekki.UI.Services
     {
         public static string Get(string key, params object[] args)
         {
-            var format = System.Windows.Application.Current?.TryFindResource(key) as string ?? key;
+            return TryGet(key, args) ?? key;
+        }
+
+        public static string? TryGet(string key, params object[] args)
+        {
+            if (System.Windows.Application.Current?.TryFindResource(key) is not string format)
+                return null;
+
             return args.Length == 0 ? format : string.Format(format, args);
         }
 

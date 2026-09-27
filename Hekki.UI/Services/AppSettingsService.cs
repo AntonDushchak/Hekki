@@ -1,3 +1,5 @@
+using CommunityToolkit.Mvvm.Messaging;
+using Hekki.UI.Messages;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
@@ -11,7 +13,7 @@ namespace Hekki.UI.Services
         private static readonly Uri LightThemeUri = new("Resources/LightTheme.xaml", UriKind.Relative);
         private static readonly Uri DarkThemeUri = new("Resources/DarkTheme.xaml", UriKind.Relative);
         private static readonly Uri EnglishResourcesUri = new("Resources/Resources.en.xaml", UriKind.Relative);
-        private static readonly Uri RussianResourcesUri = new("Resources/Resources.ru.xaml", UriKind.Relative);
+        private static readonly Uri UkrainianResourcesUri = new("Resources/Resources.uk.xaml", UriKind.Relative);
         private readonly string _settingsFilePath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "Hekki",
@@ -57,7 +59,7 @@ namespace Hekki.UI.Services
 
         private static void CopySettings(AppSettings source, AppSettings target)
         {
-            target.Language = source.Language;
+            target.Language = source.Language == "ru" ? "uk" : source.Language;
             target.Theme = source.Theme;
             target.KartNumbers = new ObservableCollection<int>(source.KartNumbers);
             target.Teams = new ObservableCollection<string>(source.Teams);
@@ -69,7 +71,8 @@ namespace Hekki.UI.Services
         {
             var dictionaries = System.Windows.Application.Current.Resources.MergedDictionaries;
             ReplaceDictionary(dictionaries, LightThemeUri, DarkThemeUri, settings.Theme == "Dark" ? DarkThemeUri : LightThemeUri);
-            ReplaceDictionary(dictionaries, EnglishResourcesUri, RussianResourcesUri, settings.Language == "ru" ? RussianResourcesUri : EnglishResourcesUri);
+            ReplaceDictionary(dictionaries, EnglishResourcesUri, UkrainianResourcesUri, settings.Language == "uk" ? UkrainianResourcesUri : EnglishResourcesUri);
+            WeakReferenceMessenger.Default.Send(new LanguageChangedMessage());
         }
 
         private static void ReplaceDictionary(

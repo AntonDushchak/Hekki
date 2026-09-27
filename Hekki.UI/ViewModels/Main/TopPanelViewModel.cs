@@ -10,7 +10,7 @@ namespace Hekki.UI.ViewModels
         private readonly IAppSettingsService _appSettingsService;
 
         [ObservableProperty]
-        private string _title = string.Empty;
+        private LocalizedText? _title;
 
         public TopPanelViewModel(IDialogService dialogService, IAppSettingsService appSettingsService)
         {

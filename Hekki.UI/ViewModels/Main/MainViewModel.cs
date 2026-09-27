@@ -34,10 +34,10 @@ namespace Hekki.UI.ViewModels
 
             TopPanelVM.Title = vm switch
             {
-                RaceViewModel => "Race",
-                CreateRegulationViewModel => "Create",
-                SelectionViewModel => "Selection",
-                _ => string.Empty
+                RaceViewModel => new LocalizedText("m_Race"),
+                CreateRegulationViewModel => new LocalizedText("m_NewRegulation"),
+                SelectionViewModel => new LocalizedText("m_Regulations"),
+                _ => null
             };
         }
     }

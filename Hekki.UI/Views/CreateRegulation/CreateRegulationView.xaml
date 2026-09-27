@@ -247,18 +247,18 @@
                         <!-- Scoring -->
 
                         <TextBlock Grid.Row="6"
-                                   Text="Scoring Type"
+                                   Text="{DynamicResource m_ScoringType}"
                                    Margin="0,0,0,5"/>
 
                         <StackPanel Grid.Row="7"
                                     Margin="0,0,0,15">
 
-                            <CheckBox Content="Points"
+                            <CheckBox Content="{DynamicResource m_Points}"
                                       IsChecked="{Binding SelectedHeat.UsePoints, Mode=TwoWay}"
                                       Margin="0,0,0,8"
                                       FontSize="14"/>
 
-                            <CheckBox Content="Time"
+                            <CheckBox Content="{DynamicResource m_Time}"
                                       IsChecked="{Binding SelectedHeat.UseTime, Mode=TwoWay}"
                                       FontSize="14"/>
 

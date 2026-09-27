@@ -47,8 +47,6 @@ namespace Hekki.UI.Services
 
         public int EndItem => TotalItems == 0 ? 0 : Math.Min(CurrentPage * PageCapacity, TotalItems);
 
-        public string PagingText => $"Showing {StartItem}-{EndItem} of {TotalItems}";
-
         public void SetTotalItems(int totalItems)
         {
             TotalItems = Math.Max(0, totalItems);
@@ -74,7 +72,6 @@ namespace Hekki.UI.Services
             OnPropertyChanged(nameof(TotalPages));
             OnPropertyChanged(nameof(StartItem));
             OnPropertyChanged(nameof(EndItem));
-            OnPropertyChanged(nameof(PagingText));
         }
     }
 }

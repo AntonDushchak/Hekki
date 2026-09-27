@@ -10,7 +10,6 @@ namespace Hekki.UI.Services
         int TotalPages { get; }
         int StartItem { get; }
         int EndItem { get; }
-        string PagingText { get; }
 
         void SetTotalItems(int totalItems);
         void Next();

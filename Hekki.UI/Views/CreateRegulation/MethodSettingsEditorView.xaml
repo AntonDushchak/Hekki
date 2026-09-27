@@ -82,7 +82,7 @@
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            Opacity="0.6"
-                           Text="{DynamicResource m_NoSetttingSelected}">
+                           Text="{DynamicResource m_NoSettingSelected}">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Visibility" Value="Collapsed" />
@@ -113,13 +113,13 @@
                         </Style>
                     </StackPanel.Style>
 
-                    <TextBlock Text="{Binding CurrentActiveSettingsTitle}"
+                    <TextBlock Text="{Binding CurrentActiveSettingsTitle.Value}"
                                HorizontalAlignment="Center"
                                FontWeight="SemiBold"
                                FontSize="16"
                                Margin="0,0,0,15"
                                TextTrimming="CharacterEllipsis"
-                               ToolTip="{Binding CurrentActiveSettingsTitle}" />
+                               ToolTip="{Binding CurrentActiveSettingsTitle.Value}" />
 
                     <ContentControl Content="{Binding CurrentActiveSettings}"
                                     HorizontalAlignment="Stretch" />

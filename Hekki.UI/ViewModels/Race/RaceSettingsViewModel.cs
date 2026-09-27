@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,9 +12,9 @@ namespace Hekki.UI.ViewModels
         private bool? _dialogResult;
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
-        [Required(ErrorMessage = "Race name is required")]
-        [MinLength(3, ErrorMessage = "Race name must be at least 3 characters")]
-        [MaxLength(100, ErrorMessage = "Race name cannot exceed 100 characters")]
+        [LocalizedRequired("err_NameRequired")]
+        [LocalizedMinLength(3, "err_NameTooShort")]
+        [LocalizedMaxLength(100, "err_NameTooLong")]
         [NotifyDataErrorInfo]
         private string _raceName = string.Empty;
 

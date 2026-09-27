@@ -20,7 +20,7 @@
         <StackPanel Grid.Column="0">
             <TextBlock Text="{Binding Label, ElementName=Root, Mode=TwoWay}" Margin="0,0,0,5"/>
             <ComboBox SelectedValue="{Binding SelectedMethodId, ElementName=Root, Mode=TwoWay}"
-                      DisplayMemberPath="Title"
+                      DisplayMemberPath="Title.Value"
                       SelectedValuePath="Id"
                       ItemsSource="{Binding AvailableMethods, ElementName=Root}"
                       MinHeight="30"/>
@@ -35,7 +35,7 @@
                 FontSize="16"
                 Command="{Binding ShowSettingsCommand, ElementName=Root}"
                 CommandParameter="{Binding SettingsType, ElementName=Root}"
-                ToolTip="Configure settings"
+                ToolTip="{DynamicResource m_ConfigureSettings}"
                 Visibility="{Binding HasSettings, ElementName=Root, Converter={StaticResource BoolToVisibilityConverter}}">
             <Button.Style>
                 <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">

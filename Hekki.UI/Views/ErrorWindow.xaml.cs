@@ -25,22 +25,22 @@ namespace Hekki.UI.Views
             switch (type)
             {
                 case MessageType.Error:
-                    Title = "Error";
+                    SetResourceReference(TitleProperty, "m_Error");
                     IconTextBlock.Text = "\uE783"; // ErrorBadge
                     IconTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(0xE7, 0x4C, 0x3C)); // Red
                     break;
                 case MessageType.Success:
-                    Title = "Success";
+                    SetResourceReference(TitleProperty, "m_Success");
                     IconTextBlock.Text = "\uE73E"; // Completed
                     IconTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(0x27, 0xAE, 0x60)); // Green
                     break;
                 case MessageType.Info:
-                    Title = "Information";
+                    SetResourceReference(TitleProperty, "m_Information");
                     IconTextBlock.Text = "\uE946"; // Info
                     IconTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(0x34, 0x98, 0xDB)); // Blue
                     break;
                 case MessageType.Warning:
-                    Title = "Warning";
+                    SetResourceReference(TitleProperty, "m_Warning");
                     IconTextBlock.Text = "\uE7BA"; // Warning
                     IconTextBlock.Foreground = new SolidColorBrush(Color.FromRgb(0xF3, 0x9C, 0x12)); // Orange
                     break;

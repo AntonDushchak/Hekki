@@ -131,7 +131,7 @@
                                                  TextAlignment="Center"
                                                  Margin="0,4,0,0"
                                                  Foreground="{DynamicResource Brush.TextSecondary}">
-                                            <Run Text="Груп: "/>
+                                            <Run Text="{DynamicResource m_GroupsLabel}"/>
                                             <Run Text="{Binding GroupCount, Mode=OneWay}"/>
                                         </TextBlock>
                                     </StackPanel>

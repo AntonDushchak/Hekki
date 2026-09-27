@@ -16,9 +16,9 @@ namespace Hekki.UI.ViewModels
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
-        [Required(ErrorMessage = "Regulation name is required")]
-        [MinLength(3, ErrorMessage = "Regulation name must be at least 3 characters")]
-        [MaxLength(100, ErrorMessage = "Regulation name cannot exceed 100 characters")]
+        [LocalizedRequired("err_NameRequired")]
+        [LocalizedMinLength(3, "err_NameTooShort")]
+        [LocalizedMaxLength(100, "err_NameTooLong")]
         [NotifyDataErrorInfo]
         private string _regulationName = string.Empty;
         [ObservableProperty] private HeatConfigurationViewModel? _selectedHeat;
@@ -50,7 +50,7 @@ namespace Hekki.UI.ViewModels
             int nextNumber = Heats.Count + 1;
             var newHeat = new HeatConfigurationViewModel
             {
-                Name = $"Heat {nextNumber}",
+                Name = Localizer.Get("m_DefaultHeatName", nextNumber),
                 HeatNumber = nextNumber,
                 UsePoints = true,
                 UseTime = false
@@ -71,7 +71,7 @@ namespace Hekki.UI.ViewModels
 
             for (int i = 0; i < Heats.Count; i++)
             {
-                Heats[i].Name = $"Heat {i + 1}";
+                Heats[i].Name = Localizer.Get("m_DefaultHeatName", i + 1);
                 Heats[i].HeatNumber = i + 1;
             }
 

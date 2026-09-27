@@ -36,7 +36,7 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty]
         private int? _selectedKartNumber;
 
-        public ObservableCollection<string> Languages { get; } = ["en", "ru"];
+        public ObservableCollection<string> Languages { get; } = ["en", "uk"];
         public ObservableCollection<string> Themes { get; } = ["Light", "Dark"];
         public ObservableCollection<int> KartNumbers { get; }
         public ObservableCollection<string> Teams { get; }

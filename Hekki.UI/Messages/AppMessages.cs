@@ -4,4 +4,5 @@ namespace Hekki.UI.Messages
     public record AppWarningMessage(string Message);
     public record AppInfoMessage(string Message);
     public record AppErrorMessage(string Message, Exception? Exception = null, string? Source = null);
+    public record LanguageChangedMessage;
 }

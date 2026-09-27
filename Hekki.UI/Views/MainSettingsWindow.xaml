@@ -1,6 +1,7 @@
 <Window x:Class="Hekki.UI.Views.MainSettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:Hekki.UI.Converters"
         Title="{DynamicResource m_Settings}"
         Width="720"
         SizeToContent="Height"
@@ -8,6 +9,9 @@
         ShowInTaskbar="False"
         ResizeMode="NoResize"
         Style="{DynamicResource WindowStyle}">
+    <Window.Resources>
+        <converters:ResourceKeyToStringConverter x:Key="ResourceKeyToStringConverter"/>
+    </Window.Resources>
     <Border Padding="30"
             Background="{DynamicResource Brush.Base}"
             BorderBrush="{DynamicResource Brush.Border}"
@@ -38,14 +42,26 @@
                 <TextBlock Margin="0,0,0,5" Text="{DynamicResource m_Language}" />
                 <ComboBox ItemsSource="{Binding Languages}"
                           SelectedItem="{Binding SelectedLanguage}"
-                          MinHeight="30" />
+                          MinHeight="30">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource ResourceKeyToStringConverter}, ConverterParameter=m_Language_}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </StackPanel>
 
             <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,15,20">
                 <TextBlock Margin="0,0,0,5" Text="{DynamicResource m_Theme}" />
                 <ComboBox ItemsSource="{Binding Themes}"
                           SelectedItem="{Binding SelectedTheme}"
-                          MinHeight="30" />
+                          MinHeight="30">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource ResourceKeyToStringConverter}, ConverterParameter=m_Theme_}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </StackPanel>
 
             <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,15,20">

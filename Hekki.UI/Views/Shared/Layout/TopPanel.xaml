@@ -14,7 +14,7 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Column="0"
-                   Text="{Binding Title}"
+                   Text="{Binding Title.Value}"
                    VerticalAlignment="Center"
                    Margin="20,0" 
                    FontSize="20" 

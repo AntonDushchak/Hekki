@@ -10,7 +10,7 @@ namespace Hekki.UI.ViewModels
         private readonly Dictionary<MethodSettingsType, MethodConfiguration> _methodConfigurations;
         [ObservableProperty] private HeatConfigurationViewModel? _selectedHeat;
         [ObservableProperty] private MethodParameters? _currentActiveSettings;
-        [ObservableProperty] private string? _currentActiveSettingsTitle;
+        [ObservableProperty] private LocalizedText? _currentActiveSettingsTitle;
         [ObservableProperty] private MethodSettingsType? _currentSettingsType;
 
         public ObservableCollection<MethodOption> AvailableShuffleMethods { get; } = [];
