@@ -27,6 +27,7 @@ namespace Hekki.UI.ViewModels
     {
         public virtual string? HeaderResourceKey => null;
         public virtual string? HeaderText => null;
+        public virtual bool IsNumeric => false;
 
         [ObservableProperty]
         private double _columnWidth;
@@ -138,6 +139,7 @@ namespace Hekki.UI.ViewModels
         }
 
         public override string HeaderText => Heat.Name;
+        public override bool IsNumeric => true;
 
         public override CellViewModel CreateCell(ParticipantRaceContext context)
         {
@@ -169,6 +171,7 @@ namespace Hekki.UI.ViewModels
         }
 
         public override string HeaderText => Heat.Name;
+        public override bool IsNumeric => true;
 
         public override CellViewModel CreateCell(ParticipantRaceContext context)
         {
@@ -186,6 +189,7 @@ namespace Hekki.UI.ViewModels
     public class TotalTimeColumn : ColumnViewModel
     {
         public override string HeaderResourceKey => "m_TotalTime";
+        public override bool IsNumeric => true;
 
         public TotalTimeColumn() : base(90) { }
 
@@ -206,6 +210,7 @@ namespace Hekki.UI.ViewModels
     public class TotalScoreColumn : ColumnViewModel
     {
         public override string HeaderResourceKey => "m_TotalScore";
+        public override bool IsNumeric => true;
 
         public TotalScoreColumn() : base(90) { }
 

@@ -11,24 +11,22 @@
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type vm:TextCellValue}">
             <TextBlock Text="{Binding Text}"
-                   TextAlignment="Center"
+                   Margin="6,0"
                    VerticalAlignment="Center"/>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type vm:ParticipantCellValue}">
-            <StackPanel>
-                <TextBlock Text="{Binding Name}"
-                       TextAlignment="Center"/>
+            <StackPanel Margin="6,0">
+                <TextBlock Text="{Binding Name}"/>
                 <TextBlock Text="{Binding KartNumbers}"
-                       FontSize="11"
-                       TextAlignment="Center"/>
+                       FontSize="11"/>
             </StackPanel>
         </DataTemplate>
 
 
     </UserControl.Resources>
 
-    <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="15">
+    <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <Border Tag="DragHandle"
                     Width="24"
@@ -51,14 +49,18 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:CellViewModel}">
                         <ContentControl Content="{Binding Value}"
-                                        HorizontalContentAlignment="Center"
                                         VerticalContentAlignment="Center"
                                         Width="{Binding Column.ColumnWidth}"
                                         MinWidth="50">
                             <ContentControl.Style>
                                 <Style TargetType="ContentControl">
+                                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Column.IsNumeric}" Value="True">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding IsEditable}" Value="True">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                             <Setter Property="ContentTemplate">
                                                 <Setter.Value>
                                                     <DataTemplate>
@@ -66,6 +68,7 @@
                                                                  BorderThickness="0"
                                                                  Background="Transparent"
                                                                  TextAlignment="Center"
+                                                                 Margin="6,0"
                                                                  VerticalAlignment="Center"/>
                                                     </DataTemplate>
                                                 </Setter.Value>

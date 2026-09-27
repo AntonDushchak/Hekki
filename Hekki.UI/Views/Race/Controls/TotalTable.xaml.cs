@@ -69,10 +69,7 @@ namespace Hekki.UI.Views.Race.Controls
 
             foreach (var column in _viewModel.Columns)
             {
-                // Outer Grid: [text *] [thumb 5px]
                 var cell = new Grid();
-                cell.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                cell.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(5) });
 
                 // Bind cell width to ColumnViewModel.ColumnWidth
                 cell.SetBinding(WidthProperty, new Binding(nameof(ColumnViewModel.ColumnWidth))
@@ -85,21 +82,23 @@ namespace Hekki.UI.Views.Race.Controls
                 var text = new TextBlock
                 {
                     FontWeight = FontWeights.Bold,
-                    TextAlignment = TextAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center
+                    TextAlignment = column.IsNumeric ? TextAlignment.Center : TextAlignment.Left,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = column.IsNumeric ? new Thickness(0) : new Thickness(6, 0, 5, 0)
                 };
                 if (converter != null)
                     text.SetBinding(TextBlock.TextProperty, new Binding { Source = column, Converter = converter });
                 else
                     text.Text = column.HeaderText ?? column.HeaderResourceKey ?? string.Empty;
 
-                Grid.SetColumn(text, 0);
                 cell.Children.Add(text);
 
                 // Resize thumb
                 var thumb = new Thumb
                 {
                     Width = 5,
+                    HorizontalAlignment = HorizontalAlignment.Right,
                     Cursor = Cursors.SizeWE,
                     Template = CreateThumbTemplate()
                 };
@@ -107,7 +106,6 @@ namespace Hekki.UI.Views.Race.Controls
                 thumb.DragDelta += (_, e) =>
                     col.ColumnWidth = Math.Max(40, col.ColumnWidth + e.HorizontalChange);
 
-                Grid.SetColumn(thumb, 1);
                 cell.Children.Add(thumb);
 
                 PART_HeaderPanel.Children.Add(cell);
