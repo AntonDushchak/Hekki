@@ -18,69 +18,76 @@
     </UserControl.Resources>
 
     <Border Background="White" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="12">
-        <!-- Outer -->
-        <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Disabled">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-                <!-- Header row -->
-                <Border Grid.Row="0"
-                        BorderBrush="{DynamicResource Brush.Border}"
-                        BorderThickness="0,0,0,1"
-                        Padding="15">
-                    <StackPanel x:Name="PART_HeaderPanel"
-                                Orientation="Horizontal"
-                                VerticalAlignment="Center"/>
-                </Border>
+            <!-- Outer -->
+            <ScrollViewer Grid.Row="0"
+                          HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Disabled">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                <!-- Data rows -->
-                <ScrollViewer Grid.Row="1"
-                              VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Disabled">
-                    <ItemsControl ItemsSource="{Binding TotalTableRows}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type totalTableVm:TotalTableRowViewModel}">
-                                <local:TotalTableRow/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-                <Grid Grid.Row="2"
-                      DataContext="{Binding Participants, ElementName=Root}">
-                    <Button Content="+"
-                            Command="{Binding DataContext.OpenAddPilotEditorCommand, ElementName=Root}"
-                            MinHeight="40">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Visibility" Value="Visible"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding DataContext.IsAddPilotEditorOpen, ElementName=Root}" Value="True">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
+                    <!-- Header row -->
+                    <Border Grid.Row="0"
+                            BorderBrush="{DynamicResource Brush.Border}"
+                            BorderThickness="0,0,0,1">
+                        <StackPanel x:Name="PART_HeaderPanel"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Center"/>
+                    </Border>
 
-                    <components:AddPilotControl>
-                        <components:AddPilotControl.Style>
-                            <Style TargetType="components:AddPilotControl">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding DataContext.IsAddPilotEditorOpen, ElementName=Root}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </components:AddPilotControl.Style>
-                    </components:AddPilotControl>
+                    <!-- Data rows -->
+                    <ScrollViewer Grid.Row="1"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{Binding TotalTableRows}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type totalTableVm:TotalTableRowViewModel}">
+                                    <local:TotalTableRow/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </Grid>
+            </ScrollViewer>
+
+            <Grid Grid.Row="1"
+                  DataContext="{Binding Participants, ElementName=Root}">
+                <Button Content="+"
+                        Command="{Binding DataContext.OpenAddPilotEditorCommand, ElementName=Root}"
+                        MinHeight="40">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DataContext.IsAddPilotEditorOpen, ElementName=Root}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <components:AddPilotControl>
+                    <components:AddPilotControl.Style>
+                        <Style TargetType="components:AddPilotControl">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DataContext.IsAddPilotEditorOpen, ElementName=Root}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </components:AddPilotControl.Style>
+                </components:AddPilotControl>
             </Grid>
-        </ScrollViewer>
+        </Grid>
     </Border>
 </UserControl>
