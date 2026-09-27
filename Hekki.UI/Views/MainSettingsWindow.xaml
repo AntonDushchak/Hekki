@@ -7,7 +7,7 @@
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
-        Background="{DynamicResource Brush.Base}">
+        Style="{DynamicResource WindowStyle}">
     <Border Padding="30"
             Background="{DynamicResource Brush.Base}"
             BorderBrush="{DynamicResource Brush.Border}"
