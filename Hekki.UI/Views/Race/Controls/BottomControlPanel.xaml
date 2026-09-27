@@ -8,35 +8,13 @@
              x:Name="Root"
              d:DesignHeight="120" d:DesignWidth="800">
 
-    <UserControl.Resources>
-        <Storyboard x:Key="ShowPanelStoryboard">
-            <DoubleAnimation Storyboard.TargetName="PanelTransform"
-                           Storyboard.TargetProperty="Y"
-                           To="0"
-                           Duration="0:0:0.3">
-                <DoubleAnimation.EasingFunction>
-                    <CubicEase EasingMode="EaseOut"/>
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-        </Storyboard>
-
-        <Storyboard x:Key="HidePanelStoryboard">
-            <DoubleAnimation Storyboard.TargetName="PanelTransform"
-                           Storyboard.TargetProperty="Y"
-                           To="80"
-                           Duration="0:0:0.3">
-                <DoubleAnimation.EasingFunction>
-                    <CubicEase EasingMode="EaseIn"/>
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-        </Storyboard>
-    </UserControl.Resources>
-
-    <Grid VerticalAlignment="Bottom" 
-          HorizontalAlignment="Stretch">
+    <Grid x:Name="PanelRoot"
+          VerticalAlignment="Bottom"
+          HorizontalAlignment="Stretch"
+          SizeChanged="PanelRoot_SizeChanged">
 
         <Grid.RenderTransform>
-            <TranslateTransform x:Name="PanelTransform" Y="80"/>
+            <TranslateTransform x:Name="PanelTransform"/>
         </Grid.RenderTransform>
 
         <!-- Panel background with shadow -->

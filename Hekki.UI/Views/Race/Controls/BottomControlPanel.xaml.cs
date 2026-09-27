@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Hekki.UI.ViewModels;
 
@@ -8,8 +9,8 @@ namespace Hekki.UI.Views.Race.Controls
 {
     public partial class BottomControlPanel : UserControl
     {
-        private Storyboard? _showStoryboard;
-        private Storyboard? _hideStoryboard;
+        private const double HandleHeight = 40;
+        private static readonly Duration AnimationDuration = TimeSpan.FromSeconds(0.3);
 
         public static readonly DependencyProperty IsExpandedProperty =
             DependencyProperty.Register(
@@ -27,35 +28,22 @@ namespace Hekki.UI.Views.Race.Controls
         public BottomControlPanel()
         {
             InitializeComponent();
-            Loaded += OnLoaded;
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            _showStoryboard = (Storyboard)Resources["ShowPanelStoryboard"];
-            _hideStoryboard = (Storyboard)Resources["HidePanelStoryboard"];
-
-            if (!IsExpanded)
-            {
-                PanelTransform.Y = 80;
-            }
-        }
+        private double CollapsedOffset => Math.Max(0, PanelRoot.ActualHeight - HandleHeight);
 
         private static void OnIsExpandedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is BottomControlPanel panel)
-            {
-                bool isExpanded = (bool)e.NewValue;
+                panel.AnimateTo((bool)e.NewValue ? 0 : panel.CollapsedOffset, (bool)e.NewValue ? EasingMode.EaseOut : EasingMode.EaseIn);
+        }
 
-                if (isExpanded)
-                {
-                    panel.ShowPanel();
-                }
-                else
-                {
-                    panel.HidePanel();
-                }
-            }
+        private void PanelRoot_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (IsExpanded) return;
+
+            PanelTransform.BeginAnimation(TranslateTransform.YProperty, null);
+            PanelTransform.Y = CollapsedOffset;
         }
 
         private void Handle_Click(object sender, MouseButtonEventArgs e)
@@ -63,16 +51,13 @@ namespace Hekki.UI.Views.Race.Controls
             IsExpanded = !IsExpanded;
         }
 
-        private void ShowPanel()
+        private void AnimateTo(double offset, EasingMode easingMode)
         {
-            _hideStoryboard?.Stop();
-            _showStoryboard?.Begin();
-        }
-
-        private void HidePanel()
-        {
-            _showStoryboard?.Stop();
-            _hideStoryboard?.Begin();
+            var animation = new DoubleAnimation(offset, AnimationDuration)
+            {
+                EasingFunction = new CubicEase { EasingMode = easingMode }
+            };
+            PanelTransform.BeginAnimation(TranslateTransform.YProperty, animation);
         }
 
         private void HeatButton_Click(object sender, RoutedEventArgs e)

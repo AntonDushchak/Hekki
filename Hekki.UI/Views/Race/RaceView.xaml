@@ -10,13 +10,8 @@
              d:DesignHeight="720" d:DesignWidth="1240">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
         <!-- Main content row -->
-        <Grid Grid.Row="0" Margin="40,0">
+        <Grid Margin="40,0,40,40">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="5"/>
@@ -97,8 +92,8 @@
         </Grid>
 
         <!-- Bottom Heats Panel -->
-        <components:BottomControlPanel Grid.Row="1"
-                                       DataContext="{Binding}"
+        <components:BottomControlPanel DataContext="{Binding}"
+                                       VerticalAlignment="Bottom"
                                        HorizontalAlignment="Stretch"/>
     </Grid>
 </UserControl>
