@@ -49,13 +49,41 @@ namespace Hekki.Infrastructure.Repositories
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
+            var maxSortOrder = await db.RaceParticipants
+                .Where(x => x.RaceId == raceId)
+                .MaxAsync(x => (int?)x.SortOrder, ct);
+
             var entity = _mapper.Map<RaceParticipantEntity>(participant);
             entity.RaceId = raceId;
             entity.IsActive = true;
+            entity.SortOrder = (maxSortOrder ?? -1) + 1;
             db.RaceParticipants.Add(entity);
             await db.SaveChangesAsync(ct);
 
             return entity.Id;
+        }
+
+        public async Task UpdateOrderAsync(int raceId, IReadOnlyList<Guid> orderedIds, CancellationToken ct = default)
+        {
+            await using var db = await _dbFactory.CreateDbContextAsync(ct);
+            await using var transaction = await db.Database.BeginTransactionAsync(ct);
+
+            var participants = await db.RaceParticipants
+                .Where(x => x.RaceId == raceId)
+                .ToDictionaryAsync(x => x.Id, ct);
+
+            if (orderedIds.Count != participants.Count || orderedIds.Any(id => !participants.ContainsKey(id)))
+                throw new InvalidOperationException($"Participant order for race {raceId} does not match its participants.");
+
+            for (var i = 0; i < orderedIds.Count; i++)
+                participants[orderedIds[i]].SortOrder = -(i + 1);
+            await db.SaveChangesAsync(ct);
+
+            for (var i = 0; i < orderedIds.Count; i++)
+                participants[orderedIds[i]].SortOrder = i;
+            await db.SaveChangesAsync(ct);
+
+            await transaction.CommitAsync(ct);
         }
 
         public async Task UpdateAsync(RaceParticipantDto participant, CancellationToken ct = default)

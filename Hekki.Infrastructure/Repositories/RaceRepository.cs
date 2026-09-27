@@ -22,7 +22,7 @@ namespace Hekki.Infrastructure.Repositories
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
             var raceEntities = await db.Races
-                .Include(x => x.Participants)
+                .Include(x => x.Participants.OrderBy(p => p.SortOrder))
                     .ThenInclude(x => x.Pilot)
                 .Include(x => x.Heats)
                     .ThenInclude(x => x.HeatGroups)
@@ -42,7 +42,7 @@ namespace Hekki.Infrastructure.Repositories
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
 
             var raceEntity = await db.Races
-                .Include(x => x.Participants)
+                .Include(x => x.Participants.OrderBy(p => p.SortOrder))
                     .ThenInclude(x => x.Pilot)
                 .Include(x => x.Heats)
                     .ThenInclude(x => x.HeatGroups)

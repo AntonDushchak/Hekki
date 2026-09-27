@@ -30,6 +30,17 @@
 
     <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1" Padding="15">
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Border Tag="DragHandle"
+                    Width="24"
+                    Background="Transparent"
+                    Cursor="SizeAll">
+                <TextBlock Text="≡"
+                           FontSize="16"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource Brush.Border}"/>
+            </Border>
+
             <!-- Dynamic result cells -->
             <ItemsControl ItemsSource="{Binding Cells}">
                 <ItemsControl.ItemsPanel>

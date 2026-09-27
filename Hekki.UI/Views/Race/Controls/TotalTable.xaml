@@ -47,7 +47,15 @@
                     <ScrollViewer Grid.Row="1"
                                   VerticalScrollBarVisibility="Auto"
                                   HorizontalScrollBarVisibility="Disabled">
-                        <ItemsControl ItemsSource="{Binding TotalTableRows}">
+                        <ItemsControl x:Name="PART_Rows"
+                                      ItemsSource="{Binding TotalTableRows}"
+                                      AllowDrop="True"
+                                      Background="Transparent"
+                                      PreviewMouseLeftButtonDown="Rows_PreviewMouseLeftButtonDown"
+                                      PreviewMouseMove="Rows_PreviewMouseMove"
+                                      DragOver="Rows_DragOver"
+                                      DragLeave="Rows_DragLeave"
+                                      Drop="Rows_Drop">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type totalTableVm:TotalTableRowViewModel}">
                                     <local:TotalTableRow/>

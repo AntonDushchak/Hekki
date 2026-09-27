@@ -61,6 +61,12 @@ namespace Hekki.Application.Services
             _eventPublisher.Publish(new ParticipantRemovedMessage(raceId, participantId));
         }
 
+        public async Task ReorderParticipantsAsync(int raceId, IReadOnlyList<Guid> orderedIds, CancellationToken ct = default)
+        {
+            await _participantRepository.UpdateOrderAsync(raceId, orderedIds, ct);
+            _eventPublisher.Publish(new ParticipantsReorderedMessage(raceId, orderedIds));
+        }
+
         public async Task<RegulationEditDto?> GetRegulationEditAsync(int regulationId, CancellationToken ct = default)
         {
             return await _regulationRepository.GetForEditAsync(regulationId, ct);

@@ -15,6 +15,7 @@ namespace Hekki.UI.ViewModels
     public partial class RaceViewModel : ViewModelBase,
         IRecipient<ParticipantAddedMessage>,
         IRecipient<ParticipantRemovedMessage>,
+        IRecipient<ParticipantsReorderedMessage>,
         IRecipient<GroupsAssignedMessage>
     {
         private readonly IRaceService _raceService;
@@ -53,7 +54,7 @@ namespace Hekki.UI.ViewModels
             _navigationService = navigationService;
 
             Participants = new ParticipantsSectionViewModel(raceService, pilotService, dialogService, appSettings);
-            TotalTable = new TotalTableViewModel();
+            TotalTable = new TotalTableViewModel(raceService);
             HeatsTable = new HeatsTableViewModel(raceService);
             _heatList = new List<HeatViewModel>();
             _appSettings = appSettings;
@@ -121,7 +122,7 @@ namespace Hekki.UI.ViewModels
 
             Participants.Initialize(RaceId!.Value, _participantList);
             HeatsTable.Initialize(RaceId!.Value, _heatList);
-            TotalTable.Initialize(_heatList, _participantList);
+            TotalTable.Initialize(RaceId!.Value, _heatList, _participantList);
         });
 
         public void Receive(ParticipantAddedMessage message)
@@ -141,6 +142,14 @@ namespace Hekki.UI.ViewModels
             var participant = _participantList.FirstOrDefault(p => p.Id == message.ParticipantId);
             if (participant != null) _participantList.Remove(participant);
             TotalTable.RemoveRow(message.ParticipantId);
+        }
+
+        public void Receive(ParticipantsReorderedMessage message)
+        {
+            if (message.RaceId != RaceId) return;
+
+            _participantList.ReorderBy(message.ParticipantIds, p => p.Id);
+            TotalTable.ApplyOrder(message.ParticipantIds);
         }
 
         public void Receive(GroupsAssignedMessage message)

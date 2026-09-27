@@ -133,7 +133,13 @@ namespace Hekki.Infrastructure
                     .HasForeignKey(e => e.PilotId)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                entity.Property(e => e.SortOrder)
+                    .IsRequired();
+
                 entity.HasIndex(e => new { e.RaceId, e.PilotId })
+                    .IsUnique();
+
+                entity.HasIndex(e => new { e.RaceId, e.SortOrder })
                     .IsUnique();
             });
 

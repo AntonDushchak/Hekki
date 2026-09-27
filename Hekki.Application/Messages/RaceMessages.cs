@@ -4,5 +4,6 @@ namespace Hekki.Application.Messages
 {
     public record ParticipantAddedMessage(int RaceId, RaceParticipantDto RaceParticipant);
     public record ParticipantRemovedMessage(int RaceId, Guid ParticipantId);
+    public record ParticipantsReorderedMessage(int RaceId, IReadOnlyList<Guid> ParticipantIds);
     public record GroupsAssignedMessage(int RaceId, int HeatId, List<GroupAssignmentResultDto> Result);
 }

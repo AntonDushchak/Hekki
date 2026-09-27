@@ -1,19 +1,30 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Hekki.Application.Abstractions;
+using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels.Race.TotalTable
 {
     public partial class TotalTableViewModel : ViewModelBase
     {
+        private readonly IRaceService _raceService;
+        private int? _raceId;
+
         public IReadOnlyList<RaceParticipantViewModel> Participants { get; private set; } = [];
         public IReadOnlyList<HeatViewModel> Heats { get; private set; } = [];
         public ObservableCollection<TotalTableRowViewModel> TotalTableRows { get; } = [];
         public ObservableCollection<ColumnViewModel> Columns { get; } = [];
         [ObservableProperty] private bool _isAddPilotEditorOpen = false;
 
-        public void Initialize(IReadOnlyList<HeatViewModel> heats, IReadOnlyList<RaceParticipantViewModel> participants)
+        public TotalTableViewModel(IRaceService raceService)
         {
+            _raceService = raceService;
+        }
+
+        public void Initialize(int raceId, IReadOnlyList<HeatViewModel> heats, IReadOnlyList<RaceParticipantViewModel> participants)
+        {
+            _raceId = raceId;
             IsAddPilotEditorOpen = false;
 
             Heats = heats;
@@ -37,6 +48,25 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
         public void RefreshAssignments()
         {
             RebuildStandingsKart();
+        }
+
+        public Task MoveRowAsync(TotalTableRowViewModel row, int newIndex) => ExecuteSafeAsync(async () =>
+        {
+            if (_raceId == null) return;
+
+            var oldIndex = TotalTableRows.IndexOf(row);
+            if (oldIndex < 0 || oldIndex == newIndex || newIndex < 0 || newIndex >= TotalTableRows.Count) return;
+
+            var orderedIds = TotalTableRows.Select(r => r.Participant.Id).ToList();
+            orderedIds.RemoveAt(oldIndex);
+            orderedIds.Insert(newIndex, row.Participant.Id);
+
+            await _raceService.ReorderParticipantsAsync(_raceId.Value, orderedIds);
+        });
+
+        public void ApplyOrder(IReadOnlyList<Guid> participantIds)
+        {
+            TotalTableRows.ReorderBy(participantIds, r => r.Participant.Id);
         }
 
         private void RebuildStandingsHeat(int heatId)

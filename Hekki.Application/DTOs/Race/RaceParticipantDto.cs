@@ -10,5 +10,6 @@ namespace Hekki.Application.DTOs.Race
         public string? Team { get; init; }
         public string? League { get; init; }
         public bool IsActive { get; init; }
+        public int SortOrder { get; init; }
     }
 }
