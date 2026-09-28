@@ -72,6 +72,8 @@
     <system:String x:Key="m_OpenProfileLink">Перейти за посиланням</system:String>
     <system:String x:Key="m_DeleteParticipantTitle">Видалення учасника</system:String>
     <system:String x:Key="m_DeleteParticipantConfirm">Видалити {0} з гонки? Пілота та всі його результати буде видалено з усіх заїздів.</system:String>
+    <system:String x:Key="m_SortBy">Сортувати за</system:String>
+    <system:String x:Key="m_ReverseOrder">Зворотний порядок</system:String>
     <system:String x:Key="m_RaceSettings">Налаштування гонки</system:String>
     <system:String x:Key="m_RaceName">Назва гонки</system:String>
     <system:String x:Key="m_RaceDate">Дата гонки</system:String>

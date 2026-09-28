@@ -1,8 +1,12 @@
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Hekki.UI.Converters;
+using Hekki.UI.Services;
 using Hekki.UI.ViewModels;
 
 namespace Hekki.UI.Views.Race.Controls
@@ -10,6 +14,7 @@ namespace Hekki.UI.Views.Race.Controls
     public partial class BottomControlPanel : UserControl
     {
         private const double HandleHeight = 40;
+        private static readonly ColumnHeaderConverter HeaderConverter = new();
         private static readonly Duration AnimationDuration = TimeSpan.FromSeconds(0.3);
 
         public static readonly DependencyProperty IsExpandedProperty =
@@ -58,6 +63,36 @@ namespace Hekki.UI.Views.Race.Controls
                 EasingFunction = new CubicEase { EasingMode = easingMode }
             };
             PanelTransform.BeginAnimation(TranslateTransform.YProperty, animation);
+        }
+
+        private void TableActionsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button button || DataContext is not RaceViewModel viewModel) return;
+
+            var totalTable = viewModel.TotalTable;
+            var sortMenu = new MenuItem { Header = Localizer.Get("m_SortBy") };
+            foreach (var column in totalTable.Columns.Where(c => c.IsSortable))
+            {
+                sortMenu.Items.Add(new MenuItem
+                {
+                    Header = HeaderConverter.Convert(column, typeof(string), null!, CultureInfo.CurrentCulture),
+                    Command = totalTable.SortByColumnCommand,
+                    CommandParameter = column
+                });
+            }
+
+            var menu = new ContextMenu
+            {
+                PlacementTarget = button,
+                Placement = PlacementMode.Top
+            };
+            menu.Items.Add(sortMenu);
+            menu.Items.Add(new MenuItem
+            {
+                Header = Localizer.Get("m_ReverseOrder"),
+                Command = totalTable.ReverseOrderCommand
+            });
+            menu.IsOpen = true;
         }
 
         private void HeatButton_Click(object sender, RoutedEventArgs e)

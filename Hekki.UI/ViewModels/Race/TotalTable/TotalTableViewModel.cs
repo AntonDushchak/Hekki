@@ -88,6 +88,43 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
             await _raceService.ReorderParticipantsAsync(_raceId.Value, orderedIds);
         });
 
+        [RelayCommand]
+        private Task SortByColumnAsync(TotalTableColumn column) => ExecuteSafeAsync(async () =>
+        {
+            if (_raceId == null) return;
+
+            var orderedIds = TotalTableRows
+                .Select(row => (row.Participant.Id, Key: column.GetSortKey(new ParticipantRaceContext(row.Participant, Heats))))
+                .OrderBy(item => item.Key, Comparer<IComparable?>.Create(CompareSortKeys))
+                .Select(item => item.Id)
+                .ToList();
+
+            await _raceService.ReorderParticipantsAsync(_raceId.Value, orderedIds);
+        });
+
+        [RelayCommand]
+        private Task ReverseOrderAsync() => ExecuteSafeAsync(async () =>
+        {
+            if (_raceId == null) return;
+
+            var orderedIds = TotalTableRows.Select(row => row.Participant.Id).Reverse().ToList();
+            await _raceService.ReorderParticipantsAsync(_raceId.Value, orderedIds);
+        });
+
+        private static int CompareSortKeys(IComparable? left, IComparable? right)
+        {
+            var leftEmpty = left is null || left is string { Length: 0 };
+            var rightEmpty = right is null || right is string { Length: 0 };
+
+            if (leftEmpty || rightEmpty)
+                return leftEmpty.CompareTo(rightEmpty);
+
+            if (left is string leftText && right is string rightText)
+                return string.Compare(leftText, rightText, StringComparison.CurrentCultureIgnoreCase);
+
+            return left!.CompareTo(right);
+        }
+
         public void ApplyOrder(IReadOnlyList<Guid> participantIds)
         {
             TotalTableRows.ReorderBy(participantIds, r => r.Participant.Id);
@@ -160,6 +197,7 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
 
             if (Heats.Any(h => h.ShowScore))
                 Columns.Add(new TotalScoreColumn());
+
         }
 
         private TotalTableRowViewModel BuildRow(RaceParticipantViewModel participant)

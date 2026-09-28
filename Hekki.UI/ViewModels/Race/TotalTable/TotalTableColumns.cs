@@ -8,8 +8,12 @@ namespace Hekki.UI.ViewModels
         {
         }
 
+        public virtual bool IsSortable => true;
+
         public abstract string GetValue(ParticipantRaceContext context);
         public abstract CellViewModel CreateCell(ParticipantRaceContext context);
+
+        public virtual IComparable? GetSortKey(ParticipantRaceContext context) => GetValue(context);
 
         public virtual void UpdateCell(CellViewModel cell, ParticipantRaceContext context)
         {
@@ -34,6 +38,8 @@ namespace Hekki.UI.ViewModels
         public override void UpdateCell(CellViewModel cell, ParticipantRaceContext context)
         {
         }
+
+        public override bool IsSortable => false;
     }
 
     public class ParticipantColumn : TotalTableColumn
@@ -67,6 +73,8 @@ namespace Hekki.UI.ViewModels
                 KartNumbers = string.Join(", ", context.GetKartNumbers())
             });
         }
+
+        public override IComparable? GetSortKey(ParticipantRaceContext context) => context.Participant.FullName;
     }
 
     public class PhotoColumn : TotalTableColumn
@@ -86,6 +94,8 @@ namespace Hekki.UI.ViewModels
         {
             throw new NotImplementedException();
         }
+
+        public override bool IsSortable => false;
     }
 
     public class LeagueColumn : TotalTableColumn
@@ -143,6 +153,8 @@ namespace Hekki.UI.ViewModels
             if (row == null) return string.Empty;
             return LapTimeFormat.Format(row.BestLapMs);
         }
+
+        public override IComparable? GetSortKey(ParticipantRaceContext context) => context.Results[Heat]?.BestLapMs;
     }
 
     public class HeatScoreColumn : TotalTableColumn
@@ -168,6 +180,8 @@ namespace Hekki.UI.ViewModels
             if (row == null) return string.Empty;
             return row.TotalScore.ToString();
         }
+
+        public override IComparable? GetSortKey(ParticipantRaceContext context) => context.Results[Heat]?.TotalScore;
     }
 
     public class TotalTimeColumn : TotalTableColumn
@@ -191,6 +205,12 @@ namespace Hekki.UI.ViewModels
 
             return laps.Count == 0 ? string.Empty : LapTimeFormat.Format(laps.Sum());
         }
+
+        public override IComparable? GetSortKey(ParticipantRaceContext context)
+        {
+            var laps = context.Results.Values.Where(r => r?.BestLapMs != null).Select(r => r!.BestLapMs!.Value).ToList();
+            return laps.Count == 0 ? null : laps.Sum();
+        }
     }
 
     public class TotalScoreColumn : TotalTableColumn
@@ -211,6 +231,11 @@ namespace Hekki.UI.ViewModels
                 .Where(r => r != null)
                 .Sum(r => r!.TotalScore)
                 .ToString();
+        }
+
+        public override IComparable? GetSortKey(ParticipantRaceContext context)
+        {
+            return context.Results.Values.Where(r => r != null).Sum(r => r!.TotalScore);
         }
     }
 

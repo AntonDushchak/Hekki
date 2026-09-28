@@ -72,6 +72,8 @@
     <system:String x:Key="m_OpenProfileLink">Follow the link</system:String>
     <system:String x:Key="m_DeleteParticipantTitle">Delete participant</system:String>
     <system:String x:Key="m_DeleteParticipantConfirm">Delete {0} from the race? The pilot and all their results will be removed from every heat.</system:String>
+    <system:String x:Key="m_SortBy">Sort by</system:String>
+    <system:String x:Key="m_ReverseOrder">Reverse order</system:String>
     <system:String x:Key="m_RaceSettings">Race settings</system:String>
     <system:String x:Key="m_RaceName">Race name</system:String>
     <system:String x:Key="m_RaceDate">Race date</system:String>

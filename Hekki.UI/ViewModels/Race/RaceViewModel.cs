@@ -25,7 +25,9 @@ namespace Hekki.UI.ViewModels
         private readonly IDialogService _dialogService;
 
         [ObservableProperty] private int _regulationId;
-        [ObservableProperty] private int? _raceId;
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(EditRaceSettingsCommand))]
+        private int? _raceId;
         [ObservableProperty] private string _raceName = string.Empty;
         [ObservableProperty] private string _location = string.Empty;
         [ObservableProperty] private DateTime _raceDate = DateTime.Today;
@@ -226,6 +228,22 @@ namespace Hekki.UI.ViewModels
             HeatsTable.Dispose();
             TotalTable.Dispose();
         }
+
+        [RelayCommand(CanExecute = nameof(CanEditRaceSettings))]
+        private Task EditRaceSettingsAsync() => ExecuteSafeAsync(async () =>
+        {
+            var settingsViewModel = new RaceSettingsViewModel(_appSettings, RaceName, RaceDate, Location);
+            if (_dialogService.ShowRaceSettings(settingsViewModel) != true) return;
+
+            var location = settingsViewModel.SelectedLocation ?? string.Empty;
+            await _raceService.UpdateRaceAsync(RaceId!.Value, settingsViewModel.RaceName, location, settingsViewModel.RaceDate);
+
+            RaceName = settingsViewModel.RaceName;
+            RaceDate = settingsViewModel.RaceDate;
+            Location = location;
+        });
+
+        private bool CanEditRaceSettings() => !IsNewRace;
 
         private void OpenRaceSettings()
         {

@@ -47,6 +47,14 @@ namespace Hekki.Application.Services
             return await _raceRepository.AddAsync(race, ct);
         }
 
+        public async Task UpdateRaceAsync(int raceId, string name, string location, DateTime date, CancellationToken ct = default)
+        {
+            var race = await _raceRepository.GetByIdAsync(raceId, ct)
+                ?? throw new RaceNotFoundException(raceId);
+
+            await _raceRepository.UpdateAsync(race with { RaceName = name, Location = location, Date = date }, ct);
+        }
+
         public async Task<RaceParticipantDto> AddParticipantAsync(int raceId, int pilotId, CancellationToken ct = default)
         {
             var pilot = await _pilotRepository.GetByIdAsync(pilotId, ct) ?? throw new PilotNotFoundException(pilotId);
