@@ -66,6 +66,12 @@
     <system:String x:Key="m_TotalScore">Сума очок</system:String>
     <system:String x:Key="m_TotalTime">Загальний час</system:String>
     <system:String x:Key="m_NewPilot">Новий пілот:</system:String>
+    <system:String x:Key="m_EditPilotAction">Редагувати пілота</system:String>
+    <system:String x:Key="m_Exclude">Виключити</system:String>
+    <system:String x:Key="m_Include">Включити</system:String>
+    <system:String x:Key="m_OpenProfileLink">Перейти за посиланням</system:String>
+    <system:String x:Key="m_DeleteParticipantTitle">Видалення учасника</system:String>
+    <system:String x:Key="m_DeleteParticipantConfirm">Видалити {0} з гонки? Пілота та всі його результати буде видалено з усіх заїздів.</system:String>
     <system:String x:Key="m_RaceSettings">Налаштування гонки</system:String>
     <system:String x:Key="m_RaceName">Назва гонки</system:String>
     <system:String x:Key="m_RaceDate">Дата гонки</system:String>
@@ -130,4 +136,5 @@
     <system:String x:Key="err_InvalidPenalty">Штраф має бути цілим числом.</system:String>
     <system:String x:Key="err_InvalidResultValue">Неприпустиме значення результату: {0}.</system:String>
     <system:String x:Key="err_ParticipantNotInHeat">Учасника не розподілено в групу цього заїзду.</system:String>
+    <system:String x:Key="err_ParticipantNotFound">Учасника {0} не знайдено.</system:String>
 </ResourceDictionary>

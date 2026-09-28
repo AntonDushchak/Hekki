@@ -54,5 +54,15 @@ namespace Hekki.UI.Services
 
             return window.ShowDialog();
         }
+
+        public bool Confirm(string title, string message, string confirmText)
+        {
+            var window = new ConfirmWindow(title, message, confirmText);
+
+            if (System.Windows.Application.Current?.MainWindow is { IsLoaded: true } owner)
+                window.Owner = owner;
+
+            return window.ShowDialog() == true;
+        }
     }
 }

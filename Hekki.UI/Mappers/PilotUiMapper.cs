@@ -16,6 +16,17 @@ namespace Hekki.UI.Mappers
             };
         }
 
+        public static void ApplyToParticipantViewModel(RaceParticipantDto raceParticipant, RaceParticipantViewModel participant)
+        {
+            participant.FirstName = raceParticipant.FirstName;
+            participant.LastName = raceParticipant.LastName;
+            participant.PilotPhotoPath = raceParticipant.PhotoPath;
+            participant.PilotProfileUrl = raceParticipant.ProfileUrl;
+            participant.Team = raceParticipant.Team;
+            participant.League = raceParticipant.League;
+            participant.IsActive = raceParticipant.IsActive;
+        }
+
         public static RaceParticipantViewModel MapToParticipantViewModel(RaceParticipantDto raceParticipant)
         {
             return new RaceParticipantViewModel
@@ -25,6 +36,7 @@ namespace Hekki.UI.Mappers
                 FirstName = raceParticipant.FirstName,
                 LastName = raceParticipant.LastName,
                 PilotPhotoPath = raceParticipant.PhotoPath,
+                PilotProfileUrl = raceParticipant.ProfileUrl,
                 Team = raceParticipant.Team,
                 League = raceParticipant.League,
                 IsActive = raceParticipant.IsActive

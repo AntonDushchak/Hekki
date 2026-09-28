@@ -8,5 +8,6 @@ namespace Hekki.UI.Services
         bool? ShowRaceSettings(RaceSettingsViewModel vm);
         PilotDto? ShowPilotEditor(PilotEditorViewModel vm);
         bool? ShowMainSettings(MainSettingsViewModel vm);
+        bool Confirm(string title, string message, string confirmText);
     }
 }

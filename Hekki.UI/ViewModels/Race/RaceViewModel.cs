@@ -14,6 +14,7 @@ namespace Hekki.UI.ViewModels
 {
     public partial class RaceViewModel : ViewModelBase,
         IRecipient<ParticipantAddedMessage>,
+        IRecipient<ParticipantUpdatedMessage>,
         IRecipient<ParticipantRemovedMessage>,
         IRecipient<ParticipantsReorderedMessage>,
         IRecipient<HeatResultChangedMessage>,
@@ -55,7 +56,7 @@ namespace Hekki.UI.ViewModels
             _navigationService = navigationService;
 
             Participants = new ParticipantsSectionViewModel(raceService, pilotService, dialogService, appSettings);
-            TotalTable = new TotalTableViewModel(raceService);
+            TotalTable = new TotalTableViewModel(raceService, pilotService, dialogService, appSettings);
             HeatsTable = new HeatsTableViewModel(raceService);
             _heatList = new List<HeatViewModel>();
             _appSettings = appSettings;
@@ -143,6 +144,39 @@ namespace Hekki.UI.ViewModels
             var participant = _participantList.FirstOrDefault(p => p.Id == message.ParticipantId);
             if (participant != null) _participantList.Remove(participant);
             TotalTable.RemoveRow(message.ParticipantId);
+
+            foreach (var group in _heatList.SelectMany(h => h.Groups))
+            {
+                var rows = group.Rows.Where(r => r.Entry?.ParticipantId == message.ParticipantId).ToList();
+                if (rows.Count == 0) continue;
+
+                foreach (var row in rows)
+                    group.Rows.Remove(row);
+                group.RefreshCells();
+            }
+        }
+
+        public void Receive(ParticipantUpdatedMessage message)
+        {
+            if (message.RaceId != RaceId) return;
+
+            var participantId = message.RaceParticipant.ParticipantId;
+            var participant = _participantList.FirstOrDefault(p => p.Id == participantId);
+            if (participant == null) return;
+
+            PilotUiMapper.ApplyToParticipantViewModel(message.RaceParticipant, participant);
+
+            foreach (var group in _heatList.SelectMany(h => h.Groups))
+            {
+                var rows = group.Rows.Where(r => r.Entry?.ParticipantId == participantId).ToList();
+                if (rows.Count == 0) continue;
+
+                foreach (var row in rows)
+                    row.Entry!.PilotName = participant.FullName;
+                group.RefreshCells();
+            }
+
+            TotalTable.RefreshRow(participantId);
         }
 
         public void Receive(ParticipantsReorderedMessage message)

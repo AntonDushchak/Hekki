@@ -37,6 +37,7 @@ namespace Hekki.Infrastructure.Mapping
                 .ForMember(d => d.FirstName, opt => opt.MapFrom(s => s.FirstName))
                 .ForMember(d => d.LastName, opt => opt.MapFrom(s => s.LastName))
                 .ForMember(d => d.PhotoPath, opt => opt.MapFrom(s => s.Pilot.PhotoPath))
+                .ForMember(d => d.ProfileUrl, opt => opt.MapFrom(s => s.Pilot.ProfileUrl))
                 .ForMember(d => d.League, opt => opt.MapFrom(s => s.League));
 
             CreateMap<RaceParticipantDto, RaceParticipantEntity>()

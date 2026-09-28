@@ -66,6 +66,12 @@
     <system:String x:Key="m_TotalScore">Total score</system:String>
     <system:String x:Key="m_TotalTime">Total time</system:String>
     <system:String x:Key="m_NewPilot">New pilot:</system:String>
+    <system:String x:Key="m_EditPilotAction">Edit pilot</system:String>
+    <system:String x:Key="m_Exclude">Exclude</system:String>
+    <system:String x:Key="m_Include">Include</system:String>
+    <system:String x:Key="m_OpenProfileLink">Follow the link</system:String>
+    <system:String x:Key="m_DeleteParticipantTitle">Delete participant</system:String>
+    <system:String x:Key="m_DeleteParticipantConfirm">Delete {0} from the race? The pilot and all their results will be removed from every heat.</system:String>
     <system:String x:Key="m_RaceSettings">Race settings</system:String>
     <system:String x:Key="m_RaceName">Race name</system:String>
     <system:String x:Key="m_RaceDate">Race date</system:String>
@@ -130,4 +136,5 @@
     <system:String x:Key="err_InvalidPenalty">Penalty must be a whole number.</system:String>
     <system:String x:Key="err_InvalidResultValue">Invalid result value: {0}.</system:String>
     <system:String x:Key="err_ParticipantNotInHeat">The participant is not assigned to a group in this heat.</system:String>
+    <system:String x:Key="err_ParticipantNotFound">Participant {0} not found.</system:String>
 </ResourceDictionary>

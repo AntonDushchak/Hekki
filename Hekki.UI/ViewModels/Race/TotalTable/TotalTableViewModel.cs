@@ -1,14 +1,19 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.Abstractions;
+using Hekki.Application.Exceptions;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace Hekki.UI.ViewModels.Race.TotalTable
 {
     public partial class TotalTableViewModel : ViewModelBase
     {
         private readonly IRaceService _raceService;
+        private readonly IPilotService _pilotService;
+        private readonly IDialogService _dialogService;
+        private readonly AppSettings _appSettings;
         private int? _raceId;
 
         public IReadOnlyList<RaceParticipantViewModel> Participants { get; private set; } = [];
@@ -17,9 +22,16 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
         public ObservableCollection<TotalTableColumn> Columns { get; } = [];
         [ObservableProperty] private bool _isAddPilotEditorOpen = false;
 
-        public TotalTableViewModel(IRaceService raceService)
+        public TotalTableViewModel(
+            IRaceService raceService,
+            IPilotService pilotService,
+            IDialogService dialogService,
+            AppSettings appSettings)
         {
             _raceService = raceService;
+            _pilotService = pilotService;
+            _dialogService = dialogService;
+            _appSettings = appSettings;
         }
 
         public void Initialize(int raceId, IReadOnlyList<HeatViewModel> heats, IReadOnlyList<RaceParticipantViewModel> participants)
@@ -162,6 +174,57 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
             }
 
             return row;
+        }
+
+        [RelayCommand]
+        private Task EditPilotAsync(TotalTableRowViewModel row) => ExecuteSafeAsync(async () =>
+        {
+            if (_raceId == null) return;
+
+            var pilot = await _pilotService.GetPilotByIdAsync(row.Participant.PilotId)
+                ?? throw new PilotNotFoundException(row.Participant.PilotId);
+
+            var editedPilot = _dialogService.ShowPilotEditor(new PilotEditorViewModel(_appSettings, pilot));
+            if (editedPilot == null) return;
+
+            await _raceService.UpdateParticipantPilotAsync(_raceId.Value, row.Participant.Id, editedPilot);
+        });
+
+        [RelayCommand]
+        private Task DeleteParticipantAsync(TotalTableRowViewModel row) => ExecuteSafeAsync(async () =>
+        {
+            if (_raceId == null) return;
+
+            var confirmed = _dialogService.Confirm(
+                Localizer.Get("m_DeleteParticipantTitle"),
+                Localizer.Get("m_DeleteParticipantConfirm", row.Participant.FullName),
+                Localizer.Get("m_Delete"));
+            if (!confirmed) return;
+
+            await _raceService.RemoveParticipantAsync(_raceId.Value, row.Participant.Id);
+        });
+
+        [RelayCommand]
+        private void ToggleParticipantActive(TotalTableRowViewModel row)
+        {
+            // TODO: exclude/include the participant from the race
+        }
+
+        [RelayCommand(CanExecute = nameof(HasProfileLink))]
+        private void OpenProfileLink(TotalTableRowViewModel row)
+        {
+            if (TryGetProfileLink(row, out var link))
+                Process.Start(new ProcessStartInfo(link.AbsoluteUri) { UseShellExecute = true });
+        }
+
+        private static bool HasProfileLink(TotalTableRowViewModel? row) => TryGetProfileLink(row, out _);
+
+        private static bool TryGetProfileLink(TotalTableRowViewModel? row, out Uri link)
+        {
+            link = null!;
+            return Uri.TryCreate(row?.Participant.PilotProfileUrl, UriKind.Absolute, out var uri)
+                && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps)
+                && (link = uri) != null;
         }
 
         [RelayCommand]

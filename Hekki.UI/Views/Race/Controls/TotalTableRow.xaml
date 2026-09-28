@@ -1,9 +1,40 @@
 <UserControl x:Class="Hekki.UI.Views.Race.Controls.TotalTableRow"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Hekki.UI.Views.Race.Controls"
              xmlns:table="clr-namespace:Hekki.UI.Views.Shared.Table">
 
-    <Border BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1">
+    <Border BorderBrush="{DynamicResource Brush.Border}"
+            BorderThickness="0,0,0,1"
+            Background="Transparent"
+            Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=local:TotalTable}}">
+        <Border.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="{DynamicResource m_EditPilotAction}"
+                          Command="{Binding PlacementTarget.Tag.EditPilotCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                          CommandParameter="{Binding}"/>
+                <MenuItem Header="{DynamicResource m_Delete}"
+                          Command="{Binding PlacementTarget.Tag.DeleteParticipantCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                          CommandParameter="{Binding}"/>
+                <MenuItem Command="{Binding PlacementTarget.Tag.ToggleParticipantActiveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                          CommandParameter="{Binding}">
+                    <MenuItem.Style>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                            <Setter Property="Header" Value="{DynamicResource m_Exclude}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Participant.IsActive}" Value="False">
+                                    <Setter Property="Header" Value="{DynamicResource m_Include}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </MenuItem.Style>
+                </MenuItem>
+                <MenuItem Header="{DynamicResource m_OpenProfileLink}"
+                          Command="{Binding PlacementTarget.Tag.OpenProfileLinkCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                          CommandParameter="{Binding}"/>
+            </ContextMenu>
+        </Border.ContextMenu>
+
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <Border Tag="DragHandle"
                     Width="24"

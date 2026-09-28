@@ -7,6 +7,7 @@ namespace Hekki.Application.DTOs.Race
         public string FirstName { get; init; } = string.Empty;
         public string LastName { get; init; } = string.Empty;
         public string? PhotoPath { get; init; }
+        public string? ProfileUrl { get; init; }
         public string? Team { get; init; }
         public string? League { get; init; }
         public bool IsActive { get; init; }

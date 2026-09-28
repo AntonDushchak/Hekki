@@ -1,4 +1,5 @@
 using Hekki.Application.Abstractions;
+using Hekki.Application.DTOs.Pilot;
 using Hekki.Application.DTOs.Race;
 using Hekki.Application.DTOs.Regulation;
 using Hekki.Application.Exceptions;
@@ -59,6 +60,25 @@ namespace Hekki.Application.Services
         {
             await _participantRepository.DeleteAsync(participantId, ct);
             _eventPublisher.Publish(new ParticipantRemovedMessage(raceId, participantId));
+        }
+
+        public async Task UpdateParticipantPilotAsync(int raceId, Guid participantId, PilotDto pilot, CancellationToken ct = default)
+        {
+            var participant = await _participantRepository.GetByIdAsync(participantId, ct)
+                ?? throw new ParticipantNotFoundException(participantId);
+
+            await _pilotRepository.UpdateAsync(pilot, ct);
+            await _participantRepository.UpdateAsync(participant with
+            {
+                FirstName = pilot.FirstName,
+                LastName = pilot.LastName,
+                Team = pilot.Team,
+                League = pilot.League
+            }, ct);
+
+            var updated = await _participantRepository.GetByIdAsync(participantId, ct)
+                ?? throw new ParticipantNotFoundException(participantId);
+            _eventPublisher.Publish(new ParticipantUpdatedMessage(raceId, updated));
         }
 
         public async Task ReorderParticipantsAsync(int raceId, IReadOnlyList<Guid> orderedIds, CancellationToken ct = default)

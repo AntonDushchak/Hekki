@@ -94,6 +94,8 @@ namespace Hekki.Infrastructure.Repositories
             if (entity is null)
                 throw new InvalidOperationException($"Race participant with ID {participant.ParticipantId} not found");
 
+            entity.FirstName = participant.FirstName;
+            entity.LastName = participant.LastName;
             entity.Team = participant.Team;
             entity.League = participant.League;
             entity.IsActive = participant.IsActive;
