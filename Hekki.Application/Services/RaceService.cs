@@ -215,6 +215,9 @@ namespace Hekki.Application.Services
             var heat = heats.FirstOrDefault(h => h.HeatNumber == heatNumber)
                 ?? throw new HeatNotFoundException(heatNumber);
 
+            if (IsDrawn(heat))
+                throw new HeatAlreadyDrawnException(heat.HeatNumber);
+
             var configurationIndex = heat.ConfigurationIndex;
             var config = reg.Config.HeatConfigs[configurationIndex];
             var assignConfig = config.Assignment;
@@ -251,6 +254,25 @@ namespace Hekki.Application.Services
 
             _eventPublisher.Publish(new GroupsAssignedMessage(raceId, heat.HeatId, result));
         }
+
+        public async Task ClearHeatAssignmentAsync(int raceId, int heatId, CancellationToken ct = default)
+        {
+            var heats = await _heatRepository.GetByRaceIdAsync(raceId, ct);
+            var heat = heats.FirstOrDefault(h => h.HeatId == heatId)
+                ?? throw new HeatNotFoundException(heatId);
+
+            if (!IsDrawn(heat))
+                throw new HeatNotDrawnException(heat.HeatNumber);
+
+            var lastDrawn = heats.Where(IsDrawn).MaxBy(h => h.HeatNumber)!;
+            if (lastDrawn.HeatId != heat.HeatId)
+                throw new HeatNotLastDrawnException(heat.HeatNumber);
+
+            await _heatRepository.ClearAssignmentAsync(heatId, ct);
+            _eventPublisher.Publish(new HeatAssignmentClearedMessage(raceId, heatId));
+        }
+
+        private static bool IsDrawn(HeatDto heat) => heat.Groups.Any(g => g.Entries.Count > 0);
 
         private async Task<IReadOnlyList<HeatEntryDto>> GenerateEntriesForGroupAsync(
             int heatId,

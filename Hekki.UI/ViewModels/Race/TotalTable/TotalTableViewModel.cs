@@ -69,6 +69,12 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
                 Columns[i].UpdateCell(row.Cells[i], context);
         }
 
+        public void RefreshAllRows()
+        {
+            foreach (var row in TotalTableRows)
+                RefreshRow(row.Participant.Id);
+        }
+
         public void RefreshAssignments()
         {
             RefreshColumn(Columns.OfType<ParticipantColumn>().FirstOrDefault());

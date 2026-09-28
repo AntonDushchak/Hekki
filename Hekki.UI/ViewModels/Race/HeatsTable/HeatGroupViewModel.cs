@@ -23,6 +23,21 @@ namespace Hekki.UI.ViewModels
         public ObservableCollection<HeatRowViewModel> Rows { get; set; } = [];
         public ObservableCollection<HeatGroupColumn> Columns { get; } = [];
 
+        public void AddEmptySlots()
+        {
+            if (Rows.Any(row => row.HasParticipant)) return;
+
+            for (var i = Rows.Count; i < GroupCapacity; i++)
+                Rows.Add(new HeatRowViewModel { Entry = new HeatEntryViewModel(), Result = new HeatResultViewModel() });
+        }
+
+        public void ClearAssignment()
+        {
+            Rows.Clear();
+            AddEmptySlots();
+            RefreshCells();
+        }
+
         public void RefreshCells()
         {
             if (Columns.Count == 0)

@@ -127,6 +127,17 @@ namespace Hekki.Infrastructure.Repositories
             }
         }
 
+        public async Task ClearAssignmentAsync(int heatId, CancellationToken ct = default)
+        {
+            await using var db = await _dbFactory.CreateDbContextAsync(ct);
+
+            var groupIds = db.HeatGroups.Where(g => g.HeatId == heatId).Select(g => g.Id);
+            db.HeatResults.RemoveRange(db.HeatResults.Where(r => groupIds.Contains(r.GroupId)));
+            db.HeatEntries.RemoveRange(db.HeatEntries.Where(e => groupIds.Contains(e.GroupId)));
+
+            await db.SaveChangesAsync(ct);
+        }
+
         public async Task UpdateAsync(HeatDto heat, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);

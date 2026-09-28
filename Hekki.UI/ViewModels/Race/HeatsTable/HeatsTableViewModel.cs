@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.Abstractions;
 using Hekki.Application.DTOs.Race;
+using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels.Race
@@ -8,13 +9,15 @@ namespace Hekki.UI.ViewModels.Race
     public partial class HeatsTableViewModel : ViewModelBase
     {
         private readonly IRaceService _raceService;
+        private readonly IDialogService _dialogService;
         private int? _raceId;
 
         public ObservableCollection<HeatViewModel> Heats { get; } = [];
 
-        public HeatsTableViewModel(IRaceService raceService)
+        public HeatsTableViewModel(IRaceService raceService, IDialogService dialogService)
         {
             _raceService = raceService;
+            _dialogService = dialogService;
         }
 
         public void Initialize(int raceId, IEnumerable<HeatViewModel> heats)
@@ -29,18 +32,41 @@ namespace Hekki.UI.ViewModels.Race
             {
                 foreach (var group in heat.Groups)
                 {
-                    AddEmptySlots(group);
+                    group.AddEmptySlots();
                     group.RefreshCells();
                 }
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanAssignGroupsAndNumbers))]
         private Task AssignGroupsAndNumbersAsync(HeatViewModel heat) => ExecuteSafeAsync(async () =>
         {
             if (heat == null || _raceId == null) return;
             await _raceService.AssignGroupsAndNumbersAsync(_raceId.Value, heat.HeatNumber);
         });
+
+        private static bool CanAssignGroupsAndNumbers(HeatViewModel? heat) => heat is { IsDrawn: false };
+
+        [RelayCommand(CanExecute = nameof(CanUndoDraw))]
+        private Task UndoDrawAsync(HeatViewModel heat) => ExecuteSafeAsync(async () =>
+        {
+            if (_raceId == null) return;
+
+            var message = Localizer.Get(heat.HasResults ? "m_UndoDrawWithResultsConfirm" : "m_UndoDrawConfirm", heat.Name);
+            if (!_dialogService.Confirm(Localizer.Get("m_UndoDraw"), message, Localizer.Get("m_UndoDraw"))) return;
+
+            await _raceService.ClearHeatAssignmentAsync(_raceId.Value, heat.HeatId);
+        });
+
+        private bool CanUndoDraw(HeatViewModel? heat) => heat != null && LastDrawnHeat() == heat;
+
+        private HeatViewModel? LastDrawnHeat() => Heats.Where(h => h.IsDrawn).MaxBy(h => h.HeatNumber);
+
+        public void NotifyDrawStateChanged()
+        {
+            AssignGroupsAndNumbersCommand.NotifyCanExecuteChanged();
+            UndoDrawCommand.NotifyCanExecuteChanged();
+        }
 
         public Task SaveCellAsync(HeatRowViewModel row, CellViewModel cell) => ExecuteSafeAsync(async () =>
         {
@@ -61,16 +87,6 @@ namespace Hekki.UI.ViewModels.Race
                 throw;
             }
         });
-
-        private static void AddEmptySlots(HeatGroupViewModel heatGroup)
-        {
-            if (heatGroup.Rows.Any(row => row.HasParticipant)) return;
-
-            for (int i = heatGroup.Rows.Count; i < heatGroup.GroupCapacity; i++)
-            {
-                heatGroup.Rows.Add(new HeatRowViewModel() { Entry = new HeatEntryViewModel(), Result = new HeatResultViewModel() });
-            }
-        }
 
 
         [RelayCommand]

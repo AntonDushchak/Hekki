@@ -82,6 +82,9 @@
     <!-- Heats -->
     <system:String x:Key="m_GroupsLabel">Груп:</system:String>
     <system:String x:Key="m_AssignGroupsAndNumbers">Призначити групи та номери</system:String>
+    <system:String x:Key="m_UndoDraw">Скасувати жеребкування</system:String>
+    <system:String x:Key="m_UndoDrawConfirm">Скасувати жеребкування «{0}»? Розподіл по групах цього заїзду буде видалено.</system:String>
+    <system:String x:Key="m_UndoDrawWithResultsConfirm">Скасувати жеребкування «{0}»? Розподіл по групах і всі результати цього заїзду буде видалено.</system:String>
     <system:String x:Key="m_EditHeat">Редагувати заїзд</system:String>
     <system:String x:Key="m_DeleteHeat">Видалити заїзд</system:String>
     <system:String x:Key="m_Group">Група</system:String>
@@ -139,4 +142,7 @@
     <system:String x:Key="err_InvalidResultValue">Неприпустиме значення результату: {0}.</system:String>
     <system:String x:Key="err_ParticipantNotInHeat">Учасника не розподілено в групу цього заїзду.</system:String>
     <system:String x:Key="err_ParticipantNotFound">Учасника {0} не знайдено.</system:String>
+    <system:String x:Key="err_HeatAlreadyDrawn">Заїзд {0} уже розіграно. Спочатку скасуйте жеребкування.</system:String>
+    <system:String x:Key="err_HeatNotDrawn">Заїзд {0} ще не розіграно.</system:String>
+    <system:String x:Key="err_HeatNotLastDrawn">Скасувати можна лише останній розіграний заїзд (заїзд {0} не останній).</system:String>
 </ResourceDictionary>

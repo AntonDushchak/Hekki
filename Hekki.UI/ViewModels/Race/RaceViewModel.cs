@@ -18,7 +18,8 @@ namespace Hekki.UI.ViewModels
         IRecipient<ParticipantRemovedMessage>,
         IRecipient<ParticipantsReorderedMessage>,
         IRecipient<HeatResultChangedMessage>,
-        IRecipient<GroupsAssignedMessage>
+        IRecipient<GroupsAssignedMessage>,
+        IRecipient<HeatAssignmentClearedMessage>
     {
         private readonly IRaceService _raceService;
         private readonly INavigationService _navigationService;
@@ -59,7 +60,7 @@ namespace Hekki.UI.ViewModels
 
             Participants = new ParticipantsSectionViewModel(raceService, pilotService, dialogService, appSettings);
             TotalTable = new TotalTableViewModel(raceService, pilotService, dialogService, appSettings);
-            HeatsTable = new HeatsTableViewModel(raceService);
+            HeatsTable = new HeatsTableViewModel(raceService, dialogService);
             _heatList = new List<HeatViewModel>();
             _appSettings = appSettings;
         }
@@ -212,6 +213,21 @@ namespace Hekki.UI.ViewModels
 
             HeatAssignmentApplier.Apply(_heatList, message.Result);
             TotalTable.RefreshAssignments();
+            HeatsTable.NotifyDrawStateChanged();
+        }
+
+        public void Receive(HeatAssignmentClearedMessage message)
+        {
+            if (message.RaceId != RaceId) return;
+
+            var heat = _heatList.FirstOrDefault(h => h.HeatId == message.HeatId);
+            if (heat == null) return;
+
+            foreach (var group in heat.Groups)
+                group.ClearAssignment();
+
+            TotalTable.RefreshAllRows();
+            HeatsTable.NotifyDrawStateChanged();
         }
 
         [RelayCommand]

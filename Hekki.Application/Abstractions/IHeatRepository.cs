@@ -17,5 +17,6 @@ namespace Hekki.Application.Abstractions
         Task UpdateResultsAsync(int groupId, IReadOnlyList<HeatResultDto> results, CancellationToken ct = default);
         Task UpdateEntryAsync(int groupId, Guid participantId, HeatEntryDto entry, CancellationToken ct = default);
         Task UpdateEntriesAsync(int groupId, IReadOnlyList<HeatEntryDto> entries, CancellationToken ct = default);
+        Task ClearAssignmentAsync(int heatId, CancellationToken ct = default);
     }
 }

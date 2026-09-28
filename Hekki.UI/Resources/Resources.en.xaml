@@ -82,6 +82,9 @@
     <!-- Heats -->
     <system:String x:Key="m_GroupsLabel">Groups:</system:String>
     <system:String x:Key="m_AssignGroupsAndNumbers">Assign groups and numbers</system:String>
+    <system:String x:Key="m_UndoDraw">Undo draw</system:String>
+    <system:String x:Key="m_UndoDrawConfirm">Undo the draw of {0}? The group assignment of this heat will be removed.</system:String>
+    <system:String x:Key="m_UndoDrawWithResultsConfirm">Undo the draw of {0}? The group assignment and all results of this heat will be removed.</system:String>
     <system:String x:Key="m_EditHeat">Edit heat</system:String>
     <system:String x:Key="m_DeleteHeat">Delete heat</system:String>
     <system:String x:Key="m_Group">Group</system:String>
@@ -139,4 +142,7 @@
     <system:String x:Key="err_InvalidResultValue">Invalid result value: {0}.</system:String>
     <system:String x:Key="err_ParticipantNotInHeat">The participant is not assigned to a group in this heat.</system:String>
     <system:String x:Key="err_ParticipantNotFound">Participant {0} not found.</system:String>
+    <system:String x:Key="err_HeatAlreadyDrawn">Heat {0} is already drawn. Undo the draw first.</system:String>
+    <system:String x:Key="err_HeatNotDrawn">Heat {0} has not been drawn yet.</system:String>
+    <system:String x:Key="err_HeatNotLastDrawn">Only the last drawn heat can be undone (heat {0} is not the last one).</system:String>
 </ResourceDictionary>
