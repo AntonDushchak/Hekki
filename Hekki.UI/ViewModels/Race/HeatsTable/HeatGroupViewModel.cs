@@ -48,7 +48,7 @@ namespace Hekki.UI.ViewModels
             Columns.Add(new GridPositionColumn());
             Columns.Add(new KartColumn());
             Columns.Add(new PilotColumn());
-            Columns.Add(new FinishPositionColumn());
+            //Columns.Add(new FinishPositionColumn());
 
             if (Heat.ShowTime)
                 Columns.Add(new BestLapColumn());
