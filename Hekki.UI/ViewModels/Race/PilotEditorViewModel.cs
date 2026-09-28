@@ -35,7 +35,7 @@ namespace Hekki.UI.ViewModels
         [ObservableProperty]
         private bool _showProfilePicture;
 
-        private int _pilotId;
+        private readonly PilotDto _source;
 
         public ObservableCollection<string> AvailableTeams { get; }
         public ObservableCollection<string> AvailableLeagues { get; }
@@ -47,9 +47,10 @@ namespace Hekki.UI.ViewModels
             AvailableTeams = appSettings.Teams;
             AvailableLeagues = appSettings.Leagues;
 
+            _source = pilot ?? new PilotDto();
+
             if (pilot is not null)
             {
-                _pilotId = pilot.Id;
                 FirstName = pilot.FirstName;
                 LastName = pilot.LastName;
                 SwsLink = pilot.ProfileUrl ?? string.Empty;
@@ -65,9 +66,8 @@ namespace Hekki.UI.ViewModels
         [RelayCommand(CanExecute = nameof(CanSave))]
         private void Save()
         {
-            Result = new PilotDto
+            Result = _source with
             {
-                Id = _pilotId,
                 FirstName = FirstName.Trim(),
                 LastName = LastName.Trim(),
                 ProfileUrl = string.IsNullOrWhiteSpace(SwsLink) ? null : SwsLink.Trim(),
