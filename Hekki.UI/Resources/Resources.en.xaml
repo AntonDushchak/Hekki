@@ -61,6 +61,7 @@
     <system:String x:Key="method_default">Default scoring</system:String>
 
     <!-- Race -->
+    <system:String x:Key="m_RowNumber">№</system:String>
     <system:String x:Key="m_TotalTable">Total table</system:String>
     <system:String x:Key="m_TotalScore">Total score</system:String>
     <system:String x:Key="m_TotalTime">Total time</system:String>

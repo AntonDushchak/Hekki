@@ -3,6 +3,7 @@ using Hekki.Application;
 using Hekki.Infrastructure;
 using Hekki.UI.Services;
 using Hekki.UI.Views;
+using Hekki.UI.Views.Shared.Behaviors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,6 +47,7 @@ namespace Hekki.UI
         protected override async void OnStartup(StartupEventArgs e)
         {
             SetupGlobalExceptionHandling();
+            ShiftWheelScrolling.Register();
             await Host.StartAsync();
 
             using (var scope = Host.Services.CreateScope())

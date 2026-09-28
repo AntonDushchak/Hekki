@@ -37,12 +37,14 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
         public void AddRow(RaceParticipantViewModel participant)
         {
             TotalTableRows.Add(BuildRow(participant));
+            RefreshRowNumbers();
         }
 
         public void RemoveRow(Guid participantId)
         {
             var row = TotalTableRows.FirstOrDefault(r => r.Participant.Id == participantId);
             if (row != null) TotalTableRows.Remove(row);
+            RefreshRowNumbers();
         }
 
         public void RefreshRow(Guid participantId)
@@ -77,6 +79,7 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
         public void ApplyOrder(IReadOnlyList<Guid> participantIds)
         {
             TotalTableRows.ReorderBy(participantIds, r => r.Participant.Id);
+            RefreshRowNumbers();
         }
 
         private void RebuildStandingsHeat(int heatId)
@@ -108,12 +111,24 @@ namespace Hekki.UI.ViewModels.Race.TotalTable
             TotalTableRows.Clear();
             foreach (var participant in Participants)
                 TotalTableRows.Add(BuildRow(participant));
+            RefreshRowNumbers();
+        }
+
+        private void RefreshRowNumbers()
+        {
+            var column = Columns.OfType<RowNumberColumn>().FirstOrDefault();
+            if (column is null) return;
+
+            var columnIndex = Columns.IndexOf(column);
+            for (var i = 0; i < TotalTableRows.Count; i++)
+                TotalTableRows[i].Cells[columnIndex].SetValue(new TextCellValue((i + 1).ToString()));
         }
 
         private void BuildColumns()
         {
             Columns.Clear();
 
+            Columns.Add(new RowNumberColumn());
             Columns.Add(new LeagueColumn());
             //Columns.Add(new TeamColumn());
             //Columns.Add(new PhotoColumn());

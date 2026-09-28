@@ -17,6 +17,25 @@ namespace Hekki.UI.ViewModels
         }
     }
 
+    public class RowNumberColumn : TotalTableColumn
+    {
+        public RowNumberColumn() : base(50) { }
+
+        public override string HeaderResourceKey => "m_RowNumber";
+        public override bool IsNumeric => true;
+
+        public override string GetValue(ParticipantRaceContext context) => string.Empty;
+
+        public override CellViewModel CreateCell(ParticipantRaceContext context)
+        {
+            return new CellViewModel(this, CreateTextValue(string.Empty));
+        }
+
+        public override void UpdateCell(CellViewModel cell, ParticipantRaceContext context)
+        {
+        }
+    }
+
     public class ParticipantColumn : TotalTableColumn
     {
         public override string HeaderResourceKey => "m_Pilot";

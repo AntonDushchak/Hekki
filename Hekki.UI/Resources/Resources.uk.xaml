@@ -61,6 +61,7 @@
     <system:String x:Key="method_default">Стандартне нарахування</system:String>
 
     <!-- Race -->
+    <system:String x:Key="m_RowNumber">№</system:String>
     <system:String x:Key="m_TotalTable">Загальна таблиця</system:String>
     <system:String x:Key="m_TotalScore">Сума очок</system:String>
     <system:String x:Key="m_TotalTime">Загальний час</system:String>
