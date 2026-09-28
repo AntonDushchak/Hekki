@@ -60,105 +60,112 @@
                     </Grid>
                 </Border>
 
-                <ScrollViewer Grid.Row="1"
-                            HorizontalScrollBarVisibility="Auto"
-                            VerticalScrollBarVisibility="Disabled"
-                            Padding="20,10,20,20">
-                    <ItemsControl ItemsSource="{Binding HeatsTable.Heats}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" 
-                                          HorizontalAlignment="Center"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
+                <DockPanel Grid.Row="1">
+                    <Button DockPanel.Dock="Right"
+                            Content="Add Test"
+                            Command="{Binding AddTestDataCommand}"
+                            VerticalAlignment="Center"
+                            Margin="0,10,20,20"/>
 
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type vm:HeatViewModel}">
-                                <Button x:Name="HeatButton"
-                                      Margin="5,0"
-                                      Padding="20,12"
-                                      MinWidth="100"
-                                      Background="{DynamicResource Brush.SurfaceLow}"
-                                      BorderBrush="{DynamicResource Brush.Border}"
-                                      BorderThickness="1"
-                                      Cursor="Hand"
-                                      Click="HeatButton_Click"
-                                      Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}"
-                                                  BorderBrush="{TemplateBinding BorderBrush}"
-                                                  BorderThickness="{TemplateBinding BorderThickness}"
-                                                  CornerRadius="8"
-                                                  Padding="{TemplateBinding Padding}">
-                                                <ContentPresenter HorizontalAlignment="Center"
-                                                                VerticalAlignment="Center"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Button.Template>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                VerticalScrollBarVisibility="Disabled"
+                                Padding="20,10,20,20">
+                        <ItemsControl ItemsSource="{Binding HeatsTable.Heats}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" 
+                                              HorizontalAlignment="Center"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
 
-                                    <StackPanel Orientation="Vertical" 
-                                              HorizontalAlignment="Center">
-                                        <TextBlock Text="{Binding Name}"
-                                                 FontSize="14"
-                                                 FontWeight="SemiBold"
-                                                 TextAlignment="Center"
-                                                 Foreground="{DynamicResource Brush.TextPrimary}"/>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:HeatViewModel}">
+                                    <Button x:Name="HeatButton"
+                                          Margin="5,0"
+                                          Padding="20,12"
+                                          MinWidth="100"
+                                          Background="{DynamicResource Brush.SurfaceLow}"
+                                          BorderBrush="{DynamicResource Brush.Border}"
+                                          BorderThickness="1"
+                                          Cursor="Hand"
+                                          Click="HeatButton_Click"
+                                          Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}"
+                                                      BorderBrush="{TemplateBinding BorderBrush}"
+                                                      BorderThickness="{TemplateBinding BorderThickness}"
+                                                      CornerRadius="8"
+                                                      Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
 
-                                        <TextBlock FontSize="11"
-                                                 TextAlignment="Center"
-                                                 Margin="0,4,0,0"
-                                                 Foreground="{DynamicResource Brush.TextSecondary}">
-                                            <Run Text="{DynamicResource m_GroupsLabel}"/>
-                                            <Run Text="{Binding GroupCount, Mode=OneWay}"/>
-                                        </TextBlock>
-                                    </StackPanel>
+                                        <StackPanel Orientation="Vertical" 
+                                                  HorizontalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}"
+                                                     FontSize="14"
+                                                     FontWeight="SemiBold"
+                                                     TextAlignment="Center"
+                                                     Foreground="{DynamicResource Brush.TextPrimary}"/>
 
-                                    <Button.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Header="{DynamicResource m_EditHeat}"
-                                                    Command="{Binding PlacementTarget.Tag.HeatsTable.EditHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                    CommandParameter="{Binding}">
-                                                <MenuItem.Icon>
-                                                    <TextBlock Text="✏️" FontSize="14"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
+                                            <TextBlock FontSize="11"
+                                                     TextAlignment="Center"
+                                                     Margin="0,4,0,0"
+                                                     Foreground="{DynamicResource Brush.TextSecondary}">
+                                                <Run Text="{DynamicResource m_GroupsLabel}"/>
+                                                <Run Text="{Binding GroupCount, Mode=OneWay}"/>
+                                            </TextBlock>
+                                        </StackPanel>
 
-                                            <MenuItem Header="{DynamicResource m_AssignGroupsAndNumbers}"
-                                                    Command="{Binding PlacementTarget.Tag.HeatsTable.AssignGroupsAndNumbersCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                    CommandParameter="{Binding}">
-                                                <MenuItem.Icon>
-                                                    <TextBlock Text="" FontSize="14"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
+                                        <Button.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="{DynamicResource m_EditHeat}"
+                                                        Command="{Binding PlacementTarget.Tag.HeatsTable.EditHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                        CommandParameter="{Binding}">
+                                                    <MenuItem.Icon>
+                                                        <TextBlock Text="✏️" FontSize="14"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
 
-                                            <Separator/>
+                                                <MenuItem Header="{DynamicResource m_AssignGroupsAndNumbers}"
+                                                        Command="{Binding PlacementTarget.Tag.HeatsTable.AssignGroupsAndNumbersCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                        CommandParameter="{Binding}">
+                                                    <MenuItem.Icon>
+                                                        <TextBlock Text="" FontSize="14"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
 
-                                            <MenuItem Header="{DynamicResource m_DeleteHeat}"
-                                                    Command="{Binding PlacementTarget.Tag.HeatsTable.DeleteHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                    CommandParameter="{Binding}">
-                                                <MenuItem.Icon>
-                                                    <TextBlock Text="🗑️" FontSize="14"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                        </ContextMenu>
-                                    </Button.ContextMenu>
+                                                <Separator/>
 
-                                    <Button.Style>
-                                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                            <Setter Property="Background" Value="{DynamicResource Brush.SurfaceLow}"/>
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Background" Value="{DynamicResource Brush.UIElement}"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Button.Style>
-                                </Button>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                                                <MenuItem Header="{DynamicResource m_DeleteHeat}"
+                                                        Command="{Binding PlacementTarget.Tag.HeatsTable.DeleteHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                        CommandParameter="{Binding}">
+                                                    <MenuItem.Icon>
+                                                        <TextBlock Text="🗑️" FontSize="14"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                            </ContextMenu>
+                                        </Button.ContextMenu>
+
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                                <Setter Property="Background" Value="{DynamicResource Brush.SurfaceLow}"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource Brush.UIElement}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </DockPanel>
             </Grid>
         </Border>
     </Grid>

@@ -20,19 +20,8 @@
 
             <!-- Left Container: Add Pilot + Total Table -->
             <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <Button Content="Add Test"
-                        Command="{Binding AddTestDataCommand}"
-                        HorizontalAlignment="Right"
-                        Margin="0,10,0,0"/>
-
                 <!-- Total Table Container -->
-                <Border Grid.Row="1"
-                        x:Name="TotalTableContainer"
+                <Border x:Name="TotalTableContainer"
                         Background="{DynamicResource Brush.SurfaceLow}"
                         CornerRadius="8">
                     <DockPanel Margin="20">
