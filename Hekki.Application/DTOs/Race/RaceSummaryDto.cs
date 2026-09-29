@@ -7,5 +7,6 @@ namespace Hekki.Application.DTOs.Race
         public DateTime Date { get; init; }
         public string Location { get; init; } = string.Empty;
         public int RegulationId { get; init; }
+        public string RegulationName { get; init; } = string.Empty;
     }
 }

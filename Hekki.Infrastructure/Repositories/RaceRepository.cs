@@ -62,6 +62,19 @@ namespace Hekki.Infrastructure.Repositories
             return _mapper.Map<RaceDataDto>(raceEntity);
         }
 
+        public async Task<IReadOnlyList<RaceSummaryDto>> GetSinceAsync(DateTime since, CancellationToken ct = default)
+        {
+            await using var db = await _dbFactory.CreateDbContextAsync(ct);
+
+            var races = await db.Races
+                .Include(x => x.Regulation)
+                .Where(x => x.Date >= since)
+                .OrderByDescending(x => x.Date)
+                .ToListAsync(ct);
+
+            return races.Select(r => _mapper.Map<RaceSummaryDto>(r)).ToList();
+        }
+
         public async Task<int> AddAsync(RaceDataDto race, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);

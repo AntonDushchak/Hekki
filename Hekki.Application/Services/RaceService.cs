@@ -38,6 +38,12 @@ namespace Hekki.Application.Services
             return await _raceRepository.GetByIdAsync(raceId, ct);
         }
 
+        public async Task<IReadOnlyList<RaceSummaryDto>> GetRacesSinceAsync(DateTime since, CancellationToken ct = default)
+        {
+            var utcSince = since.Kind == DateTimeKind.Utc ? since : since.ToUniversalTime();
+            return await _raceRepository.GetSinceAsync(utcSince, ct);
+        }
+
         public async Task<int> CreateRaceAsync(string name, string location, DateTime date, int regulationId, CancellationToken ct = default)
         {
             var utcDate = date.Kind == DateTimeKind.Utc ? date : DateTime.SpecifyKind(date, DateTimeKind.Utc);

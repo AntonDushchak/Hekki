@@ -29,7 +29,8 @@ namespace Hekki.Infrastructure.Mapping
 
             CreateMap<RaceEntity, RaceSummaryDto>()
                 .ForMember(d => d.RaceId, opt => opt.MapFrom(s => s.Id))
-                .ForMember(d => d.RaceName, opt => opt.MapFrom(s => s.Name));
+                .ForMember(d => d.RaceName, opt => opt.MapFrom(s => s.Name))
+                .ForMember(d => d.RegulationName, opt => opt.MapFrom(s => s.Regulation.Name));
 
             // ===== RaceParticipant =====
             CreateMap<RaceParticipantEntity, RaceParticipantDto>()

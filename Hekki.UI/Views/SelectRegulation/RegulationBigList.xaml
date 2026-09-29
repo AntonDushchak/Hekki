@@ -17,11 +17,17 @@
             <TextBlock Text="{DynamicResource m_Regulations}" 
                        FontSize="19" FontWeight="Bold" 
                        VerticalAlignment="Center"/>
-            <Button Content="{DynamicResource m_New}" 
-                    HorizontalAlignment="Right" 
-                    FontSize="18"
-                    Command="{Binding NavigateToCreationCommand}"
-                    MinWidth="55" MinHeight="30"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="{DynamicResource m_LoadRace}"
+                        FontSize="18"
+                        Command="{Binding LoadRaceCommand}"
+                        MinWidth="55" MinHeight="30"
+                        Margin="0,0,10,0"/>
+                <Button Content="{DynamicResource m_New}"
+                        FontSize="18"
+                        Command="{Binding NavigateToCreationCommand}"
+                        MinWidth="55" MinHeight="30"/>
+            </StackPanel>
         </Grid>
 
 

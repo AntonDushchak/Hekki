@@ -6,6 +6,7 @@ namespace Hekki.Application.Abstractions
     {
         Task<IReadOnlyList<RaceDataDto>> GetAllAsync(CancellationToken ct = default);
         Task<RaceDataDto?> GetByIdAsync(int id, CancellationToken ct = default);
+        Task<IReadOnlyList<RaceSummaryDto>> GetSinceAsync(DateTime since, CancellationToken ct = default);
         Task<int> AddAsync(RaceDataDto race, CancellationToken ct = default);
         Task UpdateAsync(RaceDataDto race, CancellationToken ct = default);
         Task DeleteAsync(int id, CancellationToken ct = default);

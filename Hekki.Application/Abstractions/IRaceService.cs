@@ -7,6 +7,7 @@ namespace Hekki.Application.Abstractions
     public interface IRaceService
     {
         Task<RaceDataDto?> GetRaceDataAsync(int raceId, CancellationToken ct = default);
+        Task<IReadOnlyList<RaceSummaryDto>> GetRacesSinceAsync(DateTime since, CancellationToken ct = default);
         Task<int> CreateRaceAsync(string name, string location, DateTime date, int regulationId, CancellationToken ct = default);
         Task UpdateRaceAsync(int raceId, string name, string location, DateTime date, CancellationToken ct = default);
         Task<RaceParticipantDto> AddParticipantAsync(int raceId, int pilotId, CancellationToken ct = default);

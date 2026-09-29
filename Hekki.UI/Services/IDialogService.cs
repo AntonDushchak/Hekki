@@ -1,4 +1,5 @@
 ﻿using Hekki.Application.DTOs.Pilot;
+using Hekki.Application.DTOs.Race;
 using Hekki.UI.ViewModels;
 
 namespace Hekki.UI.Services
@@ -9,5 +10,6 @@ namespace Hekki.UI.Services
         PilotDto? ShowPilotEditor(PilotEditorViewModel vm);
         bool? ShowMainSettings(MainSettingsViewModel vm);
         bool Confirm(string title, string message, string confirmText);
+        RaceSummaryDto? ShowLoadRace(LoadRaceViewModel vm);
     }
 }

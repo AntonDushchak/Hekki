@@ -11,8 +11,12 @@ namespace Hekki.UI.ViewModels
 {
     public partial class SelectionViewModel : ViewModelBase
     {
+        private const int RecentRacesMonths = 3;
+
         private readonly IRegulationService _regulationService;
         private readonly INavigationService _navigationService;
+        private readonly IRaceService _raceService;
+        private readonly IDialogService _dialogService;
 
         [ObservableProperty]
         private bool _isLoading;
@@ -30,10 +34,14 @@ namespace Hekki.UI.ViewModels
         public SelectionViewModel(
             INavigationService navigationService,
             IRegulationService regulationService,
-            IPaginationService paginationService)
+            IPaginationService paginationService,
+            IRaceService raceService,
+            IDialogService dialogService)
         {
             _navigationService = navigationService;
             _regulationService = regulationService;
+            _raceService = raceService;
+            _dialogService = dialogService;
             PaginationService = paginationService;
 
             Regulations.CollectionChanged += Regulations_CollectionChanged;
@@ -82,6 +90,17 @@ namespace Hekki.UI.ViewModels
         {
             _navigationService.NavigateToCreateRace();
         }
+
+        [RelayCommand]
+        private Task LoadRaceAsync() => ExecuteSafeAsync(async () =>
+        {
+            var races = await _raceService.GetRacesSinceAsync(DateTime.UtcNow.AddMonths(-RecentRacesMonths));
+
+            var race = _dialogService.ShowLoadRace(new LoadRaceViewModel(races));
+            if (race == null) return;
+
+            await _navigationService.NavigateToRace(race.RegulationId, race.RaceId);
+        });
 
         [RelayCommand]
         private void NavigateToRace(RegulationSummaryDto regulation)

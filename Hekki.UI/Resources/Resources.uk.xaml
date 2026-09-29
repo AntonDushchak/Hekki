@@ -24,6 +24,9 @@
     <system:String x:Key="m_PagingShown">Показано</system:String>
     <system:String x:Key="m_PagingOf">з</system:String>
     <system:String x:Key="m_Version">версія</system:String>
+    <system:String x:Key="m_LoadRace">Завантажити гонку</system:String>
+    <system:String x:Key="m_RecentRaces">Гонки за останні 3 місяці</system:String>
+    <system:String x:Key="m_NoRecentRaces">За останні 3 місяці гонок немає.</system:String>
 
     <!-- Create regulation -->
     <system:String x:Key="m_RegulationName">Назва регламенту</system:String>

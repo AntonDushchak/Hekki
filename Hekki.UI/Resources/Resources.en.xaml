@@ -24,6 +24,9 @@
     <system:String x:Key="m_PagingShown">Showing</system:String>
     <system:String x:Key="m_PagingOf">of</system:String>
     <system:String x:Key="m_Version">version</system:String>
+    <system:String x:Key="m_LoadRace">Load race</system:String>
+    <system:String x:Key="m_RecentRaces">Races of the last 3 months</system:String>
+    <system:String x:Key="m_NoRecentRaces">No races in the last 3 months.</system:String>
 
     <!-- Create regulation -->
     <system:String x:Key="m_RegulationName">Regulation name</system:String>
