@@ -13,9 +13,9 @@
     <system:String x:Key="m_League">Ліга</system:String>
 
     <!-- Page titles -->
+    <system:String x:Key="m_Back">Назад</system:String>
+    <system:String x:Key="m_ToggleTheme">Змінити тему</system:String>
     <system:String x:Key="m_Regulations">Регламенти</system:String>
-    <system:String x:Key="m_NewRegulation">Новий регламент</system:String>
-    <system:String x:Key="m_Race">Гонка</system:String>
 
     <!-- Regulation list -->
     <system:String x:Key="m_New">Новий</system:String>

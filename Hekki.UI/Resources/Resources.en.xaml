@@ -13,9 +13,9 @@
     <system:String x:Key="m_League">League</system:String>
 
     <!-- Page titles -->
+    <system:String x:Key="m_Back">Back</system:String>
+    <system:String x:Key="m_ToggleTheme">Switch theme</system:String>
     <system:String x:Key="m_Regulations">Regulations</system:String>
-    <system:String x:Key="m_NewRegulation">New regulation</system:String>
-    <system:String x:Key="m_Race">Race</system:String>
 
     <!-- Regulation list -->
     <system:String x:Key="m_New">New</system:String>

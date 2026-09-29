@@ -46,6 +46,14 @@ namespace Hekki.UI.Services
             ApplyResources(Settings);
         }
 
+        public async Task SetThemeAsync(string theme)
+        {
+            var settings = new AppSettings();
+            CopySettings(Settings, settings);
+            settings.Theme = theme;
+            await ApplyAsync(settings);
+        }
+
         public async Task ApplyAsync(AppSettings settings)
         {
             CopySettings(settings, Settings);

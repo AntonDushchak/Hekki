@@ -1,26 +1,46 @@
-﻿<Window x:Class="Hekki.UI.Views.MainWindow"
+<Window x:Class="Hekki.UI.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Hekki.UI.Views"
-        xmlns:views="clr-namespace:Hekki.UI.Views.Shared.Layout"
         mc:Ignorable="d"
         Title="Hekki" Height="800" Width="1000"
         MinHeight="450"
         MinWidth="800"
         Style="{DynamicResource WindowStyle}">
 
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+        <Style x:Key="CornerButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+    </Window.Resources>
+
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <ContentControl Content="{Binding CurrentPageVM}"/>
 
-        <views:TopPanel Grid.Row="0"
-                        DataContext="{Binding TopPanelVM}" />
-
-        <ContentControl Grid.Row="1"
-                        Content="{Binding CurrentPageVM}" />
+        <StackPanel HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Margin="4,8,0,0">
+            <Button Style="{StaticResource CornerButton}"
+                    Content="&#xE72B;"
+                    ToolTip="{DynamicResource m_Back}"
+                    Command="{Binding GoBackCommand}"
+                    Visibility="{Binding CanGoBack, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Button Style="{StaticResource CornerButton}"
+                    Content="&#xE793;"
+                    ToolTip="{DynamicResource m_ToggleTheme}"
+                    Command="{Binding ToggleThemeCommand}"/>
+            <Button Style="{StaticResource CornerButton}"
+                    Content="&#xE713;"
+                    ToolTip="{DynamicResource m_Settings}"
+                    Command="{Binding OpenSettingsCommand}"/>
+        </StackPanel>
     </Grid>
 </Window>

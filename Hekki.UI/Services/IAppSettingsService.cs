@@ -6,5 +6,6 @@ namespace Hekki.UI.Services
 
         Task LoadAsync();
         Task ApplyAsync(AppSettings settings);
+        Task SetThemeAsync(string theme);
     }
 }
