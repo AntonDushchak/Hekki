@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.Abstractions;
 using Hekki.UI.Services;
+using Hekki.UI.ViewModels.Race.Session;
 using System.Collections.ObjectModel;
 
 namespace Hekki.UI.ViewModels.Race
@@ -12,32 +13,35 @@ namespace Hekki.UI.ViewModels.Race
         private readonly IPilotService _pilotService;
         private readonly IDialogService _dialogService;
         private readonly AppSettings _appSettings;
-        private int? _raceId;
+        private readonly RaceSessionHolder _sessionHolder;
         private CancellationTokenSource? _searchCancellation;
 
         [ObservableProperty] private string _searchText = string.Empty;
         [ObservableProperty] private bool _isPopupOpen;
+        [ObservableProperty] private bool _isAddPilotEditorOpen;
 
-        private IReadOnlyCollection<RaceParticipantViewModel> _participants;
         public ObservableCollection<object> Suggestions { get; } = [];
 
         public ParticipantsSectionViewModel(
             IRaceService raceService,
             IPilotService pilotService,
             IDialogService dialogService,
-            AppSettings appSettings)
+            AppSettings appSettings,
+            RaceSessionHolder sessionHolder)
         {
             _raceService = raceService;
             _pilotService = pilotService;
             _dialogService = dialogService;
             _appSettings = appSettings;
-            _participants = [];
+            _sessionHolder = sessionHolder;
         }
 
-        public void Initialize(int raceId, IReadOnlyCollection<RaceParticipantViewModel> participants)
+        private RaceSession? Session => _sessionHolder.Current;
+
+        [RelayCommand]
+        private void OpenAddPilotEditor()
         {
-            _raceId = raceId;
-            _participants = participants;
+            IsAddPilotEditorOpen = true;
         }
 
         partial void OnSearchTextChanged(string value)
@@ -82,7 +86,7 @@ namespace Hekki.UI.ViewModels.Race
         [RelayCommand]
         private Task SelectSuggestionAsync(object? suggestion) => ExecuteSafeAsync(async () =>
         {
-            if (_raceId == null) return;
+            if (Session is not { } session) return;
 
             IsPopupOpen = false;
 
@@ -95,9 +99,11 @@ namespace Hekki.UI.ViewModels.Race
 
             if (pilotId == null || IsInRace(pilotId.Value)) return;
 
-            await _raceService.AddParticipantAsync(_raceId.Value, pilotId.Value);
+            var participant = await _raceService.AddParticipantAsync(session.RaceId, pilotId.Value);
+            session.AddParticipant(participant);
 
             SearchText = string.Empty;
+            IsAddPilotEditorOpen = false;
         });
 
         private async Task<int?> CreatePilotAsync(string fullName)
@@ -115,7 +121,7 @@ namespace Hekki.UI.ViewModels.Race
             return await _pilotService.CreatePilotAsync(pilot);
         }
 
-        private bool IsInRace(int pilotId) => _participants.Any(p => p.PilotId == pilotId);
+        private bool IsInRace(int pilotId) => Session?.Participants.Any(p => p.PilotId == pilotId) == true;
     }
 
     public record NewPilotSuggestion(string FullName);

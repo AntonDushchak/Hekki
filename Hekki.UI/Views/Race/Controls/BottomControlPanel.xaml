@@ -133,7 +133,7 @@
                                             <Button.ContextMenu>
                                                 <ContextMenu>
                                                     <MenuItem Header="{DynamicResource m_EditHeat}"
-                                                            Command="{Binding PlacementTarget.Tag.HeatActions.EditHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                            Command="{Binding PlacementTarget.Tag.HeatCommands.EditHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                             CommandParameter="{Binding}">
                                                         <MenuItem.Icon>
                                                             <TextBlock Text="✏️" FontSize="14"/>
@@ -141,7 +141,7 @@
                                                     </MenuItem>
 
                                                     <MenuItem Header="{DynamicResource m_AssignGroupsAndNumbers}"
-                                                            Command="{Binding PlacementTarget.Tag.HeatActions.AssignCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                            Command="{Binding PlacementTarget.Tag.HeatCommands.AssignCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                             CommandParameter="{Binding}">
                                                         <MenuItem.Icon>
                                                             <TextBlock Text="" FontSize="14"/>
@@ -149,7 +149,7 @@
                                                     </MenuItem>
 
                                                     <MenuItem Header="{DynamicResource m_UndoDraw}"
-                                                            Command="{Binding PlacementTarget.Tag.HeatActions.UndoDrawCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                            Command="{Binding PlacementTarget.Tag.HeatCommands.UndoDrawCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                             CommandParameter="{Binding}">
                                                         <MenuItem.Icon>
                                                             <TextBlock Text="&#xE7A7;" FontFamily="Segoe MDL2 Assets" FontSize="14"/>
@@ -159,7 +159,7 @@
                                                     <Separator/>
 
                                                     <MenuItem Header="{DynamicResource m_DeleteHeat}"
-                                                            Command="{Binding PlacementTarget.Tag.HeatActions.DeleteHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                            Command="{Binding PlacementTarget.Tag.HeatCommands.DeleteHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                             CommandParameter="{Binding}">
                                                         <MenuItem.Icon>
                                                             <TextBlock Text="🗑️" FontSize="14"/>

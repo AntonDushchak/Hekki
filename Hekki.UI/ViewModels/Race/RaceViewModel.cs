@@ -40,7 +40,8 @@ namespace Hekki.UI.ViewModels
         public bool IsNewRace => RaceId == null;
 
         public RaceSession? Session => _sessionHolder.Current;
-        public HeatActionsViewModel HeatActions { get; }
+        public HeatCommands HeatCommands { get; }
+        public ParticipantCommands ParticipantCommands { get; }
         public ParticipantsSectionViewModel Participants { get; }
         public TotalTableViewModel TotalTable { get; }
         public HeatsTableViewModel HeatsTable { get; }
@@ -61,10 +62,11 @@ namespace Hekki.UI.ViewModels
             _raceService = raceService;
             _dialogService = dialogService;
 
-            Participants = new ParticipantsSectionViewModel(raceService, pilotService, dialogService, appSettings);
+            Participants = new ParticipantsSectionViewModel(raceService, pilotService, dialogService, appSettings, sessionHolder);
             TotalTable = new TotalTableViewModel(raceService, pilotService, dialogService, appSettings);
             HeatsTable = new HeatsTableViewModel(raceService, dialogService);
-            HeatActions = new HeatActionsViewModel(raceService, dialogService, sessionHolder);
+            HeatCommands = new HeatCommands(raceService, dialogService, sessionHolder);
+            ParticipantCommands = new ParticipantCommands(raceService, pilotService, dialogService, appSettings, sessionHolder);
             _heatList = new List<HeatViewModel>();
             _appSettings = appSettings;
         }
@@ -131,7 +133,6 @@ namespace Hekki.UI.ViewModels
                 .Select(HeatUiMapper.MapToHeatViewModel)
                 .ToList();
 
-            Participants.Initialize(RaceId!.Value, _participantList);
             HeatsTable.Initialize(RaceId!.Value, _heatList);
             TotalTable.Initialize(RaceId!.Value, _heatList, _participantList);
         });
@@ -139,8 +140,6 @@ namespace Hekki.UI.ViewModels
         public void Receive(ParticipantAddedMessage message)
         {
             if (message.RaceId != RaceId) return;
-
-            Session?.AddParticipant(message.RaceParticipant);
 
             var participant = PilotUiMapper.MapToParticipantViewModel(message.RaceParticipant);
             _participantList.Add(participant);
@@ -151,8 +150,6 @@ namespace Hekki.UI.ViewModels
         public void Receive(ParticipantRemovedMessage message)
         {
             if (message.RaceId != RaceId) return;
-
-            Session?.RemoveParticipant(message.ParticipantId);
 
             var participant = _participantList.FirstOrDefault(p => p.Id == message.ParticipantId);
             if (participant != null) _participantList.Remove(participant);
@@ -172,8 +169,6 @@ namespace Hekki.UI.ViewModels
         public void Receive(ParticipantUpdatedMessage message)
         {
             if (message.RaceId != RaceId) return;
-
-            Session?.UpdateParticipant(message.RaceParticipant);
 
             var participantId = message.RaceParticipant.ParticipantId;
             var participant = _participantList.FirstOrDefault(p => p.Id == participantId);
@@ -198,7 +193,6 @@ namespace Hekki.UI.ViewModels
         {
             if (message.RaceId != RaceId) return;
 
-            Session?.ApplyOrder(message.ParticipantIds);
             _participantList.ReorderBy(message.ParticipantIds, p => p.Id);
             TotalTable.ApplyOrder(message.ParticipantIds);
         }
@@ -248,14 +242,15 @@ namespace Hekki.UI.ViewModels
         {
             if (RaceId == null) return;
             for (int i = 334; i <= 344; i++)
-                await _raceService.AddParticipantAsync(RaceId.Value, i);
+                Session?.AddParticipant(await _raceService.AddParticipantAsync(RaceId.Value, i));
         });
 
         protected override void OnDisposing()
         {
             Participants.Dispose();
             HeatsTable.Dispose();
-            HeatActions.Dispose();
+            HeatCommands.Dispose();
+            ParticipantCommands.Dispose();
             TotalTable.Dispose();
         }
 

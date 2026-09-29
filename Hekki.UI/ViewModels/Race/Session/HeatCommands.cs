@@ -7,13 +7,13 @@ namespace Hekki.UI.ViewModels.Race.Session
 {
     public record ResultEditRequest(HeatRowViewModel Row, HeatResultField Field, long? Value);
 
-    public partial class HeatActionsViewModel : ViewModelBase
+    public partial class HeatCommands : ViewModelBase
     {
         private readonly IRaceService _raceService;
         private readonly IDialogService _dialogService;
         private readonly RaceSessionHolder _sessionHolder;
 
-        public HeatActionsViewModel(IRaceService raceService, IDialogService dialogService, RaceSessionHolder sessionHolder)
+        public HeatCommands(IRaceService raceService, IDialogService dialogService, RaceSessionHolder sessionHolder)
         {
             _raceService = raceService;
             _dialogService = dialogService;
