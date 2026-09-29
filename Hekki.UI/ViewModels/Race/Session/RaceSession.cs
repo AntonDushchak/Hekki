@@ -166,6 +166,13 @@ namespace Hekki.UI.ViewModels.Race.Session
             row?.ApplyResult(result);
         }
 
+        private void RebuildStandingsHeat(int heatId)
+        {
+            //TotalTableRows[0].Cells[0]..Clear();
+            //foreach (var participant in _participants)
+            //    TotalTableRows.Add(BuildRow(participant));
+        }
+
         private static HeatViewModel CreateHeat(HeatDto dto, int index)
         {
             var heat = new HeatViewModel(dto.HeatId, index, dto.Name, dto.HeatNumber, dto.ScoringMode);

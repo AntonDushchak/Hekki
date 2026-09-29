@@ -95,17 +95,6 @@ namespace Hekki.UI.Views.Race.Controls
             return header;
         }
 
-        private void Grid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (Keyboard.Modifiers != ModifierKeys.Shift) return;
-
-            var scrollViewer = FindDescendant<ScrollViewer>(PART_Grid);
-            if (scrollViewer == null) return;
-
-            scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - e.Delta);
-            e.Handled = true;
-        }
-
         private void Grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             _dragParticipant = null;
@@ -220,19 +209,6 @@ namespace Hekki.UI.Views.Race.Controls
 
             AdornerLayer.GetAdornerLayer(PART_Grid)?.Remove(_insertionAdorner);
             _insertionAdorner = null;
-        }
-
-        private static T? FindDescendant<T>(DependencyObject parent) where T : DependencyObject
-        {
-            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-            {
-                var child = VisualTreeHelper.GetChild(parent, i);
-                if (child is T match) return match;
-
-                var descendant = FindDescendant<T>(child);
-                if (descendant != null) return descendant;
-            }
-            return null;
         }
 
         private static T? FindAncestor<T>(DependencyObject? current, Func<T, bool>? predicate = null) where T : DependencyObject

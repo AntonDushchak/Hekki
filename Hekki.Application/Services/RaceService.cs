@@ -3,7 +3,6 @@ using Hekki.Application.DTOs.Pilot;
 using Hekki.Application.DTOs.Race;
 using Hekki.Application.DTOs.Regulation;
 using Hekki.Application.Exceptions;
-using Hekki.Application.Messages;
 using Hekki.Application.Models;
 
 namespace Hekki.Application.Services
@@ -15,21 +14,18 @@ namespace Hekki.Application.Services
         private readonly IPilotRepository _pilotRepository;
         private readonly IRegulationRepository _regulationRepository;
         private readonly IHeatRepository _heatRepository;
-        private readonly IEventPublisher _eventPublisher;
 
         public RaceService(
             IRaceRepository raceRepository,
             IRaceParticipantRepository participantRepository,
             IPilotRepository pilotRepository,
             IRegulationRepository regulationRepository,
-            IHeatRepository heatRepository,
-            IEventPublisher eventPublisher)
+            IHeatRepository heatRepository)
         {
             _raceRepository = raceRepository;
             _participantRepository = participantRepository;
             _pilotRepository = pilotRepository;
             _regulationRepository = regulationRepository;
-            _eventPublisher = eventPublisher;
             _heatRepository = heatRepository;
         }
 
@@ -66,14 +62,12 @@ namespace Hekki.Application.Services
             var pilot = await _pilotRepository.GetByIdAsync(pilotId, ct) ?? throw new PilotNotFoundException(pilotId);
             var participant = new RaceParticipantDto { ParticipantId = Guid.NewGuid(), PilotId = pilot.Id, FirstName = pilot.FirstName, LastName = pilot.LastName, Team = pilot.Team, IsActive = true };
             await _participantRepository.AddAsync(participant, raceId, ct);
-            _eventPublisher.Publish(new ParticipantAddedMessage(raceId, participant));
             return participant;
         }
 
         public async Task RemoveParticipantAsync(int raceId, Guid participantId, CancellationToken ct = default)
         {
             await _participantRepository.DeleteAsync(participantId, ct);
-            _eventPublisher.Publish(new ParticipantRemovedMessage(raceId, participantId));
         }
 
         public async Task<RaceParticipantDto> UpdateParticipantPilotAsync(int raceId, Guid participantId, PilotDto pilot, CancellationToken ct = default)
@@ -92,14 +86,12 @@ namespace Hekki.Application.Services
 
             var updated = await _participantRepository.GetByIdAsync(participantId, ct)
                 ?? throw new ParticipantNotFoundException(participantId);
-            _eventPublisher.Publish(new ParticipantUpdatedMessage(raceId, updated));
             return updated;
         }
 
         public async Task ReorderParticipantsAsync(int raceId, IReadOnlyList<Guid> orderedIds, CancellationToken ct = default)
         {
             await _participantRepository.UpdateOrderAsync(raceId, orderedIds, ct);
-            _eventPublisher.Publish(new ParticipantsReorderedMessage(raceId, orderedIds));
         }
 
         public async Task<HeatResultDto> SetHeatResultValueAsync(int raceId, int heatId, Guid participantId, HeatResultField field, long? value, CancellationToken ct = default)
@@ -130,7 +122,6 @@ namespace Hekki.Application.Services
             else
                 await _heatRepository.UpdateResultAsync(group.Id, participantId, result, ct);
 
-            _eventPublisher.Publish(new HeatResultChangedMessage(raceId, heatId, result));
             return result;
         }
 
@@ -260,7 +251,6 @@ namespace Hekki.Application.Services
                 });
             }
 
-            _eventPublisher.Publish(new GroupsAssignedMessage(raceId, heat.HeatId, result));
             return result;
         }
 
@@ -278,7 +268,6 @@ namespace Hekki.Application.Services
                 throw new HeatNotLastDrawnException(heat.HeatNumber);
 
             await _heatRepository.ClearAssignmentAsync(heatId, ct);
-            _eventPublisher.Publish(new HeatAssignmentClearedMessage(raceId, heatId));
         }
 
         private static bool IsDrawn(HeatDto heat) => heat.Groups.Any(g => g.Entries.Count > 0);

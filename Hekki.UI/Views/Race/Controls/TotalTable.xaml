@@ -56,24 +56,12 @@
                       Grid.Row="0"
                       Margin="1"
                       ItemsSource="{Binding Session.Participants}"
-                      IsReadOnly="True"
-                      BorderThickness="0"
-                      AlternatingRowBackground="{DynamicResource Brush.Base}"
-                      CanUserAddRows="False"
-                      CanUserDeleteRows="False"
-                      CanUserSortColumns="False"
-                      CanUserReorderColumns="False"
-                      CanUserResizeColumns="True"
-                      SelectionMode="Single"
-                      SelectionUnit="Cell"
-                      HeadersVisibility="Column"
                       FrozenColumnCount="4"
                       HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Auto"
                       AllowDrop="True"
                       PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown"
                       PreviewMouseMove="Grid_PreviewMouseMove"
-                      PreviewMouseWheel="Grid_PreviewMouseWheel"
                       DragOver="Grid_DragOver"
                       DragLeave="Grid_DragLeave"
                       Drop="Grid_Drop">
@@ -84,16 +72,6 @@
                         <Setter Property="MinHeight" Value="36"/>
                     </Style>
                 </DataGrid.RowStyle>
-                <DataGrid.CellStyle>
-                    <Style TargetType="DataGridCell">
-                        <Setter Property="Focusable" Value="False"/>
-                        <Setter Property="IsTabStop" Value="False"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Foreground" Value="{DynamicResource Brush.TextPrimary}"/>
-                        <Setter Property="VerticalContentAlignment" Value="Center"/>
-                    </Style>
-                </DataGrid.CellStyle>
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Width="24" CanUserResize="False">
                         <DataGridTemplateColumn.CellTemplate>

@@ -575,13 +575,20 @@
         <Setter Property="Background" Value="{DynamicResource Brush.Base}" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.TextPrimary}" />
         <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="GridLinesVisibility" Value="None" />
         <Setter Property="RowBackground" Value="{DynamicResource Brush.Base}" />
-        <Setter Property="AlternatingRowBackground" Value="{DynamicResource Brush.SurfaceLow}" />
+        <Setter Property="AlternatingRowBackground" Value="{DynamicResource Brush.Base}" />
         <Setter Property="AutoGenerateColumns" Value="False" />
         <Setter Property="HeadersVisibility" Value="Column" />
         <Setter Property="RowHeight" Value="32" />
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="CanUserAddRows" Value="False" />
+        <Setter Property="CanUserDeleteRows" Value="False" />
+        <Setter Property="CanUserSortColumns" Value="False" />
+        <Setter Property="CanUserReorderColumns" Value="False" />
+        <Setter Property="SelectionMode" Value="Single" />
+        <Setter Property="SelectionUnit" Value="Cell" />
 
         <Setter Property="ColumnHeaderStyle">
             <Setter.Value>
@@ -599,16 +606,12 @@
         <Setter Property="CellStyle">
             <Setter.Value>
                 <Style TargetType="DataGridCell">
-                    <Setter Property="Padding" Value="8,4"/>
+                    <Setter Property="Focusable" Value="False"/>
+                    <Setter Property="IsTabStop" Value="False"/>
                     <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Foreground" Value="{DynamicResource Brush.TextPrimary}"/>
-
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource Brush.UIElement}" />
-                            <Setter Property="Foreground" Value="{DynamicResource Brush.TextPrimary}" />
-                        </Trigger>
-                    </Style.Triggers>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
                 </Style>
             </Setter.Value>
         </Setter>

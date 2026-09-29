@@ -59,28 +59,8 @@
             <DataGrid Grid.Column="1"
                       Margin="12"
                       ItemsSource="{Binding Rows}"
-                      IsReadOnly="True"
-                      BorderThickness="0"
-                      AlternatingRowBackground="{DynamicResource Brush.Base}"
-                      CanUserAddRows="False"
-                      CanUserDeleteRows="False"
-                      CanUserSortColumns="False"
-                      CanUserReorderColumns="False"
-                      SelectionMode="Single"
-                      SelectionUnit="Cell"
-                      HeadersVisibility="Column"
                       HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Disabled">
-                <DataGrid.CellStyle>
-                    <Style TargetType="DataGridCell">
-                        <Setter Property="Focusable" Value="False"/>
-                        <Setter Property="IsTabStop" Value="False"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Foreground" Value="{DynamicResource Brush.TextPrimary}"/>
-                        <Setter Property="VerticalContentAlignment" Value="Center"/>
-                    </Style>
-                </DataGrid.CellStyle>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="{DynamicResource m_GridPosition}"
                                         Binding="{Binding GridPosition}"

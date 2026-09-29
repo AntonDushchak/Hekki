@@ -16,7 +16,6 @@ namespace Hekki.UI
             services.AddTransient<IViewModelFactory, ViewModelFactory>();
             services.AddSingleton<IMethodCatalogService, MethodCatalogService>();
             services.AddSingleton<IDialogService, DialogService>();
-            services.AddSingleton<IEventPublisher, MessengerEventPublisher>();
             services.AddSingleton<AppSettings>();
             services.AddSingleton<IAppSettingsService, AppSettingsService>();
             services.AddSingleton<RaceSessionHolder>();
