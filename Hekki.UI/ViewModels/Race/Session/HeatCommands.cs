@@ -1,6 +1,8 @@
 using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.Abstractions;
 using Hekki.Application.DTOs.Race;
+using Hekki.Application.Exceptions;
+using Hekki.UI.Mappers;
 using Hekki.UI.Services;
 
 namespace Hekki.UI.ViewModels.Race.Session
@@ -11,12 +13,14 @@ namespace Hekki.UI.ViewModels.Race.Session
     {
         private readonly IRaceService _raceService;
         private readonly IDialogService _dialogService;
+        private readonly IMethodCatalogService _methodCatalog;
         private readonly RaceSessionHolder _sessionHolder;
 
-        public HeatCommands(IRaceService raceService, IDialogService dialogService, RaceSessionHolder sessionHolder)
+        public HeatCommands(IRaceService raceService, IDialogService dialogService, IMethodCatalogService methodCatalog, RaceSessionHolder sessionHolder)
         {
             _raceService = raceService;
             _dialogService = dialogService;
+            _methodCatalog = methodCatalog;
             _sessionHolder = sessionHolder;
         }
 
@@ -72,7 +76,18 @@ namespace Hekki.UI.ViewModels.Race.Session
         [RelayCommand]
         private Task EditHeatAsync(HeatViewModel heat) => ExecuteSafeAsync(async () =>
         {
-            await Task.CompletedTask; // TODO
+            if (Session is not { } session) return;
+
+            var config = await _raceService.GetHeatConfigAsync(session.RaceId, heat.HeatId);
+            var settings = new HeatSettingsViewModel(_methodCatalog, HeatConfigUiMapper.ToViewModel(config));
+            if (_dialogService.ShowHeatSettings(settings) != true) return;
+
+            await _raceService.UpdateHeatConfigAsync(session.RaceId, heat.HeatId, HeatConfigUiMapper.ToConfig(settings.Heat, _methodCatalog));
+
+            var race = await _raceService.GetRaceDataAsync(session.RaceId)
+                ?? throw new RaceNotFoundException(session.RaceId);
+            _sessionHolder.Current = RaceSession.Create(race);
+            NotifyDrawStateChanged();
         });
 
         [RelayCommand]

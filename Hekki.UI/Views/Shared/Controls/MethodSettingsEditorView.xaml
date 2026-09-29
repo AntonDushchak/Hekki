@@ -1,8 +1,8 @@
-<UserControl x:Class="Hekki.UI.Views.CreateRegulation.MethodSettingsEditorView"
+<UserControl x:Class="Hekki.UI.Views.Shared.Controls.MethodSettingsEditorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:Hekki.UI.Converters"
-             xmlns:controls="clr-namespace:Hekki.UI.Views.CreateRegulation"
+             xmlns:controls="clr-namespace:Hekki.UI.Views.Shared.Controls"
              xmlns:vm="clr-namespace:Hekki.UI.ViewModels">
     <UserControl.Resources>
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>

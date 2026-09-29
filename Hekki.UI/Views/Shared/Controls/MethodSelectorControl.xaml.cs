@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Hekki.UI.Views.CreateRegulation
+namespace Hekki.UI.Views.Shared.Controls
 {
     public partial class MethodSelectorControl : UserControl
     {

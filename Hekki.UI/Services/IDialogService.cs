@@ -7,6 +7,7 @@ namespace Hekki.UI.Services
     public interface IDialogService
     {
         bool? ShowRaceSettings(RaceSettingsViewModel vm);
+        bool? ShowHeatSettings(HeatSettingsViewModel vm);
         PilotDto? ShowPilotEditor(PilotEditorViewModel vm);
         bool? ShowMainSettings(MainSettingsViewModel vm);
         bool Confirm(string title, string message, string confirmText);

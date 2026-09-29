@@ -103,6 +103,22 @@ namespace Hekki.Infrastructure.Repositories
             await db.SaveChangesAsync(ct);
         }
 
+        public async Task UpdateRegulationAsync(int raceId, int regulationId, CancellationToken ct = default)
+        {
+            await using var db = await _dbFactory.CreateDbContextAsync(ct);
+
+            var entity = await db.Races
+                .Include(r => r.Heats)
+                .FirstOrDefaultAsync(r => r.Id == raceId, ct)
+                ?? throw new InvalidOperationException($"Race with ID {raceId} not found");
+
+            entity.RegulationId = regulationId;
+            foreach (var heat in entity.Heats)
+                heat.RegulationId = regulationId;
+
+            await db.SaveChangesAsync(ct);
+        }
+
         public async Task DeleteAsync(int raceId, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);

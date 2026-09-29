@@ -41,6 +41,25 @@ namespace Hekki.UI.Services
             return window.ShowDialog();
         }
 
+        public bool? ShowHeatSettings(HeatSettingsViewModel vm)
+        {
+            var window = new HeatSettingsWindow { DataContext = vm };
+
+            if (System.Windows.Application.Current?.MainWindow is { IsLoaded: true } owner)
+                window.Owner = owner;
+
+            vm.PropertyChanged += (_, args) =>
+            {
+                if (args.PropertyName == nameof(vm.DialogResult) &&
+                    vm.DialogResult.HasValue)
+                {
+                    window.DialogResult = vm.DialogResult.Value;
+                }
+            };
+
+            return window.ShowDialog();
+        }
+
         public bool? ShowMainSettings(MainSettingsViewModel vm)
         {
             var window = new MainSettingsWindow { DataContext = vm };

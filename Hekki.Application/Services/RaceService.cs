@@ -270,6 +270,59 @@ namespace Hekki.Application.Services
             await _heatRepository.ClearAssignmentAsync(heatId, ct);
         }
 
+        public async Task<HeatConfig> GetHeatConfigAsync(int raceId, int heatId, CancellationToken ct = default)
+        {
+            var (_, heat, regulation) = await GetHeatWithRegulationAsync(raceId, heatId, ct);
+            return regulation.Config.HeatConfigs[heat.ConfigurationIndex];
+        }
+
+        public async Task UpdateHeatConfigAsync(int raceId, int heatId, HeatConfig config, CancellationToken ct = default)
+        {
+            var (race, heat, regulation) = await GetHeatWithRegulationAsync(raceId, heatId, ct);
+
+            var current = regulation.Config.HeatConfigs[heat.ConfigurationIndex];
+            var groupsChanged = current.GroupCount != config.GroupCount
+                || current.ParticipantsPerGroup != config.ParticipantsPerGroup;
+
+            if (groupsChanged && IsDrawn(heat))
+                throw new HeatAlreadyDrawnException(heat.HeatNumber);
+
+            var heatConfigs = regulation.Config.HeatConfigs.ToList();
+            heatConfigs[heat.ConfigurationIndex] = config with { HeatNumber = current.HeatNumber };
+            var updated = regulation with { Config = new RegulationConfig { HeatConfigs = heatConfigs } };
+
+            if (regulation.OwnerRaceId == race.RaceId)
+            {
+                await _regulationRepository.UpdateAsync(updated, ct);
+            }
+            else
+            {
+                var copyId = await _regulationRepository.AddAsync(updated with { Id = 0, OwnerRaceId = race.RaceId }, ct);
+                await _raceRepository.UpdateRegulationAsync(race.RaceId, copyId, ct);
+            }
+
+            await _heatRepository.UpdateAsync(heat with { Name = config.Name, ScoringMode = config.ScoringMode }, ct);
+
+            if (groupsChanged)
+            {
+                await _heatRepository.DeleteGroupsAsync(heat.HeatId, ct);
+                await GenerateGroupsAsync(raceId, heat.HeatId, ct);
+            }
+        }
+
+        private async Task<(RaceDataDto Race, HeatDto Heat, RegulationEditDto Regulation)> GetHeatWithRegulationAsync(int raceId, int heatId, CancellationToken ct)
+        {
+            var race = await _raceRepository.GetByIdAsync(raceId, ct)
+                ?? throw new RaceNotFoundException(raceId);
+            var heat = await _heatRepository.GetByIdAsync(heatId, ct);
+            if (heat == null || heat.RaceId != raceId)
+                throw new HeatNotFoundException(heatId);
+            var regulation = await _regulationRepository.GetForEditAsync(race.RegulationId, ct)
+                ?? throw new RegulationNotFoundException(race.RegulationId);
+
+            return (race, heat, regulation);
+        }
+
         private static bool IsDrawn(HeatDto heat) => heat.Groups.Any(g => g.Entries.Count > 0);
 
         private async Task<IReadOnlyList<HeatEntryDto>> GenerateEntriesForGroupAsync(

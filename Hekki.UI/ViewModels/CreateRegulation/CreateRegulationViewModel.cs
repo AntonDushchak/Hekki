@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Hekki.Application.DTOs.Regulation;
 using Hekki.Application.Abstractions;
+using Hekki.UI.Mappers;
 using Hekki.UI.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -134,25 +135,7 @@ namespace Hekki.UI.ViewModels
 
         private RegulationEditDto BuildRegulationDto()
         {
-            var heatConfigs = Heats.Select(h => new HeatConfig
-            {
-                Name = h.Name,
-                HeatNumber = h.HeatNumber,
-                GroupCount = h.NumberOfGroups,
-                ParticipantsPerGroup = h.GroupCapacity,
-                ScoringMode = h.ScoringMode,
-                Scoring = new ScoringConfig
-                {
-                    Method = _methodCatalog.CreateScoreMethod(h.ScoreMethodId),
-                    UsePenalties = h.UsePenalty,
-                },
-                Assignment = new AssignmentConfig
-                {
-                    KartMethod = _methodCatalog.CreateKartMethod(h.KartMethodId),
-                    GroupMethod = _methodCatalog.CreateGroupMethod(h.GroupMethodId),
-                    Shuffle = _methodCatalog.CreateShuffleMethod(h.ShuffleMethodId)
-                }
-            }).ToList();
+            var heatConfigs = Heats.Select(h => HeatConfigUiMapper.ToConfig(h, _methodCatalog)).ToList();
 
             return new RegulationEditDto
             {

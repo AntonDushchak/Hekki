@@ -7,5 +7,6 @@
         public string Json { get; set; } = string.Empty;
         public int Version { get; set; }
         public DateTime CreationDate { get; set; }
+        public int? OwnerRaceId { get; set; }
     }
 }

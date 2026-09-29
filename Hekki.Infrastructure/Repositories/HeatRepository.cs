@@ -138,6 +138,22 @@ namespace Hekki.Infrastructure.Repositories
             await db.SaveChangesAsync(ct);
         }
 
+        public async Task DeleteGroupsAsync(int heatId, CancellationToken ct = default)
+        {
+            await using var db = await _dbFactory.CreateDbContextAsync(ct);
+
+            var groupIds = await db.HeatGroups
+                .Where(g => g.HeatId == heatId)
+                .Select(g => g.Id)
+                .ToListAsync(ct);
+
+            db.HeatResults.RemoveRange(db.HeatResults.Where(r => groupIds.Contains(r.GroupId)));
+            db.HeatEntries.RemoveRange(db.HeatEntries.Where(e => groupIds.Contains(e.GroupId)));
+            db.HeatGroups.RemoveRange(db.HeatGroups.Where(g => g.HeatId == heatId));
+
+            await db.SaveChangesAsync(ct);
+        }
+
         public async Task UpdateAsync(HeatDto heat, CancellationToken ct = default)
         {
             await using var db = await _dbFactory.CreateDbContextAsync(ct);
@@ -149,6 +165,7 @@ namespace Hekki.Infrastructure.Repositories
             entity.Name = heat.Name;
             entity.HeatNumber = heat.HeatNumber;
             entity.ConfigurationIndex = heat.ConfigurationIndex;
+            entity.ScoringMode = (int)heat.ScoringMode;
             await db.SaveChangesAsync(ct);
         }
 

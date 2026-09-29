@@ -1,0 +1,127 @@
+<UserControl x:Class="Hekki.UI.Views.Shared.Controls.HeatSettingsEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:Hekki.UI.Converters"
+             xmlns:controls="clr-namespace:Hekki.UI.Views.Shared.Controls">
+
+    <UserControl.Resources>
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid Visibility="{Binding SelectedHeat, Converter={StaticResource NullToVisibilityConverter}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border x:Name="HeatDetails"
+                CornerRadius="8"
+                Padding="20"
+                Grid.Column="0"
+                Background="{DynamicResource Brush.SurfaceLow}">
+            <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Header -->
+                    <Grid Grid.Row="0"
+                          Margin="0,0,0,20">
+
+                        <TextBlock Text="{DynamicResource m_HeatDetails}"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"/>
+
+                    </Grid>
+
+
+                    <!-- Fields -->
+                    <Grid Grid.Row="1">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+
+                        <!-- Name -->
+
+                        <TextBlock Grid.Row="0"
+                                   Text="{DynamicResource m_Name}"
+                                   Margin="0,0,0,5"/>
+
+                        <TextBox Grid.Row="1"
+                                 MinHeight="30"
+                                 MinWidth="100"
+                                 HorizontalAlignment="Left"
+                                 Text="{Binding SelectedHeat.Name, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="0,0,0,15"/>
+
+
+                        <!-- Groups count -->
+
+                        <TextBlock Grid.Row="2"
+                                   Text="{DynamicResource m_GroupsCount}"
+                                   Margin="0,0,0,5"/>
+
+                        <TextBox Grid.Row="3"
+                                 MinHeight="30"
+                                 HorizontalAlignment="Left"
+                                 Text="{Binding SelectedHeat.NumberOfGroups, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="0,0,0,15"/>
+
+
+                        <!-- Group capacity -->
+
+                        <TextBlock Grid.Row="4"
+                                   Text="{DynamicResource m_GroupCapacity}"
+                                   Margin="0,0,0,5"/>
+
+                        <TextBox Grid.Row="5"
+                                 MinHeight="30"
+                                 HorizontalAlignment="Left"
+                                 Text="{Binding SelectedHeat.GroupCapacity, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="0,0,0,15"/>
+
+
+                        <!-- Scoring -->
+
+                        <TextBlock Grid.Row="6"
+                                   Text="{DynamicResource m_ScoringType}"
+                                   Margin="0,0,0,5"/>
+
+                        <StackPanel Grid.Row="7"
+                                    Margin="0,0,0,15">
+
+                            <CheckBox Content="{DynamicResource m_Points}"
+                                      IsChecked="{Binding SelectedHeat.UsePoints, Mode=TwoWay}"
+                                      Margin="0,0,0,8"
+                                      FontSize="14"/>
+
+                            <CheckBox Content="{DynamicResource m_Time}"
+                                      IsChecked="{Binding SelectedHeat.UseTime, Mode=TwoWay}"
+                                      FontSize="14"/>
+
+                        </StackPanel>
+
+                    </Grid>
+            </Grid>
+        </Border>
+
+        <controls:MethodSettingsEditorView Grid.Column="2"/>
+    </Grid>
+</UserControl>

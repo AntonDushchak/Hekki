@@ -1,6 +1,6 @@
 using System.Windows.Controls;
 
-namespace Hekki.UI.Views.CreateRegulation
+namespace Hekki.UI.Views.Shared.Controls
 {
     public partial class MethodSettingsEditorView : UserControl
     {

@@ -21,5 +21,7 @@ namespace Hekki.Application.Abstractions
         Task<IReadOnlyList<HeatDto>> GenerateHeatsWithGroupsAsync(int raceId, CancellationToken ct = default);
         Task<IReadOnlyList<GroupAssignmentResultDto>> AssignGroupsAndNumbersAsync(int raceId, int heatNumber, CancellationToken ct = default);
         Task ClearHeatAssignmentAsync(int raceId, int heatId, CancellationToken ct = default);
+        Task<HeatConfig> GetHeatConfigAsync(int raceId, int heatId, CancellationToken ct = default);
+        Task UpdateHeatConfigAsync(int raceId, int heatId, HeatConfig config, CancellationToken ct = default);
     }
 }

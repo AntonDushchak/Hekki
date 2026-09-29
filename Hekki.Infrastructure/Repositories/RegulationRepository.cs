@@ -23,6 +23,7 @@ namespace Hekki.Infrastructure.Repositories
 
             var entities = await db.Regulations
                 .AsNoTracking()
+                .Where(r => r.OwnerRaceId == null)
                 .OrderBy(r => r.Name)
                 .ToListAsync(ct);
 
@@ -62,6 +63,19 @@ namespace Hekki.Infrastructure.Repositories
             db.Regulations.Add(entity);
             await db.SaveChangesAsync(ct);
             return entity.Id;
+        }
+
+        public async Task UpdateAsync(RegulationEditDto regulationDto, CancellationToken ct = default)
+        {
+            await using var db = await _dbFactory.CreateDbContextAsync(ct);
+
+            var entity = await db.Regulations.FindAsync(new object[] { regulationDto.Id }, ct)
+                ?? throw new InvalidOperationException($"Regulation with ID {regulationDto.Id} not found");
+
+            var updated = _mapper.Map<RegulationEntity>(regulationDto);
+            entity.Name = updated.Name;
+            entity.Json = updated.Json;
+            await db.SaveChangesAsync(ct);
         }
 
         public async Task DeleteAsync(int regulationId, CancellationToken ct = default)

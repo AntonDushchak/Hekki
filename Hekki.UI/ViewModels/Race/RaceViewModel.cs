@@ -6,6 +6,7 @@ using Hekki.UI.Mappers;
 using Hekki.UI.Services;
 using Hekki.UI.ViewModels.Race;
 using Hekki.UI.ViewModels.Race.Session;
+using System.ComponentModel;
 
 namespace Hekki.UI.ViewModels
 {
@@ -39,16 +40,18 @@ namespace Hekki.UI.ViewModels
             IPilotService pilotService,
             IDialogService dialogService,
             AppSettings appSettings,
+            IMethodCatalogService methodCatalog,
             RaceSessionHolder sessionHolder)
         {
             _sessionHolder = sessionHolder;
+            _sessionHolder.PropertyChanged += OnSessionHolderChanged;
             RegulationId = regulationId;
             RaceId = raceId;
             _raceService = raceService;
             _dialogService = dialogService;
 
             Participants = new ParticipantsSectionViewModel(raceService, pilotService, dialogService, appSettings, sessionHolder);
-            HeatCommands = new HeatCommands(raceService, dialogService, sessionHolder);
+            HeatCommands = new HeatCommands(raceService, dialogService, methodCatalog, sessionHolder);
             ParticipantCommands = new ParticipantCommands(raceService, pilotService, dialogService, appSettings, sessionHolder);
             _appSettings = appSettings;
         }
@@ -105,7 +108,6 @@ namespace Hekki.UI.ViewModels
 
             RaceUiMapper.ApplyTo(this, raceDto);
             _sessionHolder.Current = RaceSession.Create(raceDto);
-            OnPropertyChanged(nameof(Session));
         });
 
         [RelayCommand]
@@ -116,8 +118,15 @@ namespace Hekki.UI.ViewModels
                 Session?.AddParticipant(await _raceService.AddParticipantAsync(RaceId.Value, i));
         });
 
+        private void OnSessionHolderChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(RaceSessionHolder.Current))
+                OnPropertyChanged(nameof(Session));
+        }
+
         protected override void OnDisposing()
         {
+            _sessionHolder.PropertyChanged -= OnSessionHolderChanged;
             Participants.Dispose();
             HeatCommands.Dispose();
             ParticipantCommands.Dispose();

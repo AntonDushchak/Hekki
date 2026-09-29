@@ -28,6 +28,7 @@ namespace Hekki.UI.Services
                 _serviceProvider.GetRequiredService<IPilotService>(),
                 _serviceProvider.GetRequiredService<IDialogService>(),
                 _serviceProvider.GetRequiredService<AppSettings>(),
+                _serviceProvider.GetRequiredService<IMethodCatalogService>(),
                 _serviceProvider.GetRequiredService<RaceSessionHolder>());
         }
     }
