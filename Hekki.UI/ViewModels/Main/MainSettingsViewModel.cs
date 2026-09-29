@@ -63,7 +63,8 @@ namespace Hekki.UI.ViewModels
                 Theme = SelectedTheme,
                 KartNumbers = new ObservableCollection<int>(KartNumbers),
                 Teams = new ObservableCollection<string>(Teams),
-                Leagues = new ObservableCollection<string>(Leagues)
+                Leagues = new ObservableCollection<string>(Leagues),
+                Locations = new ObservableCollection<string>(_appSettingsService.Settings.Locations)
             };
 
             await _appSettingsService.ApplyAsync(settings);
