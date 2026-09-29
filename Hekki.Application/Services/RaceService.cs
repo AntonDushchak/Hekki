@@ -76,7 +76,7 @@ namespace Hekki.Application.Services
             _eventPublisher.Publish(new ParticipantRemovedMessage(raceId, participantId));
         }
 
-        public async Task UpdateParticipantPilotAsync(int raceId, Guid participantId, PilotDto pilot, CancellationToken ct = default)
+        public async Task<RaceParticipantDto> UpdateParticipantPilotAsync(int raceId, Guid participantId, PilotDto pilot, CancellationToken ct = default)
         {
             var participant = await _participantRepository.GetByIdAsync(participantId, ct)
                 ?? throw new ParticipantNotFoundException(participantId);
@@ -93,6 +93,7 @@ namespace Hekki.Application.Services
             var updated = await _participantRepository.GetByIdAsync(participantId, ct)
                 ?? throw new ParticipantNotFoundException(participantId);
             _eventPublisher.Publish(new ParticipantUpdatedMessage(raceId, updated));
+            return updated;
         }
 
         public async Task ReorderParticipantsAsync(int raceId, IReadOnlyList<Guid> orderedIds, CancellationToken ct = default)
@@ -101,7 +102,7 @@ namespace Hekki.Application.Services
             _eventPublisher.Publish(new ParticipantsReorderedMessage(raceId, orderedIds));
         }
 
-        public async Task SetHeatResultValueAsync(int raceId, int heatId, Guid participantId, HeatResultField field, long? value, CancellationToken ct = default)
+        public async Task<HeatResultDto> SetHeatResultValueAsync(int raceId, int heatId, Guid participantId, HeatResultField field, long? value, CancellationToken ct = default)
         {
             if (value is < 0 || (field is HeatResultField.FinishPosition or HeatResultField.BestLap && value == 0))
                 throw new InvalidResultValueException(value.Value);
@@ -130,6 +131,7 @@ namespace Hekki.Application.Services
                 await _heatRepository.UpdateResultAsync(group.Id, participantId, result, ct);
 
             _eventPublisher.Publish(new HeatResultChangedMessage(raceId, heatId, result));
+            return result;
         }
 
         public async Task<RegulationEditDto?> GetRegulationEditAsync(int regulationId, CancellationToken ct = default)
@@ -211,7 +213,7 @@ namespace Hekki.Application.Services
             return groups;
         }
 
-        public async Task AssignGroupsAndNumbersAsync(int raceId, int heatNumber, CancellationToken ct = default)
+        public async Task<IReadOnlyList<GroupAssignmentResultDto>> AssignGroupsAndNumbersAsync(int raceId, int heatNumber, CancellationToken ct = default)
         {
             var race = await GetRaceDataAsync(raceId, ct)
                 ?? throw new RaceNotFoundException(raceId);
@@ -259,6 +261,7 @@ namespace Hekki.Application.Services
             }
 
             _eventPublisher.Publish(new GroupsAssignedMessage(raceId, heat.HeatId, result));
+            return result;
         }
 
         public async Task ClearHeatAssignmentAsync(int raceId, int heatId, CancellationToken ct = default)
