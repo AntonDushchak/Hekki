@@ -374,3 +374,9 @@ squirrelPublish/
 /.github/promts/architect.md
 /.github/promts/implementer.md
 /.github/promts/reviewer.md
+
+# Local architecture notes
+/README.md
+/FIXES.md
+/Hekki.UI/README.md
+/Hekki.UI/TABLES.md

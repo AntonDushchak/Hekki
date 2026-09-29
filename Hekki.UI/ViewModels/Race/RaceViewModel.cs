@@ -22,7 +22,6 @@ namespace Hekki.UI.ViewModels
         IRecipient<HeatAssignmentClearedMessage>
     {
         private readonly IRaceService _raceService;
-        private readonly INavigationService _navigationService;
         private readonly IDialogService _dialogService;
 
         [ObservableProperty] private int _regulationId;
@@ -48,7 +47,6 @@ namespace Hekki.UI.ViewModels
             int? raceId,
             IRaceService raceService,
             IPilotService pilotService,
-            INavigationService navigationService,
             IDialogService dialogService,
             AppSettings appSettings)
         {
@@ -56,7 +54,6 @@ namespace Hekki.UI.ViewModels
             RaceId = raceId;
             _raceService = raceService;
             _dialogService = dialogService;
-            _navigationService = navigationService;
 
             Participants = new ParticipantsSectionViewModel(raceService, pilotService, dialogService, appSettings);
             TotalTable = new TotalTableViewModel(raceService, pilotService, dialogService, appSettings);

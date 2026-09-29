@@ -25,7 +25,6 @@ namespace Hekki.UI.Services
                 raceId,
                 _serviceProvider.GetRequiredService<IRaceService>(),
                 _serviceProvider.GetRequiredService<IPilotService>(),
-                _serviceProvider.GetRequiredService<INavigationService>(),
                 _serviceProvider.GetRequiredService<IDialogService>(),
                 _serviceProvider.GetRequiredService<AppSettings>());
         }
