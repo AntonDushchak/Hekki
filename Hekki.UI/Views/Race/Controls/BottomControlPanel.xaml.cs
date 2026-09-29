@@ -97,13 +97,10 @@ namespace Hekki.UI.Views.Race.Controls
 
         private void HeatButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.DataContext is HeatViewModel heatViewModel)
+            if (sender is Button { ContextMenu: { } menu } button)
             {
-                if (button.ContextMenu != null)
-                {
-                    button.ContextMenu.PlacementTarget = button;
-                    button.ContextMenu.IsOpen = true;
-                }
+                menu.PlacementTarget = button;
+                menu.IsOpen = true;
             }
         }
     }

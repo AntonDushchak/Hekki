@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:vm="clr-namespace:Hekki.UI.ViewModels"
+             xmlns:vm="clr-namespace:Hekki.UI.ViewModels.Race.Session"
              mc:Ignorable="d"
              x:Name="Root"
              d:DesignHeight="120" d:DesignWidth="800">
@@ -80,7 +80,7 @@
                                     VerticalAlignment="Center"
                                     ToolTip="{DynamicResource m_TotalTable}"
                                     Click="TableActionsButton_Click"/>
-                            <ItemsControl ItemsSource="{Binding HeatsTable.Heats}">
+                            <ItemsControl ItemsSource="{Binding Session.Heats}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal" 
@@ -133,7 +133,7 @@
                                             <Button.ContextMenu>
                                                 <ContextMenu>
                                                     <MenuItem Header="{DynamicResource m_EditHeat}"
-                                                            Command="{Binding PlacementTarget.Tag.HeatsTable.EditHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                            Command="{Binding PlacementTarget.Tag.HeatActions.EditHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                             CommandParameter="{Binding}">
                                                         <MenuItem.Icon>
                                                             <TextBlock Text="✏️" FontSize="14"/>
@@ -141,7 +141,7 @@
                                                     </MenuItem>
 
                                                     <MenuItem Header="{DynamicResource m_AssignGroupsAndNumbers}"
-                                                            Command="{Binding PlacementTarget.Tag.HeatsTable.AssignGroupsAndNumbersCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                            Command="{Binding PlacementTarget.Tag.HeatActions.AssignCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                             CommandParameter="{Binding}">
                                                         <MenuItem.Icon>
                                                             <TextBlock Text="" FontSize="14"/>
@@ -149,7 +149,7 @@
                                                     </MenuItem>
 
                                                     <MenuItem Header="{DynamicResource m_UndoDraw}"
-                                                            Command="{Binding PlacementTarget.Tag.HeatsTable.UndoDrawCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                            Command="{Binding PlacementTarget.Tag.HeatActions.UndoDrawCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                             CommandParameter="{Binding}">
                                                         <MenuItem.Icon>
                                                             <TextBlock Text="&#xE7A7;" FontFamily="Segoe MDL2 Assets" FontSize="14"/>
@@ -159,7 +159,7 @@
                                                     <Separator/>
 
                                                     <MenuItem Header="{DynamicResource m_DeleteHeat}"
-                                                            Command="{Binding PlacementTarget.Tag.HeatsTable.DeleteHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                            Command="{Binding PlacementTarget.Tag.HeatActions.DeleteHeatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                             CommandParameter="{Binding}">
                                                         <MenuItem.Icon>
                                                             <TextBlock Text="🗑️" FontSize="14"/>

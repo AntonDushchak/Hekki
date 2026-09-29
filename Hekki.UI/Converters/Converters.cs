@@ -1,4 +1,5 @@
-﻿using Hekki.UI.ViewModels;
+﻿using Hekki.UI.Services;
+using Hekki.UI.ViewModels;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -159,6 +160,21 @@ namespace Hekki.UI.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class LapTimeConverter : IValueConverter
+    {
+        public static LapTimeConverter Instance { get; } = new();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return LapTimeFormat.Format(value as long?);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
         }
     }
 }

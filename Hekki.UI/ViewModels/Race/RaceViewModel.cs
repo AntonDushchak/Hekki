@@ -40,6 +40,7 @@ namespace Hekki.UI.ViewModels
         public bool IsNewRace => RaceId == null;
 
         public RaceSession? Session => _sessionHolder.Current;
+        public HeatActionsViewModel HeatActions { get; }
         public ParticipantsSectionViewModel Participants { get; }
         public TotalTableViewModel TotalTable { get; }
         public HeatsTableViewModel HeatsTable { get; }
@@ -63,6 +64,7 @@ namespace Hekki.UI.ViewModels
             Participants = new ParticipantsSectionViewModel(raceService, pilotService, dialogService, appSettings);
             TotalTable = new TotalTableViewModel(raceService, pilotService, dialogService, appSettings);
             HeatsTable = new HeatsTableViewModel(raceService, dialogService);
+            HeatActions = new HeatActionsViewModel(raceService, dialogService, sessionHolder);
             _heatList = new List<HeatViewModel>();
             _appSettings = appSettings;
         }
@@ -205,8 +207,6 @@ namespace Hekki.UI.ViewModels
         {
             if (message.RaceId != RaceId) return;
 
-            Session?.SetResult(message.HeatId, message.Result);
-
             var participantId = message.Result.ParticipantId;
             var group = _heatList
                 .Where(h => h.HeatId == message.HeatId)
@@ -224,7 +224,6 @@ namespace Hekki.UI.ViewModels
         {
             if (message.RaceId != RaceId) return;
 
-            Session?.ApplyAssignment(message.HeatId, message.Result);
             HeatAssignmentApplier.Apply(_heatList, message.Result);
             TotalTable.RefreshAssignments();
             HeatsTable.NotifyDrawStateChanged();
@@ -233,8 +232,6 @@ namespace Hekki.UI.ViewModels
         public void Receive(HeatAssignmentClearedMessage message)
         {
             if (message.RaceId != RaceId) return;
-
-            Session?.ClearAssignment(message.HeatId);
 
             var heat = _heatList.FirstOrDefault(h => h.HeatId == message.HeatId);
             if (heat == null) return;
@@ -258,6 +255,7 @@ namespace Hekki.UI.ViewModels
         {
             Participants.Dispose();
             HeatsTable.Dispose();
+            HeatActions.Dispose();
             TotalTable.Dispose();
         }
 

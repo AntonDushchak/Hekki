@@ -38,6 +38,17 @@ namespace Hekki.UI.ViewModels.Race.Session
             Penalty = result?.Penalty;
         }
 
+        public void RefreshField(HeatResultField field)
+        {
+            OnPropertyChanged(field switch
+            {
+                HeatResultField.FinishPosition => nameof(FinishPosition),
+                HeatResultField.BestLap => nameof(BestLapMs),
+                HeatResultField.Score => nameof(Score),
+                _ => nameof(Penalty)
+            });
+        }
+
         partial void OnKartNumberChanged(int? value) => Participant?.OnResultsChanged();
         partial void OnBestLapMsChanged(long? value) => Participant?.OnResultsChanged();
         partial void OnScoreChanged(int? value) => Participant?.OnResultsChanged();

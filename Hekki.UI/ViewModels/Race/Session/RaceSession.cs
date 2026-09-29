@@ -68,6 +68,9 @@ namespace Hekki.UI.ViewModels.Race.Session
             RaceDate = raceDate;
         }
 
+        public HeatViewModel? FindHeatOf(HeatRowViewModel row) =>
+            Heats.FirstOrDefault(h => h.Groups.Any(g => g.Rows.Contains(row)));
+
         public ParticipantViewModel? FindParticipant(Guid participantId) =>
             Participants.FirstOrDefault(p => p.Id == participantId);
 
