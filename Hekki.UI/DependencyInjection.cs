@@ -1,6 +1,7 @@
 using Hekki.Application.Abstractions;
 using Hekki.UI.Services;
 using Hekki.UI.ViewModels;
+using Hekki.UI.ViewModels.Race.Session;
 using Hekki.UI.Views;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,6 +19,7 @@ namespace Hekki.UI
             services.AddSingleton<IEventPublisher, MessengerEventPublisher>();
             services.AddSingleton<AppSettings>();
             services.AddSingleton<IAppSettingsService, AppSettingsService>();
+            services.AddSingleton<RaceSessionHolder>();
 
 
 

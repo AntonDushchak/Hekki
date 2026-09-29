@@ -1,4 +1,5 @@
 ﻿using Hekki.UI.ViewModels;
+using Hekki.UI.ViewModels.Race.Session;
 using Hekki.Application.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,7 +27,8 @@ namespace Hekki.UI.Services
                 _serviceProvider.GetRequiredService<IRaceService>(),
                 _serviceProvider.GetRequiredService<IPilotService>(),
                 _serviceProvider.GetRequiredService<IDialogService>(),
-                _serviceProvider.GetRequiredService<AppSettings>());
+                _serviceProvider.GetRequiredService<AppSettings>(),
+                _serviceProvider.GetRequiredService<RaceSessionHolder>());
         }
     }
 

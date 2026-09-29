@@ -7,6 +7,7 @@ using Hekki.Application.Messages;
 using Hekki.UI.Mappers;
 using Hekki.UI.Services;
 using Hekki.UI.ViewModels.Race;
+using Hekki.UI.ViewModels.Race.Session;
 using Hekki.UI.ViewModels.Race.TotalTable;
 using System.Collections.ObjectModel;
 
@@ -23,6 +24,7 @@ namespace Hekki.UI.ViewModels
     {
         private readonly IRaceService _raceService;
         private readonly IDialogService _dialogService;
+        private readonly RaceSessionHolder _sessionHolder;
 
         [ObservableProperty] private int _regulationId;
         [ObservableProperty]
@@ -37,6 +39,7 @@ namespace Hekki.UI.ViewModels
 
         public bool IsNewRace => RaceId == null;
 
+        public RaceSession? Session => _sessionHolder.Current;
         public ParticipantsSectionViewModel Participants { get; }
         public TotalTableViewModel TotalTable { get; }
         public HeatsTableViewModel HeatsTable { get; }
@@ -48,8 +51,10 @@ namespace Hekki.UI.ViewModels
             IRaceService raceService,
             IPilotService pilotService,
             IDialogService dialogService,
-            AppSettings appSettings)
+            AppSettings appSettings,
+            RaceSessionHolder sessionHolder)
         {
+            _sessionHolder = sessionHolder;
             RegulationId = regulationId;
             RaceId = raceId;
             _raceService = raceService;
@@ -113,6 +118,8 @@ namespace Hekki.UI.ViewModels
                 ?? throw new RaceNotFoundException(RaceId.Value);
 
             RaceUiMapper.ApplyTo(this, raceDto);
+            _sessionHolder.Current = RaceSession.Create(raceDto);
+            OnPropertyChanged(nameof(Session));
 
             _participantList.Clear();
             foreach (var participant in raceDto.Participants)
@@ -131,6 +138,8 @@ namespace Hekki.UI.ViewModels
         {
             if (message.RaceId != RaceId) return;
 
+            Session?.AddParticipant(message.RaceParticipant);
+
             var participant = PilotUiMapper.MapToParticipantViewModel(message.RaceParticipant);
             _participantList.Add(participant);
             TotalTable.AddRow(participant);
@@ -140,6 +149,8 @@ namespace Hekki.UI.ViewModels
         public void Receive(ParticipantRemovedMessage message)
         {
             if (message.RaceId != RaceId) return;
+
+            Session?.RemoveParticipant(message.ParticipantId);
 
             var participant = _participantList.FirstOrDefault(p => p.Id == message.ParticipantId);
             if (participant != null) _participantList.Remove(participant);
@@ -159,6 +170,8 @@ namespace Hekki.UI.ViewModels
         public void Receive(ParticipantUpdatedMessage message)
         {
             if (message.RaceId != RaceId) return;
+
+            Session?.UpdateParticipant(message.RaceParticipant);
 
             var participantId = message.RaceParticipant.ParticipantId;
             var participant = _participantList.FirstOrDefault(p => p.Id == participantId);
@@ -183,6 +196,7 @@ namespace Hekki.UI.ViewModels
         {
             if (message.RaceId != RaceId) return;
 
+            Session?.ApplyOrder(message.ParticipantIds);
             _participantList.ReorderBy(message.ParticipantIds, p => p.Id);
             TotalTable.ApplyOrder(message.ParticipantIds);
         }
@@ -190,6 +204,8 @@ namespace Hekki.UI.ViewModels
         public void Receive(HeatResultChangedMessage message)
         {
             if (message.RaceId != RaceId) return;
+
+            Session?.SetResult(message.HeatId, message.Result);
 
             var participantId = message.Result.ParticipantId;
             var group = _heatList
@@ -208,6 +224,7 @@ namespace Hekki.UI.ViewModels
         {
             if (message.RaceId != RaceId) return;
 
+            Session?.ApplyAssignment(message.HeatId, message.Result);
             HeatAssignmentApplier.Apply(_heatList, message.Result);
             TotalTable.RefreshAssignments();
             HeatsTable.NotifyDrawStateChanged();
@@ -216,6 +233,8 @@ namespace Hekki.UI.ViewModels
         public void Receive(HeatAssignmentClearedMessage message)
         {
             if (message.RaceId != RaceId) return;
+
+            Session?.ClearAssignment(message.HeatId);
 
             var heat = _heatList.FirstOrDefault(h => h.HeatId == message.HeatId);
             if (heat == null) return;
@@ -254,6 +273,7 @@ namespace Hekki.UI.ViewModels
             RaceName = settingsViewModel.RaceName;
             RaceDate = settingsViewModel.RaceDate;
             Location = location;
+            Session?.ApplyRaceInfo(RaceName, Location, RaceDate);
         });
 
         private bool CanEditRaceSettings() => !IsNewRace;
